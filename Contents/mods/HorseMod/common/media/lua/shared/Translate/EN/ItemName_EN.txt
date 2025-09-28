@@ -1,0 +1,4 @@
+ItemName_EN = {
+    ItemName_HorseMod.HorseMeat = "Horse Meat",
+    ItemName_HorseMod.HorseHide = "Horse Hide",
+}

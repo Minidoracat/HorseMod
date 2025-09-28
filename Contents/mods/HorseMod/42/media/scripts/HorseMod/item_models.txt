@@ -35,4 +35,11 @@ module HorseMod
     static = true,
 		scale = 0,
 	}
+
+	model HorseMeat {
+		mesh = HorseMod/HorseMeat,
+		texture = Items/Horse_Meat,
+		static = true,
+		scale = 0.004,
+	}
 }
