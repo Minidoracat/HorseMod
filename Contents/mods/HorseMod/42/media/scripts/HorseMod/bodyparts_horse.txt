@@ -1,5 +1,8 @@
 module HorseMod
 {
+    imports {
+	    Base
+	}
     item Horse_Head
     {
 		DisplayCategory = AnimalPart,
@@ -20,47 +23,9 @@ module HorseMod
         Weight = 1.2,
         Type = Normal,
         DisplayName = Horse Skull,
-        Icon = Skull_Horse,
+        Icon = Skull_CowFemale,
         Tags = AnimalSkull,
         StaticModel = HorseSkull,
         WorldStaticModel = HorseSkull,
-    }
-
-    item HorseSteak 
-    {
-        Type = Food,
-        DisplayName = Horse Steak,
-        DisplayCategory = Food,
-        Weight = 0.5,
-        Icon = HorseSteak,
-        BadCold = true,
-        BadInMicrowave = true,
-        DangerousUncooked = true,
-        FoodType = Horse,
-        GoodHot = true,
-        IsCookable = true,
-        MinutesToCook = 50,
-        MinutesToBurn = 70,
-        DaysFresh = 2,
-        DaysTotallyRotten = 4,
-        HungerChange = -80,
-        Calories = 500,
-        Carbohydrates = 0,
-        Lipids = 25,
-        Proteins = 50,
-        FishingLure = true,
-        CookingSound = FryingFood,
-        UnhappyChange = 50,
-        StaticModel = HorseSteak,
-        WorldStaticModel = HorseSteak,
-    }
-
-    item HorseHoof
-    {
-        DisplayCategory = AnimalPart,
-        Weight = 0.5,
-        Type = Normal,
-        DisplayName = Horse Hoof,
-        Icon = HorseHoof,
     }
 }

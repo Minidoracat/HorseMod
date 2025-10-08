@@ -6,20 +6,20 @@
 	<m_Looped>false</m_Looped>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
 	<m_BlendTime>0.40</m_BlendTime>
-    <m_ConditionPriority>10</m_ConditionPriority>
-    <m_Conditions>
-        <m_Name>isHorse</m_Name>
-        <m_Type>BOOL</m_Type>
-        <m_Value>true</m_Value>
-    </m_Conditions>
+  <m_ConditionPriority>10</m_ConditionPriority>
+  <m_Conditions>
+    <m_Name>isHorse</m_Name>
+    <m_Type>BOOL</m_Type>
+    <m_Value>true</m_Value>
+  </m_Conditions>
 	<m_Conditions>
 		<m_Name>idleAction</m_Name>
 		<m_Type>STRING</m_Type>
 		<m_StringValue>idle1</m_StringValue>
 	</m_Conditions>
 	<m_Transitions>
-      <m_Target>Horse_idleSit</m_Target>
-      <m_AnimName>Horse_Idle_StandingToLying</m_AnimName>
+    <m_Target>Horse_idleSit</m_Target>
+    <m_AnimName>Horse_Idle_StandingToLying</m_AnimName>
   </m_Transitions>
 	<m_Events>
 		<m_EventName>idleActionEnd</m_EventName>

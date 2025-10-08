@@ -6,18 +6,18 @@
 	<m_Looped>false</m_Looped>
 	<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
 	<m_BlendTime>0.25</m_BlendTime>
-    <m_ConditionPriority>10</m_ConditionPriority>
-    <m_Conditions>
-        <m_Name>isHorse</m_Name>
-        <m_Type>BOOL</m_Type>
-        <m_Value>true</m_Value>
-    </m_Conditions>
+  <m_ConditionPriority>10</m_ConditionPriority>
+  <m_Conditions>
+    <m_Name>isHorse</m_Name>
+    <m_Type>BOOL</m_Type>
+    <m_Value>true</m_Value>
+  </m_Conditions>
 	<m_Events>
 		<m_EventName>SetVariable</m_EventName>
 		<m_Time>Start</m_Time>
 		<m_ParameterValue>HorseHurt=true</m_ParameterValue>
 	</m_Events>
-    <m_Events>
+  <m_Events>
 		<m_EventName>SetVariable</m_EventName>
 		<m_Time>End</m_Time>
 		<m_ParameterValue>HorseHurt=false</m_ParameterValue>

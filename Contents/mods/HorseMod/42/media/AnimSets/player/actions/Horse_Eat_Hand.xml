@@ -4,7 +4,7 @@
 	<m_AnimName>Bob_Horse_EatHand</m_AnimName>
 	<m_BlendTime>0.00</m_BlendTime>
 	<m_SpeedScale>1.00</m_SpeedScale>
-    <m_Looped>false</m_Looped>
+  <m_Looped>false</m_Looped>
 	<m_EarlyTransitionOut>false</m_EarlyTransitionOut>
 	<m_Conditions x_name="71182087-1e3c-450f-a2e7-02b3a2b7a7a6">
 		<m_Name>PerformingAction</m_Name>
