@@ -1,10 +1,7 @@
-module HorseMod
-{
-    imports {
-	    Base
-	}
-    item Horse_Head
-    {
+module HorseMod {
+    /* TODO: decide on a naming scheme: Horse_{part} or Horse{Part}? */
+
+    item Horse_Head {
 		DisplayCategory = AnimalPart,
         Weight = 2.5,
         Type = Food,
@@ -17,8 +14,7 @@ module HorseMod
         WorldStaticModel = HorseHead,
     }
 
-    item Horse_Skull
-    {
+    item Horse_Skull {
         DisplayCategory = AnimalPart,
         Weight = 1.2,
         Type = Normal,
@@ -29,9 +25,7 @@ module HorseMod
         WorldStaticModel = HorseSkull,
     }
 
-
-    item HorseSteak 
-    {
+    item HorseSteak {
         Type = Food,
         DisplayName = Horse Steak,
         DisplayCategory = Food,
@@ -59,8 +53,7 @@ module HorseMod
         WorldStaticModel = HorseSteak,
     }
 
-    item HorseHoof
-    {
+    item HorseHoof {
         DisplayCategory = AnimalPart,
         Weight = 0.5,
         Type = Normal,
