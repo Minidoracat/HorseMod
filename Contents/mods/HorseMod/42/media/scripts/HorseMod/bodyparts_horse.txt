@@ -59,5 +59,19 @@ module HorseMod {
         Type = Normal,
         DisplayName = Horse Hoof,
         Icon = HorseHoof,
+		StaticModel = HorseHoof,
+		WorldStaticModel = HorseHoof,
+    }
+
+    item Dung_Horse
+    {
+        DisplayCategory = Junk,
+        Weight = 0.5,
+        Type = Food,
+        CantEat = true,
+        Tags = isCompostable,
+        Icon = Dung_Horse,
+        WorldStaticModel = Dung_Horse,
+        IsDung = true,
     }
 }
