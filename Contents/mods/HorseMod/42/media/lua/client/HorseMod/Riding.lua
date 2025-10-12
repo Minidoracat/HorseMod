@@ -1,29 +1,120 @@
 require("TimedActions/ISPathFindAction")
 
-local ISMountHorse = require("HorseMod/player/ISMountHorse")
-local ISDismountHorse = require("HorseMod/player/ISDismountHorse")
+local MountHorseAction = require("HorseMod/player/MountHorseAction")
+local DismountHorseAction = require("HorseMod/player/DismountHorseAction")
 local HorseUtils = require("HorseMod/Utils")
+
+
+---@class MountPair
+---@field rider IsoPlayer
+---@field mount IsoAnimal
+local MountPair = {}
+MountPair.__index = MountPair
+
+
+---@param key string
+---@param value number | boolean
+function MountPair:setAnimationVariable(key, value)
+    self.rider:setVariable(key, value)
+    self.mount:setVariable(key, value)
+end
+
+
+-- TODO: how much of this is even needed??
+
+function MountPair:breakPair()
+    self:setAnimationVariable("RidingHorse", false)
+    self:setAnimationVariable("HorseTrot", false)
+
+    local attached = self.rider:getAttachedAnimals()
+    attached:remove(self.mount)
+    self.mount:getData():setAttachedPlayer(nil)
+
+    self.mount:getBehavior():setBlockMovement(false)
+    self.mount:getPathFindBehavior2():reset()
+
+    self.rider:setVariable("HorseTrot", false)
+    self.rider:setAllowRun(true)
+    self.rider:setAllowSprint(true)
+    self.rider:setTurnDelta(1)
+    self.rider:setSneaking(false)
+
+    self.mount:setVariable("bPathfind", false)
+    self.mount:setVariable("animalWalking", false)
+    self.mount:setVariable("animalRunning", false)
+
+    self.rider:setVariable("MountingHorse", false)
+    self.rider:setVariable("isTurningLeft", false)
+    self.rider:setVariable("isTurningRight", false)
+end
+
+
+function MountPair:make()
+    self.rider:getAttachedAnimals():add(self.mount)
+    self.mount:getData():setAttachedPlayer(self.rider)
+
+    self:setAnimationVariable("RidingHorse", true)
+    self:setAnimationVariable("HorseTrot", false)
+    self.rider:setAllowRun(false)
+    self.rider:setAllowSprint(false)
+
+    self.rider:setTurnDelta(0.65)
+
+    self.rider:setVariable("isTurningLeft", false)
+    self.rider:setVariable("isTurningRight", false)
+
+    local geneSpeed = self.mount:getUsedGene("speed"):getCurrentValue()
+    self.rider:setVariable("geneSpeed", geneSpeed)
+
+    self.mount:getPathFindBehavior2():reset()
+    self.mount:getBehavior():setBlockMovement(true)
+    self.mount:stopAllMovementNow()
+
+    self.mount:setVariable("bPathfind", false)
+    self.mount:setVariable("animalWalking", false)
+    self.mount:setVariable("animalRunning", false)
+
+    -- TODO: are these even needed
+    self.mount:setWild(false)
+    self.mount:setVariable("isHorse", true)
+end
+
+
+---@param rider IsoPlayer
+---@param mount IsoAnimal
+---@return self
+---@nodiscard
+function MountPair.new(rider, mount)
+    return setmetatable(
+        {
+            rider = rider,
+            mount = mount
+        },
+        MountPair
+    )
+end
+
+
+---@param p IsoPlayer
+---@return integer
+---@nodiscard
+local function pid(p)
+    return p and p:getPlayerNum() or -1
+end
 
 
 local HorseRiding = {}
 
----@type {[integer]: IsoAnimal | nil}
+---@type {[integer]: MountPair | nil}
 HorseRiding.playerMounts = {}
-
----@type {[integer]: IsoAnimal | nil}
-HorseRiding.lastMounted = {}
 
 
 ---@param animal IsoAnimal
 ---@return boolean
 ---@nodiscard
 function HorseRiding.isMountableHorse(animal)
-    if not animal then
-        return false
-    end
-
-    local t = animal:getAnimalType()
-    return t == "stallion" or t == "mare"
+    local type = animal:getAnimalType()
+    return type == "stallion" or type == "mare"
 end
 
 
@@ -44,7 +135,20 @@ end
 ---@return IsoAnimal | nil
 ---@nodiscard
 function HorseRiding.getMountedHorse(player)
-    return HorseRiding.playerMounts[pid(player)]
+    local pairing = HorseRiding.playerMounts[pid(player)]
+    if not pairing then
+        return nil
+    end
+
+    return pairing.mount
+end
+
+
+---@param rider IsoPlayer
+---@return MountPair | nil
+---@nodiscard
+function HorseRiding.getMountPair(rider)
+    return HorseRiding.playerMounts[pid(rider)]
 end
 
 
@@ -123,28 +227,18 @@ function HorseRiding.mountHorse(player, horse)
         ISPathFindAction.stop(self)
     end
 
-    local saddle = HorseUtils.horseHasSaddleItem(horse)
+    local saddle = HorseUtils.getSaddle(horse)
+
+    local pairing = MountPair.new(player, horse)
 
     path:setOnComplete(function()
         cleanup()
         player:setDir(lockDir)
-        local action = ISMountHorse:new(player, horse, side, saddle)
+        local action = MountHorseAction:new(pairing, side, saddle)
 
         action.onMounted = function()
-            HorseRiding.playerMounts[player:getPlayerNum()] = horse
-            HorseRiding.lastMounted[player:getPlayerNum()]  = horse
-            player:setTurnDelta(0.65)
+            HorseRiding.playerMounts[pid(player)] = pairing
             Events.OnTick.Remove(lockTick)
-        end
-
-        action.onCanceled = function()
-            horse:getBehavior():setBlockMovement(false)
-            horse:setVariable("RidingHorse", false)
-            player:setVariable("RidingHorse", false)
-            player:setVariable("MountingHorse", false)
-            player:setVariable("isTurningLeft", false)
-            player:setVariable("isTurningRight", false)
-            player:setTurnDelta(1)
         end
         ISTimedActionQueue.add(action)
     end)
@@ -155,8 +249,12 @@ end
 ---@param player IsoPlayer
 function HorseRiding.dismountHorse(player)
     local id = player:getPlayerNum()
-    local horse = HorseRiding.playerMounts[id]
-    if not horse then return end
+    local pair = HorseRiding.getMountPair(player)
+    if not pair then
+        return
+    end
+
+    local horse = pair.mount
 
     horse:getPathFindBehavior2():reset()
 
@@ -177,11 +275,16 @@ function HorseRiding.dismountHorse(player)
     if dl < dr then side, tx, ty, tz = "left", lpos:x(), lpos:y(), lpos:z() end
 
     local function centerBlocked(nx, ny, nz)
-        local sq = getCell():getGridSquare(math.floor(nx), math.floor(ny), nz or horse:getZ())
-        if not sq then return true end
-        if sq:isSolid() or sq:isSolidTrans() then return true end
+        local sq = getSquare(nx, ny, nz)
+        if not sq then
+            return true
+        end
+        if sq:isSolid() or sq:isSolidTrans() then
+            return true 
+        end
         return false
     end
+
     if centerBlocked(tx, ty, tz) then
         local ox = (side=="right") and lpos:x() or rpos:x()
         local oy = (side=="right") and lpos:y() or rpos:y()
@@ -196,33 +299,22 @@ function HorseRiding.dismountHorse(player)
         end
     end
 
-    local saddleItem = HorseUtils.horseHasSaddleItem(horse)
+    local saddleItem = HorseUtils.getSaddle(horse)
 
     player:setDir(lockDir)
 
-    local action = ISDismountHorse:new(
-        player,
-        horse,
+    local action = DismountHorseAction:new(
+        pair,
         side,
         saddleItem,
         tx,
         ty,
-        tz,
-        200
+        tz
     )
 
     action.onComplete = function()
         HorseRiding._clearRideCache(player:getPlayerNum())
-        player:faceThisObject(horse)
-
-        player:setVariable("HorseTrot", false)
-        player:setAllowRun(true)
-        player:setAllowSprint(true)
-        player:setTurnDelta(1)
-        player:setSneaking(false)
-
         HorseRiding.playerMounts[id] = nil
-        HorseRiding.lastMounted[id] = horse
     end
 
     ISTimedActionQueue.add(action)
@@ -234,13 +326,13 @@ local function toggleTrot(key)
     if key ~= Keyboard.KEY_X then return end
 
     local player = getSpecificPlayer(0)
-    local horse = HorseRiding.getMountedHorse(player)
-    if horse and player:getVariableBoolean("RidingHorse") then
-        local current = horse:getVariableBoolean("HorseTrot")
+    local mountPair = HorseRiding.getMountPair(player)
+    if mountPair and player:getVariableBoolean("RidingHorse") then
+        local current = mountPair.mount:getVariableBoolean("HorseTrot")
 
-        horse:setVariable("HorseTrot", not current)
-        player:setVariable("HorseTrot", not current)
+        mountPair:setAnimationVariable("HorseTrot", not current)
 
+        -- TODO: why is this this way? are the values supposed to be different?
         if current == true then
             player:setTurnDelta(0.65)
         else
@@ -256,17 +348,21 @@ Events.OnKeyPressed.Add(toggleTrot)
 local function horseJump(key)
     local options = PZAPI.ModOptions:getOptions("HorseMod")
     local jumpKey = Keyboard.KEY_SPACE
+
     if options then
+        -- TODO: move mod options to a module
         local opt = options:getOption("HorseJumpButton")
-        if opt and opt.getValue then jumpKey = opt:getValue() end
+        assert(opt ~= nil and opt.type == "keybind")
+        ---@cast opt umbrella.ModOptions.Keybind
+        jumpKey = opt:getValue()
     end
+
     if key ~= jumpKey then return end
 
     local player = getSpecificPlayer(0)
-    local horse = HorseRiding.getMountedHorse(player)
-    if horse and player:getVariableBoolean("RidingHorse") and horse:getVariableBoolean("HorseGallop") then
-        horse:setVariable("HorseJump", true)
-        player:setVariable("HorseJump", true)
+    local mountPair = HorseRiding.getMountPair(player)
+    if mountPair and player:getVariableBoolean("RidingHorse") and mountPair.mount:getVariableBoolean("HorseGallop") then
+        mountPair:setAnimationVariable("HorseJump", true)
     end
 end
 
