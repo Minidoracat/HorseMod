@@ -1,5 +1,6 @@
 local HorseRiding = require("HorseMod/Riding")
 local Stamina = require("HorseMod/Stamina")
+local HorseUtils = require("HorseMod/Utils")
 
 
 local WALK_SPEED = 0.05      -- tiles/sec
@@ -21,7 +22,14 @@ local TURN_STEPS_PER_SEC = 14
 local turnAcc, lastTurnSign, prevFacedDir = {}, {}, {}
 local curSpeed, rideInit = {}, {}
 
-local PLAYER_SYNC_TUNER = 0.96
+local PLAYER_SYNC_TUNER = 0.8
+
+local REINS_MODELS = {
+    idle = "HorseMod.Horse_Reins",
+    walking = "HorseMod.Horse_ReinsWalking",
+    trot = "HorseMod.Horse_ReinsTroting",
+    gallop = "HorseMod.Horse_ReinsRunning",
+}
 
 local screenVecToDir = {
     ["0,-1"]  = IsoDirections.NW,
@@ -58,6 +66,13 @@ local JOY_DEADZONE        = 0.30   -- ignore tiny stick drift
 local JOY_DIGITAL_THRESH  = 0.55   -- cross this to count as -1 / +1 on that axis
 local JOY_USE_DPAD        = true   -- also read POV/D-pad if stick is neutral
 local lastJoypadA = {}
+
+local function updateHorseReinsModel(horse, state, reinsItem)
+    local model = REINS_MODELS[state]
+    print("Reins item: ", reinsItem)
+    reinsItem:setStaticModel(model)
+    horse:resetEquippedHandsModels()
+end
 
 local function axisToSign(v)
     if math.abs(v) < JOY_DEADZONE then return 0 end
@@ -794,6 +809,23 @@ Events.OnPlayerUpdate.Add(function(player)
     current = approach(current, target, rate, dt)
     if current < 0.0001 then current = 0 end
     curSpeed[id] = current
+
+    local movementState
+    if not moving or current <= 0 then
+        movementState = "idle"
+    elseif run then
+        movementState = "gallop"
+    elseif trotting then
+        movementState = "trot"
+    else
+        movementState = "walking"
+    end
+
+    local reinsItem = HorseUtils.getReins(horse)
+
+    if reinsItem then
+        updateHorseReinsModel(horse, movementState, reinsItem)
+    end
 
     if moving and current > 0 then
         local v = dirMove[facedDir]

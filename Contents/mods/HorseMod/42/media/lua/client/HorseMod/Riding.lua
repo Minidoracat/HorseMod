@@ -53,6 +53,13 @@ function MountPair:make()
     self.rider:getAttachedAnimals():add(self.mount)
     self.mount:getData():setAttachedPlayer(self.rider)
 
+    local reins = HorseUtils.getReins(self.mount)
+    if reins then
+        self:setAnimationVariable("HasReins", true)
+    else
+        self:setAnimationVariable("HasReins", false)
+    end
+
     self:setAnimationVariable("RidingHorse", true)
     self:setAnimationVariable("HorseTrot", false)
     self.rider:setAllowRun(false)
@@ -73,10 +80,6 @@ function MountPair:make()
     self.mount:setVariable("bPathfind", false)
     self.mount:setVariable("animalWalking", false)
     self.mount:setVariable("animalRunning", false)
-
-    -- TODO: are these even needed
-    self.mount:setWild(false)
-    self.mount:setVariable("isHorse", true)
 end
 
 
@@ -330,15 +333,7 @@ local function toggleTrot(key)
     local mountPair = HorseRiding.getMountPair(player)
     if mountPair and player:getVariableBoolean("RidingHorse") then
         local current = mountPair.mount:getVariableBoolean("HorseTrot")
-
         mountPair:setAnimationVariable("HorseTrot", not current)
-
-        -- TODO: why is this this way? are the values supposed to be different?
-        if current == true then
-            player:setTurnDelta(0.65)
-        else
-            player:setTurnDelta(0.65)
-        end
     end
 end
 

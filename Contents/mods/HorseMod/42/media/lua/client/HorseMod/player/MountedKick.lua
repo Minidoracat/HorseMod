@@ -87,7 +87,6 @@ local function horseKick(key)
 
     local zHp = closest:getHealth()
     if zHp > 0 then
-        closest:setHealth(zHp * 0.99)
         if closest.knockDown then
             closest:knockDown(true)
         end

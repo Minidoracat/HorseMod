@@ -68,21 +68,18 @@ HorseUtils.getSaddle = function(animal)
     local saddle = HorseUtils.getAttachedItem(animal, "Saddle")
     if not saddle then
         return nil
-    end
-
-    local ft = saddle:getFullType()
-
-    -- TODO: why are we checking this here? just don't let the animal equip an item that isn't a saddle
-    if ft:lower():find("saddle", 1, true) then
+    else
         return saddle
     end
+end
 
-    -- FIXME: this doesn't exist ????
-    --  this is preferable to the string check !
-    -- if HorseMod.SADDLES[ft] then
-    --     return saddle 
-    -- end
-    return nil
+HorseUtils.getReins = function(animal)
+    local reins = HorseUtils.getAttachedItem(animal, "Reins")
+    if not reins then
+        return nil
+    else
+        return reins
+    end
 end
 
 
