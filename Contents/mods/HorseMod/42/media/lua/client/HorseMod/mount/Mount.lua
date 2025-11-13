@@ -109,7 +109,9 @@ function Mount:getCurrentInput()
             x = x,
             y = y
         },
-        run = run
+        run = run,
+        -- FIXME: Change this when fixing the mod option keybinds
+        trot = self.pair.mount:getVariableBoolean("HorseTrot"),
     }
 end
 

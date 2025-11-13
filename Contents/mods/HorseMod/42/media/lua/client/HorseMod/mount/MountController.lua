@@ -1,4 +1,5 @@
 local Stamina = require("HorseMod/Stamina")
+local HorseUtils = require("HorseMod/Utils")
 
 
 function GetSpeeds()
@@ -368,6 +369,25 @@ local function dirDist4(first, second)
 end
 
 
+local TWO_PI = math.pi * 2
+
+local function wrapAnglePi(angle)
+    angle = (angle + math.pi) % TWO_PI
+    if angle < 0 then
+        angle = angle + TWO_PI
+    end
+
+    return angle - math.pi
+end
+
+
+---@param direction IsoDirections
+---@return number
+local function directionToAngle(direction)
+    return Vector2.getDirection(direction:dx(), direction:dy())
+end
+
+
 local WALK_SPEED = 0.05      -- tiles/sec
 local TROT_MULT  = 1.1
 local RUN_SPEED  = 4.5       -- tiles/sec
@@ -382,7 +402,7 @@ local DECEL_DOWN = 36.0
 local TURN_STEPS_PER_SEC = 14
 
 
-local PLAYER_SYNC_TUNER = 0.96
+local PLAYER_SYNC_TUNER = 0.8
 
 
 
@@ -413,6 +433,7 @@ MountController.__index = MountController
 ---@class MountController.Input
 ---@field movement {x: number, y: number}
 ---@field run boolean
+---@field trot boolean
 
 
 ---@param input MountController.Input
@@ -447,19 +468,28 @@ function MountController:turn(input, deltaTime)
         turns = 0
         self.turnAcceleration = 0
     elseif absoluteTurnDistance ~= 4 then
-        -- we don't want to change turning direction druing a 180
+        -- we don't want to change turning direction during a 180
         shouldTurnRight = turnDistance > 0
+    else
+        local rider = self.mount.pair.rider
+        local currentAngle = rider:getAnimAngleRadians()
+        if not currentAngle then
+            currentAngle = directionToAngle(currentDirection)
+        end
+
+        local targetAngle = directionToAngle(targetDirection)
+        local delta = wrapAnglePi(targetAngle - currentAngle)
+
+        if delta ~= 0 then
+            shouldTurnRight = delta > 0
+        end
     end
 
     if turns >= 1 then
         if shouldTurnRight then
-            currentDirection = currentDirection:RotRight(
-                turns
-            )
+            currentDirection = currentDirection:RotRight(turns)
         else
-            currentDirection = currentDirection:RotLeft(
-                turns
-            )
+            currentDirection = currentDirection:RotLeft(turns)
         end
         self.turnAcceleration = self.turnAcceleration % 1
     end
@@ -490,6 +520,15 @@ function MountController:updateStamina(input, deltaTime)
     end
 
     Stamina.modify(self.mount.pair.mount, staminaChange * deltaTime, true)
+end
+
+---@param mount IsoAnimal
+---@param state string
+---@param reinsItem InventoryItem
+function MountController:updateHorseReinsModel(mount, state, reinsItem)
+    local model = HorseUtils.REINS_MODELS[state]
+    reinsItem:setStaticModel(model)
+    mount:resetEquippedHandsModels()
 end
 
 
@@ -589,6 +628,23 @@ function MountController:update(input)
     self.currentSpeed = approach(self.currentSpeed, target, rate, deltaTime)
     if self.currentSpeed < 0.0001 then self.currentSpeed = 0 end
     self.currentSpeed = self.currentSpeed
+
+    local movementState
+    if not moving or self.currentSpeed <= 0 then
+        movementState = "idle"
+    elseif input.run then
+        movementState = "gallop"
+    elseif input.trot then
+        movementState = "trot"
+    else
+        movementState = "walking"
+    end
+
+    local reinsItem = HorseUtils.getReins(self.mount.pair.mount)
+
+    if reinsItem then
+        self:updateHorseReinsModel(self.mount.pair.mount, movementState, reinsItem)
+    end
 
     if moving and self.currentSpeed > 0 then
         local currentDirection = self.mount.pair.mount:getDir()

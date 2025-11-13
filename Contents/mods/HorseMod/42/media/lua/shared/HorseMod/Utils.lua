@@ -73,6 +73,9 @@ HorseUtils.getSaddle = function(animal)
     end
 end
 
+---@param animal IsoAnimal
+---@return InventoryItem | nil
+---@nodiscard
 HorseUtils.getReins = function(animal)
     local reins = HorseUtils.getAttachedItem(animal, "Reins")
     if not reins then
@@ -81,6 +84,13 @@ HorseUtils.getReins = function(animal)
         return reins
     end
 end
+
+HorseUtils.REINS_MODELS = {
+    idle = "HorseMod.Horse_Reins",
+    walking = "HorseMod.Horse_ReinsWalking",
+    trot = "HorseMod.Horse_ReinsTroting",
+    gallop = "HorseMod.Horse_ReinsRunning",
+}
 
 
 return HorseUtils
