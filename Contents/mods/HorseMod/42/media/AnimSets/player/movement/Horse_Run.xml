@@ -9,7 +9,7 @@
     <m_SpeedScale>HorseRunSpeed</m_SpeedScale>
     <m_Scalar>geneSpeed</m_Scalar>
     <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
-    <m_EarlyTransitionOut>true</m_EarlyTransitionOut>
+    <m_EarlyTransitionOut>false</m_EarlyTransitionOut>
     <m_Conditions>
         <m_Name>RidingHorse</m_Name>
         <m_Type>BOOL</m_Type>

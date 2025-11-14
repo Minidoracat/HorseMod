@@ -8,10 +8,11 @@ local Stamina = {}
 
 -- Tunables (percent points per second)
 Stamina.MAX            = 100
-Stamina.DRAIN_RUN      = 6      -- while galloping
+Stamina.DRAIN_RUN      = 3      -- while galloping
 Stamina.REGEN_TROT     = 1.5     -- moving w/ HorseTrot true
 Stamina.REGEN_WALK     = 3.0     -- moving but not running/trotting
 Stamina.REGEN_IDLE     = 6.0     -- standing still
+Stamina.MIN_RUN_PERCENT = 0.15
 
 
 ---@param x number
@@ -20,7 +21,7 @@ Stamina.REGEN_IDLE     = 6.0     -- standing still
 ---@return number
 ---@nodiscard
 local function clamp(x, a, b)
-    return (x < a) and a 
+    return (x < a) and a
         or ((x > b) and b or x)
 end
 
@@ -79,10 +80,42 @@ end
 
 
 ---@param horse IsoAnimal
+---@param input MountController.Input
+---@param moving boolean
 ---@return boolean
 ---@nodiscard
-function Stamina.canRun(horse)
-    return Stamina.get(horse) > 10.0
+function Stamina.canRun(horse, input, moving)
+    local stamina = Stamina.get(horse)
+    local minRunStamina = Stamina.MAX * Stamina.MIN_RUN_PERCENT
+    local wantsRun = input.run and true or false
+    local runAllowed = false
+    local isGalloping = horse:getVariableBoolean("HorseGallop")
+    local needsStaminaRecovery = false
+
+    if isGalloping then
+        -- In some cases the stamina bottoms out at 0.05
+        if wantsRun and moving and stamina >= 0.1 then
+            runAllowed = true
+        else
+            isGalloping = false
+            if stamina <= minRunStamina then
+                needsStaminaRecovery = true
+            end
+        end
+    end
+
+    if not isGalloping then
+        if needsStaminaRecovery and stamina >= minRunStamina then
+            needsStaminaRecovery = false
+        end
+
+        if wantsRun and moving and not needsStaminaRecovery and stamina >= minRunStamina then
+            isGalloping = true
+            runAllowed = true
+        end
+    end
+    print("Stamina: ", Stamina.get(horse))
+    return runAllowed
 end
 
 

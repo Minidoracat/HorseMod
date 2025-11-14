@@ -399,7 +399,9 @@ local TREES_LINGER_SECONDS = 1.0   -- keep slowdown for 1s after leaving trees
 local ACCEL_UP   = 12.0
 local DECEL_DOWN = 36.0
 
-local TURN_STEPS_PER_SEC = 14
+-- low value causes player to turn before horse which causes animation desync
+-- no noticeable performance impact from having it high
+local TURN_STEPS_PER_SEC = 60
 
 
 local PLAYER_SYNC_TUNER = 0.8
@@ -547,14 +549,17 @@ function MountController:update(input)
     local moving = (input.movement.x ~= 0 or input.movement.y ~= 0)
 
     -- Prevent running at zero stamina
-    if not Stamina.canRun(self.mount.pair.mount) then
+    if not Stamina.canRun(self.mount.pair.mount, input, moving) then
         input.run = false
+    else
+        input.run = true
     end
 
     self:updateStamina(input, deltaTime)
     self:turn(input, deltaTime)
 
-    local walkMul, gallopMul = GetSpeeds()
+    local walkMul, gallopRawSpeed = GetSpeeds()
+    local gallopMul = gallopRawSpeed
 
     local baseGene = getBaseGeneSpeed(self.mount.pair.mount) or 1.0
     local isTree, isHedge, isBush = detectVegetation(self.mount.pair.rider)
@@ -611,16 +616,21 @@ function MountController:update(input)
 
     if input.run then
         local f = Stamina.runSpeedFactor(self.mount.pair.mount)
-        gallopMul = gallopMul * f
+        if f < 0.35 then
+            gallopMul = 0.35
+        else
+            gallopMul = gallopMul * f
+        end
     end
+    print("gallop speed: ", gallopMul)
 
     self.mount.pair.mount:setVariable("HorseWalkSpeed", walkMul)
     self.mount.pair.mount:setVariable("HorseTrotSpeed",  walkMul * TROT_MULT)
-    self.mount.pair.mount:setVariable("HorseRunSpeed",  gallopMul)
+    self.mount.pair.mount:setVariable("HorseRunSpeed", gallopRawSpeed)
 
     self.mount.pair.rider:setVariable("HorseWalkSpeed", walkMul * PLAYER_SYNC_TUNER)
     self.mount.pair.rider:setVariable("HorseTrotSpeed",  walkMul * TROT_MULT * PLAYER_SYNC_TUNER)
-    self.mount.pair.rider:setVariable("HorseRunSpeed",  gallopMul * PLAYER_SYNC_TUNER)
+    self.mount.pair.rider:setVariable("HorseRunSpeed", gallopRawSpeed * PLAYER_SYNC_TUNER)
 
     -- speed/locomotion
     local target  = (moving and (input.run and RUN_SPEED * gallopMul or WALK_SPEED * walkMul)) or 0.0
