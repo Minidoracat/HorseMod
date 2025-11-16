@@ -2,15 +2,24 @@ local Stamina = require("HorseMod/Stamina")
 local HorseUtils = require("HorseMod/Utils")
 
 
-function GetSpeeds()
-    local options = PZAPI.ModOptions:getOptions("HorseMod")
-    if not options then return 1.0 end
-    -- TODO: replace mod options with sandbox options
-    local walk = options:getOption("HorseWalkSpeed"):getValue()
-    local gallop = options:getOption("HorseGallopSpeed"):getValue()
-    if walk and gallop then return walk, gallop end
-    return 1.0
+---@param state "walk"|"gallop"
+---@return number
+---@nodiscard
+local function getSpeed(state)
+    if state == "walk" then
+        return SandboxVars.HorseMod.WalkSpeed
+    else
+        return SandboxVars.HorseMod.GallopSpeed
+    end
 end
+
+
+---@deprecated Use getSpeed("walk"), getSpeed("gallop") instead.
+---@return number, number
+function GetSpeeds()
+    return getSpeed("walk"), getSpeed("gallop")
+end
+
 
 local function getBaseGeneSpeed(horse)
     local md = horse:getModData()
@@ -561,7 +570,8 @@ function MountController:update(input)
     self:updateStamina(input, deltaTime)
     self:turn(input, deltaTime)
 
-    local walkMul, gallopRawSpeed = GetSpeeds()
+    local walkMul = getSpeed("walk")
+    local gallopRawSpeed = getSpeed("gallop")
     local gallopMul = gallopRawSpeed
 
     local baseGene = getBaseGeneSpeed(self.mount.pair.mount) or 1.0
