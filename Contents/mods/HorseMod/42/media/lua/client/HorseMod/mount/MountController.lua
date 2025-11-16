@@ -561,7 +561,7 @@ function MountController:update(input)
     local moving = (input.movement.x ~= 0 or input.movement.y ~= 0)
 
     -- Prevent running at zero stamina
-    if not Stamina.canRun(self.mount.pair.mount, input, moving) then
+    if not Stamina.shouldRun(self.mount.pair.mount, input, moving) then
         input.run = false
     else
         input.run = true

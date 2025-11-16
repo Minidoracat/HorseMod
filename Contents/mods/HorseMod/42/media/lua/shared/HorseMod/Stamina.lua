@@ -84,7 +84,7 @@ end
 ---@param moving boolean
 ---@return boolean
 ---@nodiscard
-function Stamina.canRun(horse, input, moving)
+function Stamina.shouldRun(horse, input, moving)
     local stamina = Stamina.get(horse)
     local minRunStamina = Stamina.MAX * Stamina.MIN_RUN_PERCENT
     local wantsRun = input.run and true or false
