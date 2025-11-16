@@ -67,7 +67,6 @@ function Mount:getCurrentInput()
             end
         end
 
-        local run = false
         local rb = getJoypadRBumper(pad)
         if rb ~= -1 and isJoypadPressed(pad, rb) then
             run = true
