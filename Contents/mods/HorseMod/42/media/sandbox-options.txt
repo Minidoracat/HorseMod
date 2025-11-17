@@ -15,5 +15,5 @@ option HorseMod.GallopSpeed {
     max = 10,
     default = 1,
     page = HorseMod,
-    translation = HorseMod_WalkSpeed,
+    translation = HorseMod_GallopSpeed,
 }
