@@ -675,7 +675,7 @@ function MountController:update(input)
         self.mount.pair.mount:setVariable("animalWalking", false)
     end
 
-    local mirrorVars =  { "HorseGalloping","isTurningLeft","isTurningRight" }
+    local mirrorVars =  { "HorseGalloping","GallopToIdlePlayer","isTurningLeft","isTurningRight" }
     for i = 1, #mirrorVars do
         local k = mirrorVars[i]
         local v = self.mount.pair.mount:getVariableBoolean(k)

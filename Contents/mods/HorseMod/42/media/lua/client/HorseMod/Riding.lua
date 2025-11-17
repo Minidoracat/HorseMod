@@ -29,6 +29,14 @@ function HorseRiding.canMountHorse(player, horse)
         return false
     end
 
+    if horse:isDead() then
+        return false
+    end
+
+    if horse:isOnHook() then
+        return false
+    end
+
     return HorseRiding.isMountableHorse(horse)
 end
 
