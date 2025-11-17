@@ -11,8 +11,8 @@ module HorseMod {
         Icon = items/HorseSaddle,
         BloodLocation = Head,
         BodyLocation = Hat,
-        StaticModel = Horse_Saddle1,
-        WorldStaticModel = Horse_Saddle1_World,
+        StaticModel = Horse_Saddle,
+        WorldStaticModel = Horse_Saddle_World,
         RequiresEquippedBothHands = true,
         ReplaceInPrimaryHand = Horse_Saddle_Hands Horse_HoldingSaddle,
     }
@@ -25,7 +25,7 @@ module HorseMod {
         Icon = items/HorseSaddle,
         BodyLocation = Hat,
         StaticModel = Horse_Reins,
-        WorldStaticModel = Horse_Reins,
+        WorldStaticModel = Horse_Reins_World,
     }
 
     item HorseSaddleBags {

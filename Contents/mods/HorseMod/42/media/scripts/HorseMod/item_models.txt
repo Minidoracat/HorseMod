@@ -1,8 +1,8 @@
 module HorseMod {
 
-    model Horse_Saddle1 {
-        mesh = HorseMod/HorseSaddle1,
-        texture = Items/Saddle1_tex,
+    model Horse_Saddle {
+        mesh = HorseMod/HorseSaddle,
+        texture = Items/HorseSaddle_Brown,
         static = true,
         scale = 1,
         attachment Bip01_Prop1 {
@@ -12,16 +12,16 @@ module HorseMod {
         }
     }
 
-    model Horse_Saddle1_World {
+    model Horse_Saddle_World {
         mesh = HorseMod/HorseSaddle_Ground,
-        texture = Items/Saddle1_tex,
+        texture = Items/HorseSaddle_Brown,
         static = true,
         scale = 1,
     }
 
     model Horse_Reins {
         mesh = HorseMod/HorseReins,
-        texture = Items/HorseReins,
+        texture = Items/HorseReinsBrown,
         static = true,
         scale = 1,
         attachment world {
@@ -31,9 +31,21 @@ module HorseMod {
         }
     }
 
+    model Horse_Reins_World {
+        mesh = HorseMod/HorseReins_Ground,
+        texture = Items/HorseReinsBrown,
+        static = true,
+        scale = 1,
+        attachment world {
+            offset = -0.0000 0.0000 0.0000,
+            rotate = -0.0000 0.0000 0.0000,
+            scale = 1,
+        }
+    }
+
     model Horse_ReinsWalking {
         mesh = HorseMod/HorseReinsWalking,
-        texture = Items/HorseReins,
+        texture = Items/HorseReinsBrown,
         static = true,
         scale = 1,
         attachment world {
@@ -45,7 +57,7 @@ module HorseMod {
 
     model Horse_ReinsTroting {
         mesh = HorseMod/HorseReinsTroting,
-        texture = Items/HorseReins,
+        texture = Items/HorseReinsBrown,
         static = true,
         scale = 1,
         attachment world {
@@ -57,7 +69,7 @@ module HorseMod {
 
     model Horse_ReinsRunning {
         mesh = HorseMod/HorseReinsRunning,
-        texture = Items/HorseReins,
+        texture = Items/HorseReinsBrown,
         static = true,
         scale = 1,
         attachment world {
@@ -69,7 +81,7 @@ module HorseMod {
 
     model Horse_SaddleBags {
         mesh = HorseMod/HorseSaddlebags,
-        texture = Items/SaddleBags1_tex,
+        texture = Items/HorseSaddlebags_Brown,
         static = true,
         scale = 1,
         attachment world {
@@ -81,7 +93,7 @@ module HorseMod {
 
     model Horse_SaddleBagsInvis {
         mesh = HorseMod/HorseSaddlebags,
-        texture = Items/SaddleBags1_tex,
+        texture = Items/HorseSaddlebags_Brown,
         static = true,
         scale = 0,
     }

@@ -222,7 +222,7 @@ local function addRandomDamageFromZombieOnParts(zombie, hitReaction, parts)
     return true
 end
 
-local allowedDamageParts = allowedDamageParts or {
+local allowedDamageParts = {
     BodyPartType.Foot_L,
     BodyPartType.Foot_R,
     BodyPartType.LowerLeg_L,
