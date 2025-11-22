@@ -62,8 +62,8 @@ maneMid5:setAttachmentName("maneMid5")
 maneEnd:setAttachmentName("maneEnd")
 
 HorseAttachmentLocations.SADDLEBAG_SLOT = "Saddlebags"
-HorseAttachmentLocations.SADDLEBAG_FULLTYPE = "HorseMod.HorseSaddleBags"
-HorseAttachmentLocations.SADDLEBAG_CONTAINER_TYPE = "HorseMod.HorseSaddleBagsContainer"
+HorseAttachmentLocations.SADDLEBAG_FULLTYPE = "HorseMod.HorseSaddlebags"
+HorseAttachmentLocations.SADDLEBAG_CONTAINER_TYPE = "HorseMod.HorseSaddlebagsContainer"
 
 HorseAttachmentLocations.MANE_ITEM_BY_SLOT = {
     ManeStart = "HorseMod.HorseManeStart",
@@ -117,10 +117,25 @@ HorseAttachmentLocations.SLOTS = {
 ---@return HorseAttachmentItemsMap
 function HorseAttachmentLocations.defaultItems()
     return {
-        ["HorseMod.HorseSaddle"] = { slot = "Saddle" },
-        ["HorseMod.HorseBackpack"] = { slot = "Saddle" },
-        ["HorseMod.HorseSaddleBags"] = { slot = "Saddlebags" },
-        ["HorseMod.HorseReins"] = { slot = "Reins" },
+        -- saddles
+        ["HorseMod.HorseSaddle_Crude"] = { slot = "Saddle" },
+        ["HorseMod.HorseSaddle_Black"] = { slot = "Saddle" },
+        ["HorseMod.HorseSaddle_CowHolstein"] = { slot = "Saddle" },
+        ["HorseMod.HorseSaddle_CowSimmental"] = { slot = "Saddle" },
+        ["HorseMod.HorseSaddle_White"] = { slot = "Saddle" },
+
+        -- saddlebags
+        ["HorseMod.HorseSaddlebags_Crude"] = { slot = "Saddlebags" },
+        ["HorseMod.HorseSaddlebags_Black"] = { slot = "Saddlebags" },
+        ["HorseMod.HorseSaddlebags_CowHolstein"] = { slot = "Saddlebags" },
+        ["HorseMod.HorseSaddlebags_CowSimmental"] = { slot = "Saddlebags" },
+        ["HorseMod.HorseSaddlebags_White"] = { slot = "Saddlebags" },
+
+        ["HorseMod.HorseReins_Crude"] = { slot = "Reins" },
+        ["HorseMod.HorseReins_Black"] = { slot = "Reins" },
+        ["HorseMod.HorseReins_Brown"] = { slot = "Reins" },
+        ["HorseMod.HorseReins_White"] = { slot = "Reins" },
+
         ["HorseMod.HorseManeStart"] = { slot = "ManeStart" },
         ["HorseMod.HorseManeMid"]   = { slot = "ManeMid1" },
         ["HorseMod.HorseManeEnd"]   = { slot = "ManeEnd" },

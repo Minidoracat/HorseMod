@@ -624,8 +624,16 @@ end
 ---@param reinsItem InventoryItem
 ---@param state string
 function MountController:setReinsState(mount, reinsItem, state)
-    local model = HorseUtils.REINS_MODELS[state]
+    -- retrieve model states associated to the reins model
+    local fullType = reinsItem:getFullType()
+    local reinModels = HorseUtils.REINS_MODELS[fullType]
+    assert(reinModels ~= nil, "No reins models for item " .. tostring(fullType))
+
+    -- retrieve the model associated to the current state
+    local model = reinModels[state]
     assert(model ~= nil, "No reins model for state " .. tostring(state))
+    
+    -- apply state model
     reinsItem:setStaticModel(model)
     mount:resetEquippedHandsModels()
 end

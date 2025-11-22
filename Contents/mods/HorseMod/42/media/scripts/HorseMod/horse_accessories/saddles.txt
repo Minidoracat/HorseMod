@@ -1,0 +1,131 @@
+module HorseMod {
+    imports {
+        Base
+    }
+
+	/* CRUDE */
+	item HorseSaddle_Crude {
+        DisplayCategory = Accessory,
+        Type = Normal,
+        Weight = 5,
+        Icon = items/HorseSaddle_Crude,
+        StaticModel = HorseSaddle_Crude,
+        WorldStaticModel = HorseSaddle_World_Crude,
+        RequiresEquippedBothHands = true,
+        ReplaceInPrimaryHand = Horse_Saddle_Hands Horse_HoldingSaddle,
+    }
+	model HorseSaddle_Crude {
+        mesh = HorseMod/HorseSaddle,
+        texture = Items/HorseSaddle_Crude,
+        static = true,
+        attachment Bip01_Prop1 {
+            scale = 0.8000,
+        }
+    }
+    model HorseSaddle_World_Crude {
+        mesh = HorseMod/HorseSaddle_Ground,
+        texture = Items/HorseSaddle_Crude,
+        static = true,
+    }
+
+	/* COW: ANGUS */
+    /* PIG: BLACK */
+	item HorseSaddle_Black {
+        DisplayCategory = Accessory,
+        Type = Normal,
+        Weight = 5,
+        Icon = items/HorseSaddle_Black,
+        StaticModel = HorseSaddle_Black,
+        WorldStaticModel = HorseSaddle_World_Black,
+        RequiresEquippedBothHands = true,
+        ReplaceInPrimaryHand = Horse_Saddle_Hands Horse_HoldingSaddle,
+    }
+	model HorseSaddle_Black {
+        mesh = HorseMod/HorseSaddle,
+        texture = Items/HorseSaddle_Black,
+        static = true,
+        attachment Bip01_Prop1 {
+            scale = 0.8000,
+        }
+    }
+    model HorseSaddle_World_Black {
+        mesh = HorseMod/HorseSaddle_Ground,
+        texture = Items/HorseSaddle_Black,
+        static = true,
+    }
+
+	/* COW: HOLSTEIN */
+	item HorseSaddle_CowHolstein {
+        DisplayCategory = Accessory,
+        Type = Normal,
+        Weight = 5,
+        Icon = items/HorseSaddle_CowHolstein,
+        StaticModel = HorseSaddle_CowHolstein,
+        WorldStaticModel = HorseSaddle_World_CowHolstein,
+        RequiresEquippedBothHands = true,
+        ReplaceInPrimaryHand = Horse_Saddle_Hands Horse_HoldingSaddle,
+    }
+	model HorseSaddle_CowHolstein {
+        mesh = HorseMod/HorseSaddle,
+        texture = Items/HorseSaddle_CowHolstein,
+        static = true,
+        attachment Bip01_Prop1 {
+            scale = 0.8000,
+        }
+    }
+    model HorseSaddle_World_CowHolstein {
+        mesh = HorseMod/HorseSaddle_Ground,
+        texture = Items/HorseSaddle_CowHolstein,
+        static = true,
+    }
+
+	/* COW: SIMMENTAL */
+	item HorseSaddle_CowSimmental {
+        DisplayCategory = Accessory,
+        Type = Normal,
+        Weight = 5,
+        Icon = items/HorseSaddle_CowSimmental,
+        StaticModel = HorseSaddle_CowSimmental,
+        WorldStaticModel = HorseSaddle_World_CowSimmental,
+        RequiresEquippedBothHands = true,
+        ReplaceInPrimaryHand = Horse_Saddle_Hands Horse_HoldingSaddle,
+    }
+	model HorseSaddle_CowSimmental {
+        mesh = HorseMod/HorseSaddle,
+        texture = Items/HorseSaddle_CowSimmental,
+        static = true,
+        attachment Bip01_Prop1 {
+            scale = 0.8000,
+        }
+    }
+    model HorseSaddle_World_CowSimmental {
+        mesh = HorseMod/HorseSaddle_Ground,
+        texture = Items/HorseSaddle_CowSimmental,
+        static = true,
+    }
+
+	/* SHEEP LEATHER */
+	item HorseSaddle_White {
+        DisplayCategory = Accessory,
+        Type = Normal,
+        Weight = 5,
+        Icon = items/HorseSaddle_White,
+        StaticModel = HorseSaddle_White,
+        WorldStaticModel = HorseSaddle_World_White,
+        RequiresEquippedBothHands = true,
+        ReplaceInPrimaryHand = Horse_Saddle_Hands Horse_HoldingSaddle,
+    }
+	model HorseSaddle_White {
+        mesh = HorseMod/HorseSaddle,
+        texture = Items/HorseSaddle_White,
+        static = true,
+        attachment Bip01_Prop1 {
+            scale = 0.8000,
+        }
+    }
+    model HorseSaddle_World_White {
+        mesh = HorseMod/HorseSaddle_Ground,
+        texture = Items/HorseSaddle_White,
+        static = true,
+    }
+}
