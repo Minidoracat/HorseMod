@@ -3,58 +3,57 @@ module HorseMod {
         Base
     }
 
-	item HorseReins {
+	item HorseReins_Crude {
         DisplayName = Horse Reins,
         DisplayCategory = Accessory,
         Type = Normal,
         Weight = 0.5,
-        Icon = items/HorseSaddle,
-        BodyLocation = Hat,
-        StaticModel = HorseReins,
-        WorldStaticModel = HorseReins,
+        Icon = items/HorseSaddle_Crude,
+        StaticModel = HorseReins_Crude,
+        WorldStaticModel = HorseReins_Crude_Ground,
     }	
-    model HorseReins {
+    model HorseReins_Crude {
         mesh = HorseMod/HorseReins,
-        texture = Items/HorseReins,
+        texture = Items/HorseReins_Crude,
         static = true,
-        scale = 1,
         attachment world {
             offset = -0.0000 0.0001 -0.0547,
-            rotate = -179.9359 89.9720 -89.9442,
-            scale = 0.5000,
+            rotate = -180 90 -90,
         }
     }
-    model HorseReins_Walking {
+    model HorseReins_Crude_Ground {
+        mesh = HorseMod/HorseReins_Ground,
+        texture = Items/HorseReins_Crude,
+        static = true,
+        attachment world {
+            offset = -0.0000 0.0001 -0.0547,
+        }
+    }
+    model HorseReins_Crude_Walking {
         mesh = HorseMod/HorseReinsWalking,
-        texture = Items/HorseReins,
+        texture = Items/HorseReins_Crude,
         static = true,
-        scale = 1,
         attachment world {
             offset = -0.0000 0.0001 -0.0547,
-            rotate = -179.9359 89.9720 -89.9442,
-            scale = 0.5000,
+            rotate = -180 90 -90,
         }
     }
-    model HorseReins_Troting {
+    model HorseReins_Crude_Troting {
         mesh = HorseMod/HorseReinsTroting,
-        texture = Items/HorseReins,
+        texture = Items/HorseReins_Crude,
         static = true,
-        scale = 1,
         attachment world {
             offset = -0.0000 0.0001 -0.0547,
-            rotate = -179.9359 89.9720 -89.9442,
-            scale = 0.5000,
+            rotate = -180 90 -90,
         }
     }
-    model HorseReins_Running {
+    model HorseReins_Crude_Running {
         mesh = HorseMod/HorseReinsRunning,
-        texture = Items/HorseReins,
+        texture = Items/HorseReins_Crude,
         static = true,
-        scale = 1,
         attachment world {
             offset = -0.0000 0.0001 -0.0547,
-            rotate = -179.9359 89.9720 -89.9442,
-            scale = 0.5000,
+            rotate = -180 90 -90,
         }
     }
 }
