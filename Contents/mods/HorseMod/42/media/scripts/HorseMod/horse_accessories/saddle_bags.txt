@@ -43,16 +43,16 @@ module HorseMod {
 
 	/* COW: ANGUS */
     /* PIG: BLACK */
-    item HorseSaddlebags_CowAngus {
+    item HorseSaddlebags_Black {
         DisplayCategory = Bag,
         Type = Container,
         Weight = 2,
         Capacity = 40,
         Icon = items/HorseSaddlebags_Black,
-        StaticModel = HorseSaddlebags_CowAngus,
-        WorldStaticModel = HorseSaddlebags_CowAngus,
+        StaticModel = HorseSaddlebags_Black,
+        WorldStaticModel = HorseSaddlebags_Black,
     }
-    model HorseSaddlebags_CowAngus {
+    model HorseSaddlebags_Black {
         mesh = HorseMod/HorseSaddlebags,
         texture = Items/HorseSaddlebags_Black,
         static = true,

@@ -21,20 +21,29 @@ module HorseMod {
             item 3 [Base.LeatherStrips] mode:destroy,
             item 3 [Base.Buckle] mode:destroy,
             item 2 [Base.IronBandSmall] mode:destroy,
-            item 1 [Base.Leather_Crude_Large;Base.Leather_Crude_Large_Tan;2:Base.Leather_Crude_Medium;2:Base.Leather_Crude_Medium_Tan;Base.CowLeather_Angus_Full] mode:destroy mappers[SaddleLeather],
+            item 1 [Base.Leather_Crude_Large_Tan;2:Base.Leather_Crude_Medium_Tan;Base.CowLeather_Angus_Fur_Tan;2:Base.CowLeather_Angus_Fur_Tan_Medium;Base.CowLeather_Holstein_Fur_Tan;2:Base.CowLeather_Holstein_Fur_Tan_Medium;Base.CowLeather_Simmental_Fur_Tan;2:Base.CowLeather_Simmental_Fur_Tan_Medium;2:Base.PigLeather_Black_Fur_Tan;2:Base.SheepLeather_Fur_Tan] mode:destroy mappers[SaddleLeather],
         }
         outputs {
             item 1 mapper:SaddleLeather,
         }
         itemMapper SaddleLeather {
-            HorseMod.HorseSaddle_Crude = Base.Leather_Crude_Large,
+            /* large size leather */
             HorseMod.HorseSaddle_Crude = Base.Leather_Crude_Large_Tan,
-            HorseMod.HorseSaddle_Crude = Base.Leather_Crude_Medium,
+            HorseMod.HorseSaddle_Black = Base.CowLeather_Angus_Fur_Tan,
+            HorseMod.HorseSaddle_CowHolstein = Base.CowLeather_Holstein_Fur_Tan,
+            HorseMod.HorseSaddle_CowSimmental = Base.CowLeather_Simmental_Fur_Tan,
+            
+            /* medium size leather */
             HorseMod.HorseSaddle_Crude = Base.Leather_Crude_Medium_Tan,
-            HorseMod.HorseSaddle_Black = Base.CowLeather_Angus_Full,
+            HorseMod.HorseSaddle_Black = Base.CowLeather_Angus_Fur_Tan_Medium,
+            HorseMod.HorseSaddle_CowHolstein = Base.CowLeather_Holstein_Fur_Tan_Medium,
+            HorseMod.HorseSaddle_CowSimmental = Base.CowLeather_Simmental_Fur_Tan_Medium,
+            HorseMod.HorseSaddle_Black = Base.PigLeather_Black_Fur_Tan,
+            HorseMod.HorseSaddle_White = Base.SheepLeather_Fur_Tan,
+        }
     }
 
-    craftRecipe horseSaddleBags {
+    craftRecipe horseSaddlebags {
         time = 200,
         tags = AnySurfaceCraft,
         skillRequired = Tailoring:6,
@@ -51,16 +60,27 @@ module HorseMod {
             item 5 tags[HeavyThread],
             item 1 [Base.LeatherStrips] mode:destroy,
             item 2 [Base.Buckle] mode:destroy,
-            item 1 [Base.Leather_Crude_Medium;Base.Leather_Crude_Medium_Tan;2:Base.Leather_Crude_Small;2:Base.Leather_Crude_Small_Tan] mode:destroy mappers[SaddleLeather],
+            item 1 [Base.Leather_Crude_Medium_Tan;2:Base.Leather_Crude_Small_Tan;Base.CowLeather_Angus_Fur_Tan_Medium;2:Base.CowLeather_Angus_Fur_Tan_Small;Base.CowLeather_Simmental_Fur_Tan_Medium;2:Base.CowLeather_Simmental_Fur_Tan_Small;Base.PigLeather_Black_Fur_Tan;2:Base.PigLeather_Black_Fur_Tan_Small;Base.SheepLeather_Fur_Tan;2:Base.SheepLeather_Fur_Tan_Small] mode:destroy mappers[SaddlebagsLeather],
         }
         outputs {
-            item 1 mapper:SaddleLeather,
+            item 1 mapper:SaddlebagsLeather,
         }
-        itemMapper SaddleLeather {
-            HorseMod.HorseSaddlebags_Crude = Base.Leather_Crude_Medium,
+        itemMapper SaddlebagsLeather {
+            /* medium size leather */
             HorseMod.HorseSaddlebags_Crude = Base.Leather_Crude_Medium_Tan,
-            HorseMod.HorseSaddlebags_Crude = Base.Leather_Crude_Small,
+            HorseMod.HorseSaddlebags_Black = Base.CowLeather_Angus_Fur_Tan_Medium,
+            HorseMod.HorseSaddlebags_CowHolstein = Base.CowLeather_Holstein_Fur_Tan_Medium,
+            HorseMod.HorseSaddlebags_CowSimmental = Base.CowLeather_Simmental_Fur_Tan_Medium,
+            HorseMod.HorseSaddlebags_Black = Base.PigLeather_Black_Fur_Tan,
+            HorseMod.HorseSaddlebags_White = Base.SheepLeather_Fur_Tan,
+
+            /* small size leather */
             HorseMod.HorseSaddlebags_Crude = Base.Leather_Crude_Small_Tan,
+            HorseMod.HorseSaddlebags_Black = Base.CowLeather_Angus_Fur_Tan_Small,
+            HorseMod.HorseSaddlebags_CowHolstein = Base.CowLeather_Holstein_Fur_Tan_Small,
+            HorseMod.HorseSaddlebags_CowSimmental = Base.CowLeather_Simmental_Fur_Tan_Small,
+            HorseMod.HorseSaddlebags_Black = Base.PigLeather_Black_Fur_Tan_Small,
+            HorseMod.HorseSaddlebags_White = Base.SheepLeather_Fur_Tan_Small,
         }
     }
 

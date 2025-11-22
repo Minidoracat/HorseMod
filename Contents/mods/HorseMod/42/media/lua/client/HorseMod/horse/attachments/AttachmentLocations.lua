@@ -122,18 +122,19 @@ function HorseAttachmentLocations.defaultItems()
         ["HorseMod.HorseSaddle_Black"] = { slot = "Saddle" },
         ["HorseMod.HorseSaddle_CowHolstein"] = { slot = "Saddle" },
         ["HorseMod.HorseSaddle_CowSimmental"] = { slot = "Saddle" },
-        ["HorseMod.HorseSaddle_SheepLeather"] = { slot = "Saddle" },
-        ["HorseMod.HorseSaddle_PigBlack"] = { slot = "Saddle" },
+        ["HorseMod.HorseSaddle_White"] = { slot = "Saddle" },
 
         -- saddlebags
         ["HorseMod.HorseSaddlebags_Crude"] = { slot = "Saddlebags" },
-        ["HorseMod.HorseSaddlebags_CowAngu"] = { slot = "Saddlebags" },
+        ["HorseMod.HorseSaddlebags_Black"] = { slot = "Saddlebags" },
         ["HorseMod.HorseSaddlebags_CowHolstein"] = { slot = "Saddlebags" },
         ["HorseMod.HorseSaddlebags_CowSimmental"] = { slot = "Saddlebags" },
-        ["HorseMod.HorseSaddlebags_SheepLeather"] = { slot = "Saddlebags" },
-        ["HorseMod.HorseSaddlebags_PigBlack"] = { slot = "Saddlebags" },
+        ["HorseMod.HorseSaddlebags_White"] = { slot = "Saddlebags" },
 
         ["HorseMod.HorseReins_Crude"] = { slot = "Reins" },
+        ["HorseMod.HorseReins_Black"] = { slot = "Reins" },
+        ["HorseMod.HorseReins_Brown"] = { slot = "Reins" },
+        ["HorseMod.HorseReins_White"] = { slot = "Reins" },
 
         ["HorseMod.HorseManeStart"] = { slot = "ManeStart" },
         ["HorseMod.HorseManeMid"]   = { slot = "ManeMid1" },
