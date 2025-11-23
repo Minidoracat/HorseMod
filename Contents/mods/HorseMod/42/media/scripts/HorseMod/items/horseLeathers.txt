@@ -1,4 +1,4 @@
-module Base {
+module HorseMod {
     /* American Paint */
     item HorseLeather_AP_Full
     {
