@@ -8,7 +8,7 @@ module HorseMod {
         DisplayCategory = Accessory,
         Type = Normal,
         Weight = 5,
-        Icon = items/HorseSaddle_Crude,
+        Icon = accessories/HorseSaddle_Crude,
         StaticModel = HorseSaddle_Crude,
         WorldStaticModel = HorseSaddle_World_Crude,
         RequiresEquippedBothHands = true,
@@ -16,7 +16,7 @@ module HorseMod {
     }
 	model HorseSaddle_Crude {
         mesh = HorseMod/HorseSaddle,
-        texture = Items/HorseSaddle_Crude,
+        texture = Items/Accessories/HorseSaddle_Crude,
         static = true,
         attachment Bip01_Prop1 {
             scale = 0.8000,
@@ -24,7 +24,7 @@ module HorseMod {
     }
     model HorseSaddle_World_Crude {
         mesh = HorseMod/HorseSaddle_Ground,
-        texture = Items/HorseSaddle_Crude,
+        texture = Items/Accessories/HorseSaddle_Crude,
         static = true,
     }
 
@@ -34,7 +34,7 @@ module HorseMod {
         DisplayCategory = Accessory,
         Type = Normal,
         Weight = 5,
-        Icon = items/HorseSaddle_Black,
+        Icon = accessories/HorseSaddle_Black,
         StaticModel = HorseSaddle_Black,
         WorldStaticModel = HorseSaddle_World_Black,
         RequiresEquippedBothHands = true,
@@ -42,7 +42,7 @@ module HorseMod {
     }
 	model HorseSaddle_Black {
         mesh = HorseMod/HorseSaddle,
-        texture = Items/HorseSaddle_Black,
+        texture = Items/Accessories/HorseSaddle_Black,
         static = true,
         attachment Bip01_Prop1 {
             scale = 0.8000,
@@ -50,7 +50,7 @@ module HorseMod {
     }
     model HorseSaddle_World_Black {
         mesh = HorseMod/HorseSaddle_Ground,
-        texture = Items/HorseSaddle_Black,
+        texture = Items/Accessories/HorseSaddle_Black,
         static = true,
     }
 
@@ -59,7 +59,7 @@ module HorseMod {
         DisplayCategory = Accessory,
         Type = Normal,
         Weight = 5,
-        Icon = items/HorseSaddle_CowHolstein,
+        Icon = accessories/HorseSaddle_CowHolstein,
         StaticModel = HorseSaddle_CowHolstein,
         WorldStaticModel = HorseSaddle_World_CowHolstein,
         RequiresEquippedBothHands = true,
@@ -67,7 +67,7 @@ module HorseMod {
     }
 	model HorseSaddle_CowHolstein {
         mesh = HorseMod/HorseSaddle,
-        texture = Items/HorseSaddle_CowHolstein,
+        texture = Items/Accessories/HorseSaddle_CowHolstein,
         static = true,
         attachment Bip01_Prop1 {
             scale = 0.8000,
@@ -75,7 +75,7 @@ module HorseMod {
     }
     model HorseSaddle_World_CowHolstein {
         mesh = HorseMod/HorseSaddle_Ground,
-        texture = Items/HorseSaddle_CowHolstein,
+        texture = Items/Accessories/HorseSaddle_CowHolstein,
         static = true,
     }
 
@@ -84,7 +84,7 @@ module HorseMod {
         DisplayCategory = Accessory,
         Type = Normal,
         Weight = 5,
-        Icon = items/HorseSaddle_CowSimmental,
+        Icon = accessories/HorseSaddle_CowSimmental,
         StaticModel = HorseSaddle_CowSimmental,
         WorldStaticModel = HorseSaddle_World_CowSimmental,
         RequiresEquippedBothHands = true,
@@ -92,7 +92,7 @@ module HorseMod {
     }
 	model HorseSaddle_CowSimmental {
         mesh = HorseMod/HorseSaddle,
-        texture = Items/HorseSaddle_CowSimmental,
+        texture = Items/Accessories/HorseSaddle_CowSimmental,
         static = true,
         attachment Bip01_Prop1 {
             scale = 0.8000,
@@ -100,7 +100,7 @@ module HorseMod {
     }
     model HorseSaddle_World_CowSimmental {
         mesh = HorseMod/HorseSaddle_Ground,
-        texture = Items/HorseSaddle_CowSimmental,
+        texture = Items/Accessories/HorseSaddle_CowSimmental,
         static = true,
     }
 
@@ -109,7 +109,7 @@ module HorseMod {
         DisplayCategory = Accessory,
         Type = Normal,
         Weight = 5,
-        Icon = items/HorseSaddle_White,
+        Icon = accessories/HorseSaddle_White,
         StaticModel = HorseSaddle_White,
         WorldStaticModel = HorseSaddle_World_White,
         RequiresEquippedBothHands = true,
@@ -117,7 +117,7 @@ module HorseMod {
     }
 	model HorseSaddle_White {
         mesh = HorseMod/HorseSaddle,
-        texture = Items/HorseSaddle_White,
+        texture = Items/Accessories/HorseSaddle_White,
         static = true,
         attachment Bip01_Prop1 {
             scale = 0.8000,
@@ -125,7 +125,7 @@ module HorseMod {
     }
     model HorseSaddle_World_White {
         mesh = HorseMod/HorseSaddle_Ground,
-        texture = Items/HorseSaddle_White,
+        texture = Items/Accessories/HorseSaddle_White,
         static = true,
     }
 }

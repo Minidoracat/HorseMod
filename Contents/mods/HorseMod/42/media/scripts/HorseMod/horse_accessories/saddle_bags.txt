@@ -11,7 +11,7 @@ module HorseMod {
         Tags = HeavyItem,
         Weight = 0,
         Capacity = 40,
-        Icon = items/HorseSaddlebags_Crude,
+        Icon = accessories/HorseSaddlebags_Crude,
         StaticModel = HorseSaddlebagsInvis,
         WorldStaticModel = HorseSaddlebagsInvis,
     }
@@ -27,13 +27,13 @@ module HorseMod {
         Type = Container,
         Weight = 2,
         Capacity = 40,
-        Icon = items/HorseSaddlebags_Crude,
+        Icon = accessories/HorseSaddlebags_Crude,
         StaticModel = HorseSaddlebags_Crude,
         WorldStaticModel = HorseSaddlebags_Crude,
     }
     model HorseSaddlebags_Crude {
         mesh = HorseMod/HorseSaddlebags,
-        texture = Items/HorseSaddlebags_Crude,
+        texture = Items/Accessories/HorseSaddlebags_Crude,
         static = true,
         attachment world {
             offset = 0.0 0.0 -0.0547,
@@ -48,13 +48,13 @@ module HorseMod {
         Type = Container,
         Weight = 2,
         Capacity = 40,
-        Icon = items/HorseSaddlebags_Black,
+        Icon = accessories/HorseSaddlebags_Black,
         StaticModel = HorseSaddlebags_Black,
         WorldStaticModel = HorseSaddlebags_Black,
     }
     model HorseSaddlebags_Black {
         mesh = HorseMod/HorseSaddlebags,
-        texture = Items/HorseSaddlebags_Black,
+        texture = Items/Accessories/HorseSaddlebags_Black,
         static = true,
         attachment world {
             offset = 0.0 0.0 -0.0547,
@@ -68,13 +68,13 @@ module HorseMod {
         Type = Container,
         Weight = 2,
         Capacity = 40,
-        Icon = items/HorseSaddlebags_CowHolstein,
+        Icon = accessories/HorseSaddlebags_CowHolstein,
         StaticModel = HorseSaddlebags_CowHolstein,
         WorldStaticModel = HorseSaddlebags_CowHolstein,
     }
     model HorseSaddlebags_CowHolstein {
         mesh = HorseMod/HorseSaddlebags,
-        texture = Items/HorseSaddlebags_CowHolstein,
+        texture = Items/Accessories/HorseSaddlebags_CowHolstein,
         static = true,
         attachment world {
             offset = 0.0 0.0 -0.0547,
@@ -88,13 +88,13 @@ module HorseMod {
         Type = Container,
         Weight = 2,
         Capacity = 40,
-        Icon = items/HorseSaddlebags_CowSimmental,
+        Icon = accessories/HorseSaddlebags_CowSimmental,
         StaticModel = HorseSaddlebags_CowSimmental,
         WorldStaticModel = HorseSaddlebags_CowSimmental,
     }
     model HorseSaddlebags_CowSimmental {
         mesh = HorseMod/HorseSaddlebags,
-        texture = Items/HorseSaddlebags_CowSimmental,
+        texture = Items/Accessories/HorseSaddlebags_CowSimmental,
         static = true,
         attachment world {
             offset = 0.0 0.0 -0.0547,
@@ -108,13 +108,13 @@ module HorseMod {
         Type = Container,
         Weight = 2,
         Capacity = 40,
-        Icon = items/HorseSaddlebags_White,
+        Icon = accessories/HorseSaddlebags_White,
         StaticModel = HorseSaddlebags_White,
         WorldStaticModel = HorseSaddlebags_White,
     }
     model HorseSaddlebags_White {
         mesh = HorseMod/HorseSaddlebags,
-        texture = Items/HorseSaddlebags_White,
+        texture = Items/Accessories/HorseSaddlebags_White,
         static = true,
         attachment world {
             offset = 0.0 0.0 -0.0547,
