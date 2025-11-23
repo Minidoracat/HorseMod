@@ -2,8 +2,8 @@
 
 ---REQUIREMENTS
 local HorseUtils = require("HorseMod/Utils")
-local Attachments = require("HorseMod/attachments/Attachments")
-local ISHorseEquipGear = require("HorseMod/attachments/timedAction/ISHorseEquipGear")
+local Attachments = require("HorseMod/Attachments")
+local ISHorseEquipGear = require("HorseMod/TimedActions/ISHorseEquipGear")
 
 ---@class AttachmentsManager
 local AttachmentsManager = {}
