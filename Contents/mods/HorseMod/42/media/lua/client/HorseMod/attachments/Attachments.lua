@@ -1,11 +1,16 @@
+---@namespace HorseMod
+
+---Defines an attachment item with its associated slots and extra data if needed.
 ---@class AttachmentDefinition
 ---@field slot string
 
----@alias AttachmentsItemsMap table<string, AttachmentDefinition|string>
+---Maps items' fulltype to their associated attachment definition.
+---@alias AttachmentsItemsMap table<string, AttachmentDefinition>
 
----@class AttachmentsData
+---Stores the various attachment data which are required to work with attachments for horses.
+---@class Attachments
 ---@field items AttachmentsItemsMap
-local HorseAttachments = {
+local Attachments = {
     items = {
         -- saddles
             -- vanilla animals
@@ -53,7 +58,26 @@ local HorseAttachments = {
         ["HorseMod.HorseManeStart"] = { slot = "ManeStart" },
         ["HorseMod.HorseManeMid"]   = { slot = "ManeMid1" },
         ["HorseMod.HorseManeEnd"]   = { slot = "ManeEnd" },
-    }
+    },
 }
 
-return HorseAttachments
+---Checks if the given item full type is an attachment, and optionally if it has a slot `_slot`.
+---@param fullType string
+---@param _slot string?
+---@return boolean
+Attachments.isAttachment = function(fullType, _slot)
+    local attachmentDef = Attachments.items[fullType]
+    if _slot then
+        return attachmentDef and attachmentDef.slot == _slot or false
+    end
+    return attachmentDef ~= nil
+end
+
+---Retrieves the given item full type associated
+---@param fullType string
+---@return AttachmentDefinition
+Attachments.getAttachment = function(fullType)
+    return Attachments.items[fullType]
+end
+
+return Attachments
