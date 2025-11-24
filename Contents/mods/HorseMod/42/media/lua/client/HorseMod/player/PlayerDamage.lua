@@ -1,5 +1,6 @@
 local HorseRiding = require("HorseMod/Riding")
 local HorseUtils = require("HorseMod/Utils")
+local HorseDamage = require("HorseMod/horse/HorseDamage")
 
 local PlayerDamage = {}
 
@@ -58,6 +59,34 @@ Events.OnPlayerUpdate.Add(PlayerDamage.applyRidingPain)
 ---@return number
 local function randf(min, max)
     return min + (ZombRand(1000) / 1000.0) * (max - min)
+end
+
+
+---@param part BodyPart|nil
+---@param bd BodyDamage
+---@return nil
+local function resetBodyPartDamage(part, bd)
+    if not part then
+        return
+    end
+
+    part:RestoreToFullHealth()
+    if part.SetInfected then
+        part:SetInfected(false)
+    end
+    if part.SetFakeInfected then
+        part:SetFakeInfected(false)
+    end
+
+    if bd.setInfectionLevel then
+        bd:setInfectionLevel(0)
+    end
+    if bd.setInfectionTime then
+        bd:setInfectionTime(-1)
+    end
+    if bd.setInfectionMortalityDuration then
+        bd:setInfectionMortalityDuration(-1)
+    end
 end
 
 
@@ -340,31 +369,17 @@ function PlayerDamage.onZombieAttack_checkAndRedirect(zombie)
     for i = 0, BodyPartType.MAX:index() - 1 do
         local bpType = BodyPartType.FromIndex(i)
         local part = bd:getBodyPart(bpType)
+        local horse = HorseRiding.getMountedHorse(player)
         if part and (part:bitten() or part:scratched() or part:isCut() or part:bleeding()) then
             if allowedDamagePartIndices[i] then
                 return
             end
-
-            part:RestoreToFullHealth()
-            if part.SetInfected then
-                part:SetInfected(false)
-            end
-            if part.SetFakeInfected then
-                part:SetFakeInfected(false)
-            end
-            if bd.setInfectionLevel then
-                bd:setInfectionLevel(0)
-            end
-            if bd.setInfectionTime then
-                bd:setInfectionTime(-1)
-            end
-            if bd.setInfectionMortalityDuration then
-                bd:setInfectionMortalityDuration(-1)
+            resetBodyPartDamage(part, bd)
+            if HorseDamage.tryRedirectZombieHitToHorse(zombie, player, horse) then
+                return
             end
 
-            if PlayerDamage.addRandomDamageFromZombieOnParts then
-                PlayerDamage.addRandomDamageFromZombieOnParts(zombie, target:getHitReaction(), allowedDamageParts)
-            end
+            PlayerDamage.addRandomDamageFromZombieOnParts(zombie, target:getHitReaction(), allowedDamageParts)
             return
         end
     end

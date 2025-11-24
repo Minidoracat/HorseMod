@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <animNode>
-    <m_Name>Horse_GallopToIdleReins</m_Name>
+    <m_Name>Horse_IdleToGallopReins</m_Name>
     <m_AnimName>Bob_Mounted_IdleToGallop_Reins</m_AnimName>
     <m_Priority>20</m_Priority>
     <m_ConditionPriority>20</m_ConditionPriority>

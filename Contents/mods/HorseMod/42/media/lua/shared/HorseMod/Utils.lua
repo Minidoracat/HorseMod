@@ -6,6 +6,28 @@ local HORSE_TYPES = {
 
 local HorseUtils = {}
 
+
+HorseUtils.runAfter = function(seconds, callback)
+    local elapsed = 0
+
+    local function tick()
+        elapsed = elapsed + GameTime.getInstance():getTimeDelta()
+        if elapsed < seconds then
+            return
+        end
+
+        Events.OnTick.Remove(tick)
+        callback()
+    end
+
+    Events.OnTick.Add(tick)
+
+    return function()
+        Events.OnTick.Remove(tick)
+    end
+end
+
+
 ---Trims whitespace from both ends of a string.
 ---@param value string
 ---@return string
@@ -14,12 +36,14 @@ local function trim(value)
     return value:match("^%s*(.-)%s*$")
 end
 
+
 ---Checks whether an animal is a horse.
 ---@param animal IsoAnimal The animal to check.
 ---@return boolean isHorse Whether the animal is a horse.
 HorseUtils.isHorse = function(animal)
     return HORSE_TYPES[animal:getAnimalType()] or false
 end
+
 
 HorseUtils.getMountWorld = function(horse, name)
     if horse.getAttachmentWorldPos then
@@ -29,6 +53,7 @@ HorseUtils.getMountWorld = function(horse, name)
     local dx = (name == "mountLeft") and -0.6 or 0.6
     return horse:getX() + dx, horse:getY(), horse:getZ()
 end
+
 
 HorseUtils.lockHorseForInteraction = function(horse)
     if horse.getPathFindBehavior2 then horse:getPathFindBehavior2():reset() end

@@ -1,4 +1,5 @@
 local Mount = require("HorseMod/mount/Mount")
+local HorseUtils = require("HorseMod/Utils")
 
 
 ---@namespace HorseMod
@@ -155,6 +156,12 @@ local function dismountOnHorseDeath(character)
     for _, mount in pairs(HorseRiding.playerMounts) do
         if mount and mount.pair.mount == character then
             HorseRiding.removeMount(mount.pair.rider)
+            HorseUtils.runAfter(4.1, function()
+                    mount.pair.rider:setBlockMovement(false)
+                    mount.pair.rider:setIgnoreMovement(false)
+                    mount.pair.rider:setIgnoreInputsForDirection(false)
+                    mount.pair.rider:setVariable("HorseDying", false)
+                end)
             return
         end
     end

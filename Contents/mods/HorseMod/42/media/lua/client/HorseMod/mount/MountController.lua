@@ -727,7 +727,7 @@ function MountController:setReinsState(mount, reinsItem, state)
     -- retrieve the model associated to the current state
     local model = reinModels[state]
     assert(model ~= nil, "No reins model for state " .. tostring(state))
-    
+
     -- apply state model
     reinsItem:setStaticModel(model)
     mount:resetEquippedHandsModels()
@@ -758,14 +758,6 @@ function MountController:updateReins(input)
 end
 
 
-function MountController:updateDeath()
-    if self.mount.pair.mount:getVariableBoolean("HorseDying") then
-        self.mount.pair.rider:setVariable("HorseDying", true)
-        return
-    end
-end
-
-
 ---@param input MountController.Input
 function MountController:update(input)
     assert(self.mount.pair.rider:getVariableString("RidingHorse") == "true")
@@ -791,7 +783,6 @@ function MountController:update(input)
     self:turn(input, deltaTime)
     self:updateSpeed(input, deltaTime)
     self:updateReins(input)
-    self:updateDeath()
 
     if moving and self.currentSpeed > 0 then
         local currentDirection = self.mount.pair.mount:getDir()
@@ -806,15 +797,6 @@ function MountController:update(input)
         self.mount.pair:setAnimationVariable("HorseGallop", false)
         self.mount.pair.mount:setVariable("animalWalking", false)
     end
-
-    -- local dbg = self.mount.pair.mount:getAnimationDebug()
-    -- local idleToGallopData = HorseUtils.getAnimationFromDebugString(dbg, "Horse_IdleToGallop")
-
-    -- if idleToGallopData then
-    --     self.mount.pair.rider:setVariable("IdleToGallop", true)
-    -- elseif not idleToGallopData then
-    --     self.mount.pair.rider:setVariable("IdleToGallop", false)
-    -- end
 
     local mirrorVarsHorse =  { "HorseGalloping","isTurningLeft","isTurningRight" }
     for i = 1, #mirrorVarsHorse do

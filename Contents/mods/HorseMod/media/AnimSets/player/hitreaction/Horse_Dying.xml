@@ -9,7 +9,7 @@
     <m_BlendTime>0.00</m_BlendTime>
     <m_ConditionPriority>30</m_ConditionPriority>
     <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
-    <m_EarlyTransitionOut>true</m_EarlyTransitionOut>
+    <m_EarlyTransitionOut>false</m_EarlyTransitionOut>
     <m_Conditions>
         <m_Name>HorseDying</m_Name>
         <m_Type>BOOL</m_Type>
