@@ -9,9 +9,10 @@ local HorseUtils = {}
 
 HorseUtils.runAfter = function(seconds, callback)
     local elapsed = 0
+    local gameTime = GameTime.getInstance()
 
     local function tick()
-        elapsed = elapsed + GameTime.getInstance():getTimeDelta()
+        elapsed = elapsed + gameTime:getTimeDelta()
         if elapsed < seconds then
             return
         end
@@ -25,15 +26,6 @@ HorseUtils.runAfter = function(seconds, callback)
     return function()
         Events.OnTick.Remove(tick)
     end
-end
-
-
----Trims whitespace from both ends of a string.
----@param value string
----@return string
----@nodiscard
-local function trim(value)
-    return value:match("^%s*(.-)%s*$")
 end
 
 
@@ -192,6 +184,13 @@ HorseUtils.REINS_MODELS = {
     },
 }
 
+---Trims whitespace from both ends of a string.
+---@param value string
+---@return string
+---@nodiscard
+local function trim(value)
+    return value:match("^%s*(.-)%s*$")
+end
 
 ---@param debugString string The string from getAnimationDebug().
 ---@param matchString string The name of the animation to look for.
