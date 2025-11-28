@@ -16,6 +16,7 @@ local HorseManager = {}
 
 ---@type IsoAnimal[]
 HorseManager.horses = table.newarray()
+HorseManager._detected_horses = {}
 
 ---@type System[]
 HorseManager.systems = table.newarray()
@@ -31,6 +32,7 @@ function HorseManager.releaseRemovedHorses()
         if not horse:isExistInTheWorld() then
             table.remove(HorseManager.horses, i)
             HorseManager.onHorseRemoved:trigger(horse)
+            HorseManager._detected_horses[horse] = nil
         end
     end
 end
@@ -56,29 +58,70 @@ end
 ---@type IsoAnimal[]
 local newAnimals = table.newarray()
 
-Events.OnCreateLivingCharacter.Add(function(character, desc)
-    if character:isAnimal() then
-        ---@cast character IsoAnimal
-        newAnimals[#newAnimals + 1] = character
+---@TODO set to update rate 8 for performance reasons
+-- local UPDATE_RATE = 8
+local UPDATE_RATE = 1
+local TICK_AMOUNT = 0
+
+---@TODO find a better method of doing this, less costly
+Events.EveryOneMinute.Add(function()
+    -- retrieve IsoMovingObjects
+    local isoMovingObjects = getCell():getObjectList()
+
+    -- check UPDATE_RATE-th IsoMovingObjects per tick
+    local size = isoMovingObjects:size()
+    local update_rate = math.min(UPDATE_RATE,size)
+    if update_rate == 0 then return end
+
+    -- update to next tick amount offset to parse next selection of the list
+    TICK_AMOUNT = TICK_AMOUNT < update_rate - 1 and TICK_AMOUNT + 1 or 0
+
+    -- iterate every update_rate-th entries
+    for i = TICK_AMOUNT, size - 1, update_rate do
+        local isoMovingObject = isoMovingObjects:get(i)
+
+        -- verify is an animal and horse
+        if instanceof(isoMovingObject, "IsoAnimal") 
+            and HorseUtils.isHorse(isoMovingObject) then
+            
+            -- verify horse was already checked
+            if not HorseManager._detected_horses[isoMovingObject] then
+                initialiseHorse(isoMovingObject)
+                HorseManager.horses[#HorseManager.horses + 1] = isoMovingObject
+                HorseManager.onHorseAdded:trigger(isoMovingObject)
+
+                HorseManager._detected_horses[isoMovingObject] = true
+            end
+        end
     end
 end)
 
+-- Events.OnCreateLivingCharacter.Add(function(character, desc)
+--     DebugLog.log("onCreateLivingCharacter: "..tostring(character:getFullName() or character:getName()))
+--     if character:isAnimal() then
+--         ---@cast character IsoAnimal
+--         newAnimals[#newAnimals + 1] = character
+--     end
+-- end)
 
-local function processNewAnimals()
-    for i = #newAnimals, 1, -1 do
-        local animal = newAnimals[i]
-        if HorseUtils.isHorse(animal) then
-            initialiseHorse(animal)
-            HorseManager.horses[#HorseManager.horses + 1] = animal
-            HorseManager.onHorseAdded:trigger(animal)
-        end
-        newAnimals[i] = nil
-    end
-end
+
+-- local function processNewAnimals()
+--     for i = #newAnimals, 1, -1 do
+--         local animal = newAnimals[i]
+--         DebugLog.log("Processing new animal: "..animal:getFullName())
+--         if HorseUtils.isHorse(animal) then
+--             DebugLog.log("    is horse")
+--             initialiseHorse(animal)
+--             HorseManager.horses[#HorseManager.horses + 1] = animal
+--             HorseManager.onHorseAdded:trigger(animal)
+--         end
+--         newAnimals[i] = nil
+--     end
+-- end
 
 
 function HorseManager.update()
-    processNewAnimals()
+    -- processNewAnimals()
     HorseManager.releaseRemovedHorses()
 
     local delta = GameTime.getInstance():getTimeDelta()
