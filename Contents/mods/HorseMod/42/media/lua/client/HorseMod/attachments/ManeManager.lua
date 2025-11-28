@@ -3,28 +3,53 @@
 ---REQUIREMENTS
 local HorseUtils = require("HorseMod/Utils")
 local Attachments = require("HorseMod/Attachments")
+local AttachmentData = require("HorseMod/AttachmentData")
 
 ---@class ManeManager
 local ManeManager = {}
 
 ---@param horse IsoAnimal
 ManeManager.removeManes = function(horse)
-    if not (horse and HorseUtils.isHorse(horse)) then
-        return
-    end
-
-    local modData = HorseUtils.getModData(horse)
-    local bySlot, ground = modData.bySlot, modData.ground
-
-    for slot, _ in pairs(Attachments.MANE_SLOTS_SET) do
+    for slot, _ in pairs(AttachmentData.MANE_SLOTS_SET) do
         local attached = Attachments.getAttachedItem(horse, slot)
         if attached then
             -- Attachments.setAttachedItem(horse, slot, nil)
             Attachments.removeAttachedItem(horse, attached)
         end
-        bySlot[slot] = nil
-        ground[slot] = nil
     end
+end
+
+---@param horse IsoAnimal
+---@return ManeColor
+---@nodiscard
+ManeManager.getManeColor = function(horse)
+    local breed = horse:getBreed()
+    local breedName = breed:getName() or "__default"
+    local hex = AttachmentData.MANE_HEX_BY_BREED[breedName]
+    local r, g, b = HorseUtils.hexToRGBf(hex)
+
+    return {r=r, g=g, b=b}
+end
+
+---Retrieve and set the mane color
+---@param horse IsoAnimal
+---@param mane InventoryItem
+---@param slot AttachmentSlot
+---@param _modData HorseModData|nil
+ManeManager.setupMane = function(horse, mane, slot, _modData)
+    local modData = _modData or HorseUtils.getModData(horse)
+    local maneColor = modData.maneColors[slot]
+    if not maneColor then
+        maneColor = ManeManager.getManeColor(horse)
+    end
+    if mane:getColorRed() ~= maneColor.r
+        or mane:getColorGreen() ~= maneColor.g
+        or mane:getColorBlue() ~= maneColor.b then
+        mane:setColorRed(maneColor.r)
+        mane:setColorGreen(maneColor.g)
+        mane:setColorBlue(maneColor.b)
+    end
+    return mane
 end
 
 

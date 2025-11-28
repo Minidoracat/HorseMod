@@ -1,81 +1,106 @@
 ---@namespace HorseMod
 
 ---REQUIREMENTS
+local Attachments = require("HorseMod/Attachments")
+local AttachmentData = require("HorseMod/AttachmentData")
 local HorseManager = require("HorseMod/HorseManager")
 local HorseUtils = require("HorseMod/Utils")
 local ManeManager = require("HorseMod/attachments/ManeManager")
 
 ---@class AttachmentUpdater
 ---@field PENDING_HORSES IsoAnimal[]
+---@field IS_REAPPLIED table<IsoAnimal, true?>
 local AttachmentUpdater = {
-    PENDING_HORSES = {}
+    DEBUG_AttachmentUpdater = true,
+    PENDING_HORSES = {},
+    IS_REAPPLIED = {},
 }
 local PENDING_HORSES = AttachmentUpdater.PENDING_HORSES
+local IS_REAPPLIED = AttachmentUpdater.IS_REAPPLIED
 
-
----@param animal IsoAnimal
-AttachmentUpdater.reapplyFor = function(animal)
-    if true then return end
-
-    if not HorseUtils.isHorse(animal) then
-        return
-    end
-    local bySlot, ground = AttachmentUtils.ensureHorseModData(animal)
-    if not bySlot then
-        return
-    end
-
-    local inv = animal:getInventory()
+---Reapply attachments to the `horse`.
+---@param horse IsoAnimal
+AttachmentUpdater.reapplyFor = function(horse)
+    -- DebugLog.log("reapply")
+    local inv = horse:getInventory()
+    local modData = HorseUtils.getModData(horse)
+    local bySlot = modData.bySlot
 
     for slot, fullType in pairs(bySlot) do
-        if fullType and fullType ~= "" then
-            local cur = AttachmentUtils.getAttachedItem(animal, slot)
-            if cur and cur:getFullType() == fullType then
-                AttachmentUtils.setAttachedItem(animal, slot, cur)
-            else
-                local found = inv:FindAndReturn(fullType)
-                if found then
-                    AttachmentUtils.setAttachedItem(animal, slot, found)
-                    ground[slot] = nil
-                else
-                    local g = ground[slot]
-                    if g and g.x and g.y and g.z then
-                        local wo, sq = AttachmentUtils.findWorldItemOnSquare(g.x, g.y, g.z, fullType, g.id)
-                        if wo then
-                            local picked = AttachmentUtils.takeWorldItemToInventory(wo, sq, inv)
-                            if picked then
-                                AttachmentUtils.setAttachedItem(animal, slot, picked)
-                                ground[slot] = nil
-                            end
-                        end
-                    end
-
-                    if not AttachmentUtils.getAttachedItem(animal, slot) then
-                        if fullType ~= HorseAttachmentSaddlebags.SADDLEBAG_CONTAINER_TYPE then
-                            inv:AddItem(fullType)
-                            local fetched = inv:FindAndReturn(fullType)
-                            if fetched then
-                                AttachmentUtils.setAttachedItem(animal, slot, fetched)
-                            end
-                        end
-                    end
-                end
-            end
-            if slot == HorseAttachmentSaddlebags.SADDLEBAG_SLOT then
-                if fullType == HorseAttachmentSaddlebags.SADDLEBAG_FULLTYPE then
-                    HorseAttachmentSaddlebags.ensureSaddlebagContainer(animal, nil)
-                else
-                    HorseAttachmentSaddlebags.removeSaddlebagContainer(nil, animal)
-                end
-            end
+        -- try to retrieve the item from attached items, else create a fresh one
+        local item = Attachments.getAttachedItem(horse, slot)
+        if not item then
+            item = inv:AddItem(fullType)
         end
-    end
-    if not bySlot[HorseAttachmentSaddlebags.SADDLEBAG_SLOT] then
-        HorseAttachmentSaddlebags.removeSaddlebagContainer(nil, animal)
+
+        -- setup mane color
+        if AttachmentData.MANE_SLOTS_SET[slot] then
+            ManeManager.setupMane(horse, item, slot, modData)
+        end
+
+        Attachments.setAttachedItem(horse, slot, item)
     end
 end
 
 
+
+
+
+
+
+---@TODO set to update rate 8 for performance reasons
+-- local UPDATE_RATE = 8
+local UPDATE_RATE = 1
+local TICK_AMOUNT = 0
+
+---Verify that the horse doesn't need to get its attachments reapplied, and if yes
+---then reapply those and set the horse status for updates.
+---@param horses IsoAnimal[]
+---@param delta number
+function AttachmentUpdater:update(horses, delta)
+    -- DebugLog.log(tostring(ticks))
+    -- apply attachments to new horses
+    for i = #PENDING_HORSES, 1, -1 do
+        local horse = PENDING_HORSES[i]
+        if horse:isOnScreen() then
+            table.remove(PENDING_HORSES, i)
+            AttachmentUpdater.reapplyFor(horse)
+            -- HorseAttachmentManes.ensureManesPresentAndColored(horse)
+
+            -- set as done
+            IS_REAPPLIED[horse] = true
+        end
+    end
+
+    -- check UPDATE_RATE-th horses per tick
+    local size = #horses
+    local update_rate = math.min(UPDATE_RATE,size)
+    if update_rate == 0 then return end
+
+    TICK_AMOUNT = TICK_AMOUNT < update_rate and TICK_AMOUNT + 1 or 1
+
+    for i = TICK_AMOUNT, size, update_rate do
+        local horse = horses[i] --[[@as IsoAnimal]]
+
+        -- if horse is visible, set it as needing an update if not already reapplied
+        local status = IS_REAPPLIED[horse]
+        if horse:isOnScreen() then
+            if not status then
+                DebugLog.log("set for reapply: "..tostring(horse:getFullName()))
+                
+                -- update reapply status
+                table.insert(PENDING_HORSES, horse)
+            end
+
+        -- else set horse as needing to be checked until it goes back in the screen
+        else
+            if status then
+                DebugLog.log("reset for reapply: "..tostring(horse:getFullName()))
+                IS_REAPPLIED[horse] = nil
+            end
+        end
+    end
+end
 
 
 ---Handle horse death.
@@ -86,66 +111,42 @@ AttachmentUpdater.onCharacterDeath = function(character)
     end
     ---@cast character IsoAnimal
 
-    HorseAttachmentGear.dropHorseGearOnDeath(character)
+    ManeManager.removeManes(character)
+
+    -- HorseAttachmentGear.dropHorseGearOnDeath(character)
 end
 
 Events.OnCharacterDeath.Add(AttachmentUpdater.onCharacterDeath)
 
 
-local UPDATE_RATE = 8
-local TICK_AMOUNT = 0
-local checked = {}
-AttachmentUpdater.updateHorses = function(ticks)
-    -- apply attachments to new horses
-    for i = #PENDING_HORSES, 1, -1 do
-        local horse = PENDING_HORSES[i]
-        if horse:isOnScreen() then
-            table.remove(PENDING_HORSES, i)
-            AttachmentUpdater.reapplyFor(horse)
-            -- HorseAttachmentManes.ensureManesPresentAndColored(horse)
-        end
+
+
+
+---@TODO remove/comment for proper release, this is used to hot reload in-game for testing
+for i, system in ipairs(HorseManager.systems) do
+    if system.DEBUG_AttachmentUpdater then
+        table.remove(HorseManager.systems,i)
     end
-
-    -- check UPDATE_RATE-th IsoMovingObjects per tick
-    local isoMovingObjects = getCell():getObjectList()
-    local size = isoMovingObjects:size()
-    local updateRate = math.min(UPDATE_RATE,size)
-    TICK_AMOUNT = TICK_AMOUNT < updateRate - 1 and TICK_AMOUNT + 1 or 0
-
-    for i = TICK_AMOUNT, size - 1, updateRate do repeat
-        local isoMovingObject = isoMovingObjects:get(i)
-
-        -- verify it's a horse
-        if not instanceof(isoMovingObject, "IsoAnimal") 
-            or HorseUtils.isHorse(isoMovingObject)
-            then break end
-        ---@cast isoMovingObject IsoAnimal
-
-        if isoMovingObject:isDead() then
-            local md = HorseUtils.getModData(isoMovingObject)
-            local already = md and md.HM_Attach and md.HM_Attach.DroppedOnDeath
-            if not already then
-                HorseAttachmentGear.dropHorseGearOnDeath(isoMovingObject)
-            end
-        elseif isoMovingObject:isOnScreen() then
-            AttachmentUpdater.reapplyFor(isoMovingObject)
-            HorseAttachmentManes.ensureManesPresentAndColored(isoMovingObject)
-        end
-    until true end
 end
 
-Events.OnTick.Add(AttachmentUpdater.updateHorses)
+--- Hook to OnTick for horses
+table.insert(HorseManager.systems, AttachmentUpdater)
 
-
+---@param horse IsoAnimal
 HorseManager.onHorseAdded:add(function(horse)
+    DebugLog.log("onHorseAdded: "..horse:getFullName())
     PENDING_HORSES[#PENDING_HORSES + 1] = horse
 end)
 
 
+---@param horse IsoAnimal
 HorseManager.onHorseRemoved:add(function(horse)
-    for i = 1, #PENDING_HORSES do
+    DebugLog.log("onHorseRemoved: "..horse:getFullName())
+    for i = #PENDING_HORSES, 1, -1 do
         if PENDING_HORSES[i] == horse then
+            IS_REAPPLIED[horse] = nil
             table.remove(PENDING_HORSES, i)
+            DebugLog.log("    remove horse from pending")
             break
         end
     end

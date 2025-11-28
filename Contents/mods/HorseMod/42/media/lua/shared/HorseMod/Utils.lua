@@ -1,3 +1,8 @@
+---@namespace HorseMod
+
+---REQUIREMENTS
+local AttachmentData = require("HorseMod/AttachmentData")
+
 local HORSE_TYPES = {
     ["stallion"] = true,
     ["mare"] = true,
@@ -8,7 +13,7 @@ local HorseUtils = {}
 
 
 HorseUtils.runAfter = function(seconds, callback)
-    local elapsed = 0
+    local elapsed = 0 --[[@as number]]
     local gameTime = GameTime.getInstance()
 
     local function tick()
@@ -37,16 +42,22 @@ HorseUtils.isHorse = function(animal)
 end
 
 
+---@class HorseModData
+---@field bySlot table<AttachmentSlot, string>
+---@field ground table
+---@field maneColors table<AttachmentSlot, ManeColor|nil>
+
 ---@param animal IsoAnimal
----@return table
+---@return HorseModData
 HorseUtils.getModData = function(animal)
     local md = animal:getModData()
     local horseModData = md.horseModData
     if not horseModData then
         md.horseModData = {
-            bySlot = {},
+            bySlot = HorseUtils.tableCopy(AttachmentData.MANE_SLOTS_SET),
             ground = {},
-        }
+            maneColors = {},
+        } --[[@as HorseModData]]
         horseModData = md.horseModData
     end
     return horseModData
@@ -188,6 +199,42 @@ end
 ---@nodiscard
 HorseUtils.formatTemplate = function(template, params)
     return template:gsub("{(%w+)}", params)
+end
+
+---Make a copy of a table
+---@param tbl table
+---@return table
+HorseUtils.tableCopy = function(tbl)
+    local copy = {}
+    for k,v in pairs(tbl) do
+        copy[k] = v
+    end
+    return copy
+end
+
+---@param hex string|nil
+---@return number, number, number
+---@nodiscard
+HorseUtils.hexToRGBf = function(hex)
+    if not hex then
+        return 1, 1, 1
+    end
+    hex = tostring(hex):gsub("#", "")
+    if #hex == 3 then
+        hex = hex:sub(1, 1)
+            .. hex:sub(1, 1)
+            .. hex:sub(2, 2)
+            .. hex:sub(2, 2)
+            .. hex:sub(3, 3)
+            .. hex:sub(3, 3)
+    end
+    if #hex ~= 6 then
+        return 1, 1, 1
+    end
+    local r = (tonumber(hex:sub(1, 2), 16) or 255) / 255
+    local g = (tonumber(hex:sub(3, 4), 16) or 255) / 255
+    local b = (tonumber(hex:sub(5, 6), 16) or 255) / 255
+    return r, g, b
 end
 
 HorseUtils.REINS_MODELS = {

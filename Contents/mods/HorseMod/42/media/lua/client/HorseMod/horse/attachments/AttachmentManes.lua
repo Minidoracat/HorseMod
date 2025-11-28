@@ -39,7 +39,7 @@ end
 
 ---@param animal IsoAnimal|nil
 function HorseAttachmentManes.ensureManesPresentAndColored(animal)
-    if not (animal and HorseUtils.isHorse(animal)) then
+    if not animal or HorseUtils.isHorse(animal) then
         return
     end
 
