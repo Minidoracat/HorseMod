@@ -90,7 +90,7 @@ local AttachmentData = {
         __default = "#6B5642",
     },
 
-    --- Sufixes for reins model swapping during horse riding
+    --- Suffix for rein model swapping during horse riding
     REIN_STATES = {
         idle = "",
         walking = "_Walking",
