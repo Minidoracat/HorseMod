@@ -11,10 +11,13 @@ local HORSE_TYPES = {
 
 local HorseUtils = {}
 
-
-HorseUtils.runAfter = function(seconds, callback)
+---@param seconds number
+---@param callback fun(...)
+---@param ... any
+HorseUtils.runAfter = function(seconds, callback, ...)
     local elapsed = 0 --[[@as number]]
     local gameTime = GameTime.getInstance()
+    local args = {...}
 
     local function tick()
         elapsed = elapsed + gameTime:getTimeDelta()
@@ -23,7 +26,7 @@ HorseUtils.runAfter = function(seconds, callback)
         end
 
         Events.OnTick.Remove(tick)
-        callback()
+        callback(unpack(args))
     end
 
     Events.OnTick.Add(tick)
@@ -237,36 +240,9 @@ HorseUtils.hexToRGBf = function(hex)
     return r, g, b
 end
 
-HorseUtils.REINS_MODELS = {
-    ["HorseMod.HorseReins_Crude"] = {
-        idle = "HorseMod.HorseReins_Crude",
-        walking = "HorseMod.HorseReins_Walking_Crude",
-        trot = "HorseMod.HorseReins_Troting_Crude",
-        gallop = "HorseMod.HorseReins_Running_Crude",
-    },
-    ["HorseMod.HorseReins_Black"] = {
-        idle = "HorseMod.HorseReins_Black",
-        walking = "HorseMod.HorseReins_Walking_Black",
-        trot = "HorseMod.HorseReins_Troting_Black",
-        gallop = "HorseMod.HorseReins_Running_Black",
-    },
-    ["HorseMod.HorseReins_White"] = {
-        idle = "HorseMod.HorseReins_White",
-        walking = "HorseMod.HorseReins_Walking_White",
-        trot = "HorseMod.HorseReins_Troting_White",
-        gallop = "HorseMod.HorseReins_Running_White",
-    },
-    ["HorseMod.HorseReins_Brown"] = {
-        idle = "HorseMod.HorseReins_Brown",
-        walking = "HorseMod.HorseReins_Walking_Brown",
-        trot = "HorseMod.HorseReins_Troting_Brown",
-        gallop = "HorseMod.HorseReins_Running_Brown",
-    },
-}
-
 ---Trims whitespace from both ends of a string.
 ---@param value string
----@return string
+---@return string?
 ---@nodiscard
 local function trim(value)
     return value:match("^%s*(.-)%s*$")

@@ -21,7 +21,6 @@ local IS_REAPPLIED = AttachmentUpdater.IS_REAPPLIED
 ---Reapply attachments to the `horse`.
 ---@param horse IsoAnimal
 AttachmentUpdater.reapplyFor = function(horse)
-    DebugLog.log("reapply: "..horse:getFullName())
     local inv = horse:getInventory()
     local modData = HorseUtils.getModData(horse)
     local bySlot = modData.bySlot
@@ -58,20 +57,6 @@ local TICK_AMOUNT = 0
 ---@param horses IsoAnimal[]
 ---@param delta number
 function AttachmentUpdater:update(horses, delta)
-    -- DebugLog.log(tostring(ticks))
-    -- apply attachments to new horses
-    for i = #PENDING_HORSES, 1, -1 do
-        local horse = PENDING_HORSES[i]
-        if horse:isOnScreen() then
-            table.remove(PENDING_HORSES, i)
-            AttachmentUpdater.reapplyFor(horse)
-            -- HorseAttachmentManes.ensureManesPresentAndColored(horse)
-
-            -- set as done
-            IS_REAPPLIED[horse] = true
-        end
-    end
-
     -- check UPDATE_RATE-th horses per tick
     local size = #horses
     local update_rate = math.min(UPDATE_RATE,size)
@@ -82,12 +67,12 @@ function AttachmentUpdater:update(horses, delta)
     for i = TICK_AMOUNT, size, update_rate do
         local horse = horses[i] --[[@as IsoAnimal]]
 
-        -- if horse is visible, set it as needing an update if not already reapplied
+        -- if horse model is visible, set it as needing an update if not already reapplied
         local status = IS_REAPPLIED[horse]
-        horse:addLineChatElement(tostring(status))
-        if horse:isOnScreen() then
+        horse:addLineChatElement(tostring(horse:getModel()))
+        if horse:getModel() then
             if not status then
-                DebugLog.log("set for reapply: "..tostring(horse:getFullName()))
+                DebugLog.log("set for reapply: "..tostring(horse:getFullName()).." (tick ".. tostring(os.time()) ..")")
                 
                 -- update reapply status
                 table.insert(PENDING_HORSES, horse)
@@ -96,9 +81,24 @@ function AttachmentUpdater:update(horses, delta)
         -- else set horse as needing to be checked until it goes back in the screen
         else
             if status then
-                DebugLog.log("reset for reapply: "..tostring(horse:getFullName()))
+                DebugLog.log("reset for reapply: "..tostring(horse:getFullName()).." (tick ".. tostring(os.time()) ..")")
                 IS_REAPPLIED[horse] = nil
             end
+        end
+    end
+
+    -- apply attachments to newly loaded horses
+    for i = #PENDING_HORSES, 1, -1 do
+        local horse = PENDING_HORSES[i]
+        if horse:getModel() then
+            DebugLog.log("reapply: "..horse:getFullName().." (tick ".. tostring(os.time()) ..")")
+            table.remove(PENDING_HORSES, i)
+            AttachmentUpdater.reapplyFor(horse)
+            -- AttachmentUpdater.reapplyFor(horse)
+            -- HorseAttachmentManes.ensureManesPresentAndColored(horse)
+
+            -- set as done
+            IS_REAPPLIED[horse] = true
         end
     end
 end

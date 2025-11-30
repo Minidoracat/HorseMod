@@ -5,6 +5,8 @@ local HorseUtils = require("HorseMod/Utils")
 local AttachmentData = require("HorseMod/AttachmentData")
 local rdm = newrandom()
 
+---Holds utility functions related to the attachment system of horses.
+---@class Attachments
 local Attachments = {}
 
 ---Checks if the given item full type is an attachment, and optionally if it has a slot `_slot`.
@@ -13,13 +15,14 @@ local Attachments = {}
 ---@return boolean
 ---@nodiscard
 Attachments.isAttachment = function(fullType, _slot)
-    local attachmentDef = Attachments.items[fullType]
+    local attachmentDef = AttachmentData.items[fullType]
     if _slot then
         return attachmentDef and attachmentDef.slot == _slot or false
     end
     return attachmentDef ~= nil
 end
 
+---Retrieve the attachment slot of a given item fullType.
 ---@param fullType string
 ---@return AttachmentSlot?
 ---@nodiscard
@@ -47,6 +50,7 @@ Attachments.getAttachedItem = function(animal, slot)
     -- return animal:getAttachedItem(slot)
 end
 
+---Retrieve a table with every attached items on the horse.
 ---@param animal IsoAnimal
 ---@return InventoryItem[]
 ---@nodiscard
@@ -122,6 +126,7 @@ Attachments.giveBackToPlayerOrDrop = function(player, horse, item)
     end
 end
 
+---Unequip instantly the attachment from the horse if it isn't a mane and store it in the player inventory or drop it on the ground.
 ---@param animal IsoAnimal
 ---@param slot AttachmentSlot
 ---@param player IsoPlayer?
@@ -153,6 +158,7 @@ Attachments.unequipAttachment = function(animal, slot, player)
     Attachments.giveBackToPlayerOrDrop(player, animal, cur)
 end
 
+---Unequip all attachments of the horse and add to the player inventory or drop on the ground.
 ---@param animal IsoAnimal
 ---@param player IsoPlayer?
 Attachments.unequipAllAttachments = function(animal, player)
