@@ -6,7 +6,6 @@ local Attachments = require("HorseMod/Attachments")
 local ISHorseEquipGear = require("HorseMod/TimedActions/ISHorseEquipGear")
 local ISHorseUnequipGear = require("HorseMod/TimedActions/ISHorseUnequipGear")
 
----@class AttachmentsManager
 local AttachmentsManager = {}
 
 

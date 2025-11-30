@@ -5,9 +5,10 @@ local ModOptions = require("HorseMod/ModOptions")
 
 ---@namespace HorseMod
 
----@class HorseRiding
----@field playerMounts {[integer]: Mount | nil}
+---Holds horse riding utility and keybind handling.
 local HorseRiding = {
+    ---Holds the mount of a given player ID.
+    ---@type {[integer]: Mount | nil}
     playerMounts = {},
 }
 
@@ -63,7 +64,7 @@ function HorseRiding.getMount(rider)
     return HorseRiding.playerMounts[rider:getPlayerNum()]
 end
 
-
+---Create a new mount from a pair.
 ---@param pair MountPair
 function HorseRiding.createMountFromPair(pair)
     assert(
@@ -78,7 +79,7 @@ function HorseRiding.createMountFromPair(pair)
     pair.rider:transmitModData()
 end
 
-
+---Remove the mount from a player.
 ---@param player IsoPlayer
 function HorseRiding.removeMount(player)
     local mount = HorseRiding.getMount(player)
@@ -98,8 +99,8 @@ function HorseRiding.removeMount(player)
     mount.pair.rider:transmitModData()
 end
 
-
-function HorseRiding.updateMounts()
+---Update the horse riding for every mounts.
+HorseRiding.updateMounts = function()
     for _, mount in pairs(HorseRiding.playerMounts) do
         mount:update()
     end
@@ -108,6 +109,7 @@ end
 Events.OnTick.Add(HorseRiding.updateMounts)
 
 
+---Handle keybind pressing to switch horse riding states.
 ---@param key integer
 HorseRiding.onKeyPressed = function(key)
     ---TROT
@@ -151,7 +153,7 @@ HorseRiding.dismountOnHorseDeath = function(character)
     end
 end
 
-Events.OnCharacterDeath.Add(dismountOnHorseDeath)
+Events.OnCharacterDeath.Add(HorseRiding.dismountOnHorseDeath)
 
 
 ---@param player IsoPlayer

@@ -7,10 +7,11 @@ local HorseManager = require("HorseMod/HorseManager")
 local HorseUtils = require("HorseMod/Utils")
 local ManeManager = require("HorseMod/attachments/ManeManager")
 
----@class AttachmentUpdater
----@field IS_REAPPLIED table<IsoAnimal, true?>
 local AttachmentUpdater = {
     DEBUG_AttachmentUpdater = true,
+
+    ---Holds currently already reapplied horses.
+    ---@type table<IsoAnimal, true?>
     IS_REAPPLIED = {},
 }
 local IS_REAPPLIED = AttachmentUpdater.IS_REAPPLIED

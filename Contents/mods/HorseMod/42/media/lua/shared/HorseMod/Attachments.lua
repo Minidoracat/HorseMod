@@ -6,7 +6,6 @@ local AttachmentData = require("HorseMod/AttachmentData")
 local rdm = newrandom()
 
 ---Holds utility functions related to the attachment system of horses.
----@class Attachments
 local Attachments = {}
 
 ---Checks if the given item full type is an attachment, and optionally if it has a slot `_slot`.

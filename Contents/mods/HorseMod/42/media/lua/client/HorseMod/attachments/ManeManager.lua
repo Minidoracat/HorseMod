@@ -5,9 +5,10 @@ local HorseUtils = require("HorseMod/Utils")
 local Attachments = require("HorseMod/Attachments")
 local AttachmentData = require("HorseMod/AttachmentData")
 
----@class ManeManager
+---Hold utility functions related to the horse manes.
 local ManeManager = {}
 
+---Remove manes from the horse.
 ---@param horse IsoAnimal
 ManeManager.removeManes = function(horse)
     for slot, _ in pairs(AttachmentData.MANE_SLOTS_SET) do
