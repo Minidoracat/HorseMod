@@ -520,6 +520,7 @@ local PLAYER_SYNC_TUNER = 0.8
 ---@namespace HorseMod
 
 
+---Handles the movement aspect of the player mounting horse state.
 ---@class MountController
 ---
 ---@field mount Mount
