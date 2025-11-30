@@ -1,6 +1,9 @@
 Attachments
 ========================
 
-.. lua:autoclass:: HorseMod.AttachmentData
+.. lua:autoclass:: HorseMod.EquipBehavior
+    :members:
+
+.. lua:autoclass:: HorseMod.AttachmentDefinition
     :members:
 

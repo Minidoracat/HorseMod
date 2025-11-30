@@ -1,15 +1,18 @@
 ---@namespace HorseMod
 
+---Available attachment slots.
 ---@alias AttachmentSlot "Saddle"|"Saddlebags"|"Reins"|"ManeStart"|"ManeMid1"|"ManeMid2"|"ManeMid3"|"ManeMid4"|"ManeMid5"|"ManeEnd"|"Head"|"MountLeft"|"MountRight"
 
----Hex color code (#rrggbb)
+---Hex color code (#rrggbb).
 ---@alias HexColor string
 
+---Table holding a RGB mane color.
 ---@class ManeColor
 ---@field r number
 ---@field g number
 ---@field b number
 
+---Equip behavior to use during equip or unequip actions.
 ---@class EquipBehavior
 ---@field time number? time to equip, if `-1` the animation defines the end time
 ---@field anim string? animation to play during equip
@@ -17,37 +20,20 @@
 
 ---Defines an attachment item with its associated slots and extra data if needed.
 ---@class AttachmentDefinition
----@field slot AttachmentSlot slot the attachment goes on
----@field equipBehavior EquipBehavior?
----@field unequipBehavior EquipBehavior?
----@field model string? model script ID to show when attached [not fully tested]
----@field hidden boolean? hide the item in menus [not fully tested]
-
----Available item slots.
----@alias AttachmentSlots AttachmentSlot[]
+---@field slot AttachmentSlot Slot the attachment goes on
+---@field equipBehavior EquipBehavior? Equip timed action behavior
+---@field unequipBehavior EquipBehavior? Unequip timed action behavior
+---@field model string? Model script ID to show when attached [not fully tested]
+---@field hidden boolean? Hide the item in menus [not fully tested]
 
 ---Stores the various attachment data which are required to work with attachments for horses.
----@class AttachmentData
----
----Maps items' fulltype to their associated attachment definition.
----@field items table<string, AttachmentDefinition>
----
----Default attachment definitions.
----@field DEFAULT_ATTACHMENT_DEFS table<string, AttachmentDefinition>
----
----
----@field SLOTS AttachmentSlots
----
----
----@field MANE_SLOTS_SET table<AttachmentSlot, string>
----
----
----@field MANE_HEX_BY_BREED table<string, HexColor>
----
----
----@field REIN_STATES table<string, string>
 local AttachmentData = {
+    ---Maps items' fulltype to their associated attachment definition.
+    ---@type table<string, AttachmentDefinition>
     items = {},
+
+    ---Default attachment definitions.
+    ---@type table<string, AttachmentDefinition>
     DEFAULT_ATTACHMENT_DEFS = {
         SADDLE = { 
             slot = "Saddle", 
@@ -60,7 +46,8 @@ local AttachmentData = {
         SADDLEBAGS = { slot = "Saddlebags", container = "HorseMod.HorseSaddlebagsContainer" },
     },
 
-    --- Every available attachment slots
+    ---Every available attachment slots.
+    ---@type AttachmentSlot[]
     SLOTS = {
         "Saddle",
         "Saddlebags",
@@ -77,7 +64,8 @@ local AttachmentData = {
         "ManeEnd",
     },
 
-    --- Mane slots associated to their default mane items
+    ---Mane slots associated to their default mane items.
+    ---@type table<AttachmentSlot, string>
     MANE_SLOTS_SET = {
         ManeStart = "HorseMod.HorseManeStart",
         ManeMid1  = "HorseMod.HorseManeMid",
@@ -88,7 +76,8 @@ local AttachmentData = {
         ManeEnd   = "HorseMod.HorseManeEnd",
     },
 
-    --- Breeds associated to their mane colors
+    ---Breeds associated to their mane colors.
+    ---@type table<string, HexColor>
     MANE_HEX_BY_BREED = {
         american_quarter = "#EADAB6",
         american_paint = "#FBDEA7",
@@ -101,7 +90,8 @@ local AttachmentData = {
         __default = "#6B5642",
     },
 
-    --- Suffix for rein model swapping during horse riding
+    ---Suffix for rein model swapping during horse riding.
+    ---@type table<string, string>
     REIN_STATES = {
         idle = "",
         walking = "_Walking",
