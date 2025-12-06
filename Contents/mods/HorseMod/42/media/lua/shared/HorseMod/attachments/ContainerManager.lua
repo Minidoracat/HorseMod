@@ -3,6 +3,7 @@
 ---REQUIREMENTS
 local HorseUtils = require("HorseMod/Utils")
 local AttachmentData = require("HorseMod/attachments/AttachmentData")
+local HorseManager = require("HorseMod/HorseManager")
 
 ---@class ContainerInformation
 ---@field x number
@@ -16,14 +17,22 @@ local AttachmentData = require("HorseMod/attachments/AttachmentData")
 
 ---Holds all the utility functions to manage containers on horses.
 local ContainerManager = {
-    ---@type table<IsoAnimal, AnimalContainers?>
-    HORSE_CONTAINERS = {}
+    ---Cache for the horse containers references.
+    ---@type table<IsoAnimal, AnimalContainers>
+    HORSE_CONTAINERS = {},
+
+    ---Containers
+    ---@type table<number, IsoAnimal>
+    FIND_CONTAINERS = {},
 }
 local HORSE_CONTAINERS = ContainerManager.HORSE_CONTAINERS
+local FIND_CONTAINERS = ContainerManager.FIND_CONTAINERS
 
 local function refreshInventories(player)
     local pdata = getPlayerData(player:getPlayerNum())
+    ---@diagnostic disable-next-line
     pdata.playerInventory:refreshBackpacks()
+    ---@diagnostic disable-next-line
     pdata.lootInventory:refreshBackpacks()
     triggerEvent("OnContainerUpdate")
 end
@@ -42,23 +51,16 @@ ContainerManager.transferAll = function(player, srcContainer, destContainer)
 end
 
 ---@param horse IsoAnimal
----@param attachmentDef AttachmentDefinition
----@param fullType string
+---@param slot AttachmentSlot
 ---@param worldItem IsoWorldInventoryObject?
-ContainerManager.registerContainerInformation = function(horse, attachmentDef, fullType, worldItem)
+ContainerManager.registerContainerInformation = function(horse, slot, worldItem)
     local modData = HorseUtils.getModData(horse)
     local containers = modData.containers
-    local slot = attachmentDef.slot
-
-    -- init cache for this horse if needed
-    ---@type AnimalContainers
-    HORSE_CONTAINERS[horse] = HORSE_CONTAINERS[horse] or {}
 
     -- remove info
     if not worldItem then
         -- clear cached and saved info        
         containers[slot] = nil
-        HORSE_CONTAINERS[horse][slot] = nil
     else
         local item = worldItem:getItem()
 
@@ -68,16 +70,17 @@ ContainerManager.registerContainerInformation = function(horse, attachmentDef, f
             x = worldItem:getX(),
             y = worldItem:getY(),
             z = worldItem:getZ(),
-            fullType = fullType,
+            fullType = item:getFullType(),
             worldID = item:getID(),
             worldItem = worldItem,
+            horseID = horse:getAnimalID(),
         }
 
         -- store in mod data
         containers[slot] = containerInfo
         
         -- cache
-        HORSE_CONTAINERS[horse][slot] = containerInfo
+        -- HORSE_CONTAINERS[horse][slot] = containerInfo
     end
 end
 
@@ -110,21 +113,19 @@ ContainerManager.initContainer = function(player, horse, attachmentDef, accessor
 
     -- transfer everything to the invisible container
     ContainerManager.transferAll(player, srcContainer, destContainer)
-
     refreshInventories(player)
 
     -- register in the data of the horse the container being attached
-    ContainerManager.registerContainerInformation(horse, attachmentDef, accessory:getFullType(), worldItem)
+    ContainerManager.registerContainerInformation(horse, attachmentDef.slot, worldItem)
 end
 
 ---@param player IsoPlayer
 ---@param horse IsoAnimal
----@param attachmentDef AttachmentDefinition
+---@param slot AttachmentSlot
 ---@param accessory InventoryContainer
-ContainerManager.removeContainer = function(player, horse, attachmentDef, accessory)
+ContainerManager.removeContainer = function(player, horse, slot, accessory)
     -- retrieve the world container
-    local fullType = accessory:getFullType()
-    local worldItem = ContainerManager.getContainer(horse, attachmentDef, fullType)
+    local worldItem = ContainerManager.getContainer(horse, slot)
     assert(worldItem ~= nil, "worldItem container not found.")
     
     -- retrieve the inventory container
@@ -145,51 +146,44 @@ ContainerManager.removeContainer = function(player, horse, attachmentDef, access
     square:transmitRemoveItemFromSquare(worldItem)
     worldItem:removeFromWorld()
     worldItem:removeFromSquare()
+    ---@diagnostic disable-next-line
     worldItem:setSquare(nil)
 
     refreshInventories(player)
 
     -- sync cached and saved informations
-    ContainerManager.registerContainerInformation(horse, attachmentDef, fullType, nil)
+    ContainerManager.registerContainerInformation(horse, slot, nil)
 end
 
 ---@param horse IsoAnimal
----@param attachmentDef AttachmentDefinition
----@param fullType string
-ContainerManager.findContainer = function(horse, attachmentDef, fullType)
+---@param containerInfo ContainerInformation
+---@return IsoWorldInventoryObject?
+ContainerManager.findContainer = function(horse, containerInfo)
     ---@TODO to implement
 
     -- ContainerManager.registerContainerInformation(horse, attachmentDef, worldItem)
 end
 
 ---@param horse IsoAnimal
----@param attachmentDef AttachmentDefinition
----@param fullType string
+---@param slot AttachmentSlot
 ---@return IsoWorldInventoryObject?
-ContainerManager.getContainer = function(horse, attachmentDef, fullType)
-    local slot = attachmentDef.slot
-
+ContainerManager.getContainer = function(horse, slot)
     --  verify horse should have a container there
     local modData = HorseUtils.getModData(horse)
     local containers = modData.containers
     local containerInfo = containers[slot]
     if not containerInfo then return end
 
-    -- init cache for this horse if needed
-    ---@type AnimalContainers
-    HORSE_CONTAINERS[horse] = HORSE_CONTAINERS[horse] or {}
-    local horseContainers = HORSE_CONTAINERS[horse]
-
-    -- find from cache
-    local containerInfo = horseContainers[slot]
-
     -- if container not cached, find it
-    if not containerInfo then
-        local item = ContainerManager.findContainer(horse, attachmentDef, fullType)
-        return item
+    local worldItem = containerInfo.worldItem
+    if not worldItem then
+        worldItem = ContainerManager.findContainer(horse, containerInfo)
+
+        -- cache container or nil
+        containerInfo.worldItem = worldItem
     end
 
-    return containerInfo.worldItem
+    return worldItem
 end
 
 
@@ -206,23 +200,55 @@ ContainerManager.track = function(horses)
 
         -- for each container, retrieve its worldItem
         for slot, containerInfo in pairs(containers) do repeat
-            local fullType = containerInfo.fullType
-            local attachmentDef = AttachmentData.items[fullType]
-            local worldItem = ContainerManager.getContainer(horse, attachmentDef, fullType)
+            local worldItem = containerInfo.worldItem
+
+            -- try to find the container
+            if not worldItem then
+                worldItem = ContainerManager.findContainer(horse, containerInfo)
+            end
+
+            -- 
             if worldItem then
                 -- update its position if the square is different
                 local square = worldItem:getRenderSquare()
                 if square and square ~= squareHorse then
+                    -- remove the item from its square
                     local item = worldItem:getItem()
                     worldItem:removeFromSquare()
                     worldItem:removeFromWorld()
+
+                    -- move it to the new square
                     local worldItem = squareHorse:AddWorldInventoryItem(item, 0, 0, 0):getWorldItem()
-                    ContainerManager.registerContainerInformation(horse, attachmentDef, fullType, worldItem)
+                    ContainerManager.registerContainerInformation(horse, slot, worldItem)
                 end
             end
         until true end
     until true end    
 end
+
+
+
+
+-- ---@param horse IsoAnimal
+-- HorseManager.onHorseAdded:add(function(horse)
+--     HORSE_CONTAINERS[horse] = {}
+
+--     -- get containers linked to the horse
+--     local modData = HorseUtils.getModData(horse)
+--     local containers = modData.containers
+
+--     local toFind = {
+--         horse = horse,
+--     }
+--     table.insert(FIND_CONTAINERS, {})
+-- end)
+
+-- ---Reset cache for horse container data and stop searching for its containers if needed.
+-- ---@param horse IsoAnimal
+-- HorseManager.onHorseRemoved:add(function(horse)
+--     ---reset cache
+--     HORSE_CONTAINERS[horse] = nil
+-- end)
 
 
 return ContainerManager

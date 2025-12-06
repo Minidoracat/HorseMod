@@ -29,7 +29,7 @@ function ISHorseUnequipGear:perform()
     -- init container
     local containerBehavior = attachmentDef.containerBehavior
     if containerBehavior then
-        ContainerManager.removeContainer(character, horse, attachmentDef, accessory)
+        ContainerManager.removeContainer(character, horse, slot, accessory)
     end
 
     if self.unlockPerform then
