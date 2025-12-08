@@ -150,7 +150,7 @@ Attachments.unequipAttachment = function(animal, slot, player)
     -- ignore if attachment should stay hidden from the player
     local attachmentDef = Attachments.getAttachmentDefinition(cur:getFullType(), slot)
     assert(attachmentDef ~= nil, "Called unequip on an item ("..cur:getFullType()..") that isn't an attachment or doesn't have an attachment definition for the slot "..slot..".")
-    if not attachmentDef or attachmentDef.hidden then
+    if not attachmentDef or attachmentDef.hidden or AttachmentData.MANE_SLOTS_SET[slot] then
         return
     end
     
