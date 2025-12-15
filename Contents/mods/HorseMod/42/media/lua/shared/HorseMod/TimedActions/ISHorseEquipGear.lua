@@ -2,10 +2,9 @@
 
 ---REQUIREMENTS
 local Attachments = require("HorseMod/attachments/Attachments")
-local HorseUtils = require("HorseMod/Utils")
 local ContainerManager = require("HorseMod/attachments/ContainerManager")
 
----@class ISHorseEquipGear : ISBaseTimedAction
+---@class ISHorseEquipGear : ISBaseTimedAction, umbrella.NetworkedTimedAction
 ---@field horse IsoAnimal
 ---@field accessory InventoryItem
 ---@field attachmentDef AttachmentDefinition
@@ -14,7 +13,7 @@ local ContainerManager = require("HorseMod/attachments/ContainerManager")
 ---@field side string
 ---@field unlockPerform fun()?
 ---@field unlockStop fun()?
-local ISHorseEquipGear = ISBaseTimedAction:derive("ISHorseEquipGear")
+local ISHorseEquipGear = ISBaseTimedAction:derive("HorseMod_ISHorseEquipGear")
 
 ---@return boolean
 function ISHorseEquipGear:isValid()
@@ -55,37 +54,57 @@ function ISHorseEquipGear:stop()
     ISBaseTimedAction.stop(self)
 end
 
-function ISHorseEquipGear:updateModData(horse, slot, ft, gr)
-    local modData = HorseUtils.getModData(horse)
-    modData.bySlot[slot] = ft
-end
 
 function ISHorseEquipGear:perform()
-    local horse = self.horse
-    local accessory = self.accessory
-    local attachmentDef = self.attachmentDef
-    local slot = self.slot
-
-    -- remove item from player's inventory and add to horse inventory
-    accessory:getContainer():Remove(accessory)
-
-    -- init container
-    local containerBehavior = attachmentDef.containerBehavior
-    if containerBehavior then
-        ContainerManager.initContainer(self.character, horse, slot, containerBehavior, accessory)
-    end
-
-    horse:getInventory():AddItem(accessory)
-
-    -- set new accessory
-    Attachments.setAttachedItem(horse, slot, accessory)
-    self:updateModData(horse, slot, accessory:getFullType(), nil)
-
     if self.unlockPerform then
         self.unlockPerform()
     end
     ISBaseTimedAction.perform(self)
 end
+
+
+function ISHorseEquipGear:complete()
+    -- remove item from player's inventory and add to horse inventory
+    local characterInventory = self.character:getInventory()
+    characterInventory:Remove(self.accessory)
+    sendRemoveItemFromContainer(characterInventory, self.accessory)
+
+    local horseInventory = self.horse:getInventory()
+    characterInventory:AddItem(self.accessory)
+    sendAddItemToContainer(horseInventory, self.accessory)
+
+    -- init container
+    local containerBehavior = self.attachmentDef.containerBehavior
+    if containerBehavior then
+        ContainerManager.initContainer(
+            self.character,
+            self.horse,
+            self.slot,
+            containerBehavior,
+            self.accessory
+        )
+    end
+
+    -- set new accessory
+    Attachments.setAttachedItem(self.horse, self.slot, self.accessory)
+
+    return true
+end
+
+
+function ISHorseEquipGear:getDuration()
+    if self.character:isTimedActionInstant() then
+        return 1
+    end
+
+    local equipBehaviour = self.attachmentDef.equipBehavior
+    if not equipBehaviour or not equipBehaviour.time then
+        return 120
+    end
+
+    return equipBehaviour.time
+end
+
 
 ---@param character IsoGameCharacter
 ---@param horse IsoAnimal
@@ -94,7 +113,7 @@ end
 ---@param side string
 ---@param unlockPerform fun()? should unlock after performing the action
 ---@param unlockStop fun()? unlock function when force stop the action, if unlockPerform is not provided
----@return ISHorseEquipGear
+---@return self
 ---@nodiscard
 function ISHorseEquipGear:new(character, horse, accessory, slot, side, unlockPerform, unlockStop)
     local o = ISBaseTimedAction.new(self,character) --[[@as ISHorseEquipGear]]
@@ -108,9 +127,8 @@ function ISHorseEquipGear:new(character, horse, accessory, slot, side, unlockPer
     o.slot = slot
     
     -- equip behavior
-    local equipBehavior = attachmentDef.equipBehavior or {}
-    o.maxTime = equipBehavior.time or 120
-    o.equipBehavior = equipBehavior
+    o.maxTime = self:getDuration()
+    o.equipBehavior = attachmentDef.equipBehavior or {}
     o.side = side
 
     -- unlock functions
@@ -123,5 +141,9 @@ function ISHorseEquipGear:new(character, horse, accessory, slot, side, unlockPer
     o.stopOnAim  = true
     return o
 end
+
+
+_G[ISHorseEquipGear.Type] = ISHorseEquipGear
+
 
 return ISHorseEquipGear
