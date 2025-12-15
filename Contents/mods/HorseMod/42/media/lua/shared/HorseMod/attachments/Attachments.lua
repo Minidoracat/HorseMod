@@ -85,8 +85,11 @@ end
 Attachments.setAttachedItem = function(animal, slot, item)
     ---@diagnostic disable-next-line
     animal:setAttachedItem(slot, item)
+    sendAttachedItem(animal, slot, item)
+
     local modData = HorseUtils.getModData(animal)
     modData.bySlot[slot] = item and item:getFullType()
+    animal:transmitModData()
 end
 
 ---@param animal IsoAnimal
@@ -143,6 +146,7 @@ Attachments.unequipAttachment = function(animal, slot, player)
     if AttachmentData.MANE_SLOTS_SET[slot] then
         return
     end
+
     local cur = Attachments.getAttachedItem(animal, slot)
     if not cur then
         return

@@ -1,7 +1,6 @@
 require("TimedActions/ISBaseTimedAction")
 
-local HorseRiding = require("HorseMod/Riding")
-local HorseSounds = require("HorseMod/Sounds")
+local MountPair = require("HorseMod/MountPair")
 
 
 ---@namespace HorseMod
@@ -95,13 +94,16 @@ end
 
 
 function MountHorseAction:complete()
-    HorseRiding.createMountFromPair(self.pair)
+    -- HACK: we can't require this at file load because it is in the client dir
+    --  this one definitely needs to be fixed but it requires tearing up half the mod
+    require("HorseMod/Riding").createMountFromPair(self.pair)
     return true
 end
 
 
 function MountHorseAction:perform()
-    HorseSounds.playMountSnort(self.character, self.horse)
+    -- HACK: we can't require this at file load because it is in the client dir
+    require("HorseMod/Sounds").playMountSnort(self.character, self.horse)
 
     ISBaseTimedAction.perform(self)
 end
@@ -125,7 +127,8 @@ function MountHorseAction:new(pair, side, saddle)
     ---@type MountHorseAction
     local o = ISBaseTimedAction.new(self, pair.rider)
 
-    -- FIXME: this probably loses its metatable when transmitted to the server
+    -- HACK: this loses its metatable when transmitted by the server
+    setmetatable(pair, MountPair)
     o.pair = pair
     o.horse = pair.mount
     o.side = side
