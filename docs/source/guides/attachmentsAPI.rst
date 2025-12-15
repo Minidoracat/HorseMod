@@ -1,46 +1,12 @@
-Attachments guide
-=================
+Attachments API
+===============
 Attachments on horses are handled by a bunch of different system spread across multiple modules and classes. The system currently allows you to associate an :lua:alias:`HorseMod.AttachmentSlot` to an `attachment point <https://pzwiki.net/wiki/Attachment_(scripts)>`_ on the horse model and define slots various items can occupy with different caracteristics defined as :lua:class:`HorseMod.AttachmentDefinition`.
 
-Creating a new slot
--------------------
-Slots require the use of :lua:class:`HorseMod.SlotDefinition` to associated a slot name to a model attachment point on the horse model. You can also use multiple times the same attachment point if needed. Alternatively, extra properties can be set to have the attachment be a mane attachment.
+AttachmentData
+--------------
+:lua:obj:`HorseMod.attachments.AttachmentData` is the main module used to define and store all the attachment slots and definitions. It provides functions to add new slots and attachments, as well as tables to store the defined slots and attachments.
 
-To add a new slot, add a new :lua:class:`HorseMod.SlotDefinition` entry to the :lua:obj:`HorseMod.attachments.AttachmentData.slotsDefinitions` table. Below is an example of adding a new slot called "Hat" attached to the "head" model attachment point on the horse model:
-
-::
-
-  local AttachmentData = require("HorseMod/attachments/AttachmentData")
-
-  AttachmentData.addNewSlot("Hat", {
-      modelAttachment = "head",
-  })
-
-The slots are first defined in the table :lua:obj:`HorseMod.attachments.AttachmentData.slotsDefinitions`, which is then processed when the server Lua folder gets loaded to generate the various tables used by the attachment system. See `AttachmentsLoad <AttachmentsLoad_>`_ for more details on that process.
-
-Defining a new attachment
--------------------------
-Defining a whole new attachment depends on the function :lua:obj:`HorseMod.AttachmentData.addNewAttachments`. This function allows you to add new slot and item definitions to an existing item full type or create a new item definition entry.
-
-Below is an example usage:
-
-::
-
-  local AttachmentData = require("HorseMod/attachments/AttachmentData")
-  local attachmentDef = {
-      unequipBehavior = {
-          time = -1,
-          anim = {
-              ["Left"] = "EquipMyItem_Left",
-              ["Right"] = "EquipMyItem_Right",
-          },
-          shouldHold = true,
-      },
-      model = "MyMod.MyItemModel", -- has variants with riding state suffixes
-  }
-  AttachmentData.addNewAttachment("MyMod.MyItemFullType", "Reins", attachmentDef)
-
-.. note:: Attachments should be added from the shared folder so that both the server and client are aware of them.
+.. _attachmentsload-label:
 
 AttachmentsLoad
 ---------------
@@ -56,6 +22,12 @@ It will also verify that the provided attachments are of the right format and lo
 * Creates the apparel location in the ``Animal`` attached locations group for every slot defined.
 * If an attachment definition has a :lua:class:`HorseMod.ContainerBehavior`, it checks that the item actually is a container (``ItemType.CONTAINER``). It also verifies that the :lua:obj:`HorseMod.ContainerBehavior.worldItem` invisible container has the same capacity as the accessory item.
 * Removes any :lua:alias:`HorseMod.ItemDefinition` entry from :lua:obj:`HorseMod.attachments.AttachmentData.items` that don't contain any attachment definitions.
+
+Mane management
+---------------
+Manes are a special type of attachment that can be colored and are made of multiple parts attached to different points on the horse model. The mane system is handled by the :lua:obj:`HorseMod.attachments.ManeManager` module, which provides functions to setup and remove manes on horse models. When a horse spawns, its manes configuration and color are automatically setup based on its breed using :lua:obj:`HorseMod.attachments.AttachmentData.maneByBreed`.
+
+In the future, we plan to expand this system by allowing players to customize their horse's mane color and style through in-game actions or items.
 
 Attachment reapplying
 ---------------------
