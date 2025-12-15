@@ -6,48 +6,49 @@ local ISHorseEquipGear = require("HorseMod/TimedActions/ISHorseEquipGear")
 local ContainerManager = require("HorseMod/attachments/ContainerManager")
 
 ---@class ISHorseUnequipGear : ISHorseEquipGear
-local ISHorseUnequipGear = ISHorseEquipGear:derive("ISHorseUnequipGear")
+local ISHorseUnequipGear = ISHorseEquipGear:derive("HorseMod_ISHorseUnequipGear")
 
-function ISHorseUnequipGear:perform()
-    local horse = self.horse
-    local character = self.character
-    local accessory = self.accessory
-    local attachmentDef = self.attachmentDef
-    local slot = self.slot
-
+function ISHorseUnequipGear:complete()
     -- remove old accessory from slot and give to player or drop
-    Attachments.setAttachedItem(horse, slot, nil)
+    Attachments.setAttachedItem(self.horse, self.slot, nil)
 
-    Attachments.giveBackToPlayerOrDrop(character, horse, accessory)
+    Attachments.giveBackToPlayerOrDrop(self.character, self.horse, self.accessory)
     
     -- remove container
-    local containerBehavior = attachmentDef.containerBehavior
+    local containerBehavior = self.attachmentDef.containerBehavior
     if containerBehavior then
-        ContainerManager.removeContainer(character, horse, slot, accessory)
+        ContainerManager.removeContainer(self.character, self.horse, self.slot, self.accessory)
     end
 
-    if self.unlockPerform then
-        self.unlockPerform()
-    end
-    ISBaseTimedAction.perform(self)
+    return true
 end
 
----@param character IsoGameCharacter
----@param horse IsoAnimal
----@param accessory InventoryItem
----@param slot AttachmentSlot
----@param side string
----@param unlockPerform fun()?
----@param unlockStop fun()?
----@return ISHorseUnequipGear
----@nodiscard
+
+function ISHorseUnequipGear:getDuration()
+    if self.character:isTimedActionInstant() then
+        return 1
+    end
+
+    local unequipBehaviour = self.attachmentDef.unequipBehavior
+    if not unequipBehaviour or not unequipBehaviour.time then
+        return 120
+    end
+
+    return unequipBehaviour.time
+end
+
+
 function ISHorseUnequipGear:new(character, horse, accessory, slot, side, unlockPerform, unlockStop)
     local o = ISHorseEquipGear.new(self, character, horse, accessory, slot, side, unlockPerform, unlockStop) --[[@as ISHorseUnequipGear]]
-    -- equip behavior
-    local equipBehavior = o.attachmentDef.unequipBehavior or {}
-    o.maxTime = equipBehavior.time or 90
-    o.equipBehavior = equipBehavior
+
+    o.maxTime = o:getDuration()
+    o.equipBehavior = o.attachmentDef.unequipBehavior or {}
+
     return o
 end
+
+
+_G[ISHorseUnequipGear.Type] = ISHorseUnequipGear
+
 
 return ISHorseUnequipGear

@@ -1,7 +1,6 @@
 require("TimedActions/ISBaseTimedAction")
 
-local HorseRiding = require("HorseMod/Riding")
-local HorseSounds = require("HorseMod/Sounds")
+local MountPair = require("HorseMod/MountPair")
 
 
 ---@namespace HorseMod
@@ -18,7 +17,7 @@ local HorseSounds = require("HorseMod/Sounds")
 ---@field saddle InventoryItem | nil
 ---
 ---@field lockDir IsoDirections
-local MountHorseAction = ISBaseTimedAction:derive("MountHorseAction")
+local MountHorseAction = ISBaseTimedAction:derive("HorseMod_MountHorseAction")
 
 
 ---@return boolean
@@ -94,12 +93,28 @@ function MountHorseAction:stop()
 end
 
 
-function MountHorseAction:perform()
-    HorseRiding.createMountFromPair(self.pair)
+function MountHorseAction:complete()
+    -- HACK: we can't require this at file load because it is in the client dir
+    --  this one definitely needs to be fixed but it requires tearing up half the mod
+    require("HorseMod/Riding").createMountFromPair(self.pair)
+    return true
+end
 
-    HorseSounds.playMountSnort(self.character, self.horse)
+
+function MountHorseAction:perform()
+    -- HACK: we can't require this at file load because it is in the client dir
+    require("HorseMod/Sounds").playMountSnort(self.character, self.horse)
 
     ISBaseTimedAction.perform(self)
+end
+
+
+function MountHorseAction:getDuration()
+    if self.character:isTimedActionInstant() then
+        return 1
+    end
+
+    return -1
 end
 
 
@@ -111,6 +126,9 @@ end
 function MountHorseAction:new(pair, side, saddle)
     ---@type MountHorseAction
     local o = ISBaseTimedAction.new(self, pair.rider)
+
+    -- HACK: this loses its metatable when transmitted by the server
+    setmetatable(pair, MountPair)
     o.pair = pair
     o.horse = pair.mount
     o.side = side
@@ -118,13 +136,13 @@ function MountHorseAction:new(pair, side, saddle)
     o.stopOnWalk = true
     o.stopOnRun  = true
 
-    o.maxTime = -1
-    if o.character:isTimedActionInstant() then
-        o.maxTime = 1
-    end
+    o.maxTime = o:getDuration()
 
     return o
 end
+
+
+_G[MountHorseAction.Type] = MountHorseAction
 
 
 return MountHorseAction
