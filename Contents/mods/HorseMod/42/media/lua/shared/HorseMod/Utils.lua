@@ -72,24 +72,24 @@ end
 ---@field bySlot table<AttachmentSlot, string> Attachments full types associated to their slots of the horse.
 ---@field maneColors table<AttachmentSlot, ManeColor> Manes of the horse and their associated color.
 ---@field containers table<AttachmentSlot, ContainerInformation> Container data currently attached to the horse holding XYZ coordinates of the container and identification data.
+---@field stamina number Current stamina of the horse.
 
 ---Used to retrieve or create the mod data of a specific horse.
----@param animal IsoAnimal
+---@param horse IsoAnimal
 ---@return HorseModData
-HorseUtils.getModData = function(animal)
-    local md = animal:getModData()
+HorseUtils.getModData = function(horse)
+    local md = horse:getModData()
+    md.horseModData = md.horseModData or {} --[[@as HorseModData]]
     local horseModData = md.horseModData
 
-    -- if no mod data, create default one
-    if not horseModData then
-        local maneConfig, maneColors = HorseUtils.generateManeConfig(animal)
-        md.horseModData = {
-            bySlot = maneConfig, -- default mane config
-            maneColors = maneColors,
-            containers = {},
-        } --[[@as HorseModData]]
-        horseModData = md.horseModData
+    -- init default values
+    if not horseModData.bySlot or not horseModData.maneColors then
+        local maneConfig, maneColors = HorseUtils.generateManeConfig(horse)
+        horseModData.bySlot = horseModData.bySlot or maneConfig
+        horseModData.maneColors = horseModData.maneColors or maneColors
     end
+    horseModData.containers = horseModData.containers or {}
+    horseModData.stamina = horseModData.stamina or HorseUtils.Stamina_MAX
 
     return horseModData
 end

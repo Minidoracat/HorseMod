@@ -88,6 +88,15 @@ function HorseRiding.createMountFromPair(pair)
     pair.rider:transmitModData()
 end
 
+---@param player IsoPlayer
+---@param mount Mount
+HorseRiding.setJump = function(player, mount)
+    mount.pair:setAnimationVariable(AnimationVariables.JUMP, true)
+
+    player:setIgnoreMovement(true)
+    player:setIgnoreInputsForDirection(true)
+end
+
 ---Remove the mount from a player.
 ---@param player IsoPlayer
 function HorseRiding.removeMount(player)
@@ -144,7 +153,7 @@ HorseRiding.onKeyPressed = function(key)
         if player:getVariableBoolean(AnimationVariables.RIDING_HORSE) 
             and horse:getVariableBoolean(AnimationVariables.GALLOP)
             and not mountPair:getAnimationVariableBoolean(AnimationVariables.JUMP) then
-            mountPair:setAnimationVariable(AnimationVariables.JUMP, true)
+            HorseRiding.setJump(player, mount)
         end
     end
 end

@@ -1,4 +1,5 @@
 local AnimationVariables = require("HorseMod/AnimationVariables")
+local HorseUtils = require("HorseMod/Utils")
 
 ---@namespace HorseMod
 
@@ -35,14 +36,12 @@ end
 ---@param horse IsoAnimal
 ---@return number
 function Stamina.get(horse)
-    local modData = horse:getModData()
-    if modData.HorseMod_Stamina == nil then
-        modData.HorseMod_Stamina = Stamina.MAX
-        horse:transmitModData()
-    end
-    return modData.HorseMod_Stamina
+    local modData = HorseUtils.getModData(horse)
+    return modData.stamina
 end
 
+---@FIXME circle dependencies
+HorseUtils.Stamina_MAX = Stamina.MAX
 
 ---@param horse IsoAnimal
 ---@param value number
@@ -52,8 +51,8 @@ function Stamina.set(horse, value, transmit)
     local modData = horse:getModData()
     local newValue = clamp(value, 0, Stamina.MAX)
 
-    if modData.HorseMod_Stamina ~= newValue then
-        modData.HorseMod_Stamina = newValue
+    if modData.stamina ~= newValue then
+        modData.stamina = newValue
         if transmit then
             horse:transmitModData()
         end
