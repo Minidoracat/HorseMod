@@ -1,7 +1,6 @@
 ---@namespace HorseMod
 
----Available attachment slots.
----"Saddle"|"Saddlebags"|"Reins"|"ManeStart"|"ManeMid1"|"ManeMid2"|"ManeMid3"|"ManeMid4"|"ManeMid5"|"ManeEnd"|"Head"|"MountLeft"|"MountRight"
+---Defines an attachment slot ID, see :ref:`availableslots-label` for the full list of attachment slots.
 ---@alias AttachmentSlot string
 
 
@@ -121,6 +120,7 @@ local AttachmentData = {
     },
 
     ---Sets attachment model points and mane properties for attachment slots.
+    ---!doctype table
     ---@type table<AttachmentSlot, SlotDefinition>
     slotsDefinitions = {
         ---ACCESSORIES
