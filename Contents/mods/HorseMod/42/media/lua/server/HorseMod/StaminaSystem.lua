@@ -1,3 +1,7 @@
+if isClient() then
+    return
+end
+
 local Stamina = require("HorseMod/Stamina")
 local Mounts = require("HorseMod/Mounts")
 local HorseManager = require("HorseMod/HorseManager")
