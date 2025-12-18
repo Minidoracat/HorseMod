@@ -1,3 +1,34 @@
+---@namespace HorseMod
+
+---REQUIREMENTS
+local HorseUtils = require("HorseMod/HorseUtils")
+
+local HorseDefinitions = {
+    SHORT_NAMES = {
+        AQHP = "american_quarter", -- American Quarter Horse Paint
+        AP = "american_paint", -- American Paint
+        GDA = "appaloosa", -- Appaloosa
+        T = "thoroughbred", -- Thoroughbred
+        AQHBR = "american_quarter_blue_roan", -- American Quarter Horse Blue Roan
+        LPA = "leopard_appaloosa", -- Leopard Appaloosa
+        APHO = "american_paint_horse_overo", -- American Paint Horse Overo
+        FBG = "flea_bitten_grey", -- Flea Bitten Grey
+    },
+    PATHS = {
+        texture = "HorseMod/Horse{shortName}",
+        textureMale = "HorseMod/Horse{shortName}",
+        rottenTexture = "HorseMod/Horse{shortName}",
+        textureBaby = "HorseMod/Horse{shortName}",
+        invIconMale = "media/textures/Item_body/Horse{shortName}_Foal.png",
+        invIconFemale = "media/textures/Item_body/Horse{shortName}_Foal.png",
+        invIconBaby = "media/textures/Item_body/Horse{shortName}_Foal.png",
+        invIconMaleDead = "media/textures/Item_body/Horse{shortName}_Dead.png",
+        invIconFemaleDead = "media/textures/Item_body/Horse{shortName}_Dead.png",
+        invIconBabyDead = "media/textures/Item_body/Horse{shortName}_Foal_Dead.png",
+    }
+}
+
+-- define the growth stages
 AnimalDefinitions.stages["horse"] = {
     stages = {
         ["filly"] = {
@@ -20,131 +51,35 @@ AnimalDefinitions.stages["horse"] = {
     }
 }
 
-AnimalDefinitions.genome["horse"] = {
-    genes = {
-        ["meatRatio"] = "meatRatio",
-        ["maxWeight"] = "maxWeight",
-        ["lifeExpectancy"] = "lifeExpectancy",
-        ["resistance"] = "resistance",
-        ["strength"] = "strength",
-        ["hungerResistance"] = "hungerResistance",
-        ["thirstResistance"] = "thirstResistance",
-        ["aggressiveness"] = "aggressiveness",
-        ["ageToGrow"] = "ageToGrow",
-        ["fertility"] = "fertility",
-        ["stress"] = "stress",
-        ["speed"] = "speed",
-        ["stamina"] = "stamina",
-        ["carryWeight"] = "carryWeight"
-    }
-}
+-- define the breeds
+local breeds = {}
+for shortName, id in pairs(HorseDefinitions.SHORT_NAMES) do
+    local breed = {name = id}
+    for key, path in pairs(HorseDefinitions.PATHS) do
+        breed[key] = HorseUtils.formatTemplate(path, {shortName = shortName})
+    end
+    breeds[id] = breed
+end
+AnimalDefinitions.breeds["horse"] = breeds
 
-AnimalDefinitions.breeds["horse"] = {
-    breeds = {
-        ["american_quarter"] = {
-            name = "american_quarter",
-            texture = "HorseMod/HorseAQHP",
-            textureMale = "HorseMod/HorseAQHP",
-            rottenTexture = "HorseMod/HorseAQHP",
-            textureBaby = "HorseMod/HorseAQHP",
-            invIconMale = "media/textures/Item_body/HorseAQHP_Foal.png",
-            invIconFemale = "media/textures/Item_body/HorseAQHP_Foal.png",
-            invIconBaby = "media/textures/Item_body/HorseAQHP_Foal.png",
-            invIconMaleDead = "media/textures/Item_body/HorseAQHP_Dead.png",
-            invIconFemaleDead = "media/textures/Item_body/HorseAQHP_Dead.png",
-            invIconBabyDead = "media/textures/Item_body/HorseAQHP_Foal_Dead.png",
-        },
-        ["american_paint"] = {
-            name = "american_paint",
-            texture = "HorseMod/HorseAP",
-            textureMale = "HorseMod/HorseAP",
-            rottenTexture = "HorseMod/HorseAP",
-            textureBaby = "HorseMod/HorseAP",
-            invIconMale = "media/textures/Item_body/HorseAP_Foal.png",
-            invIconFemale = "media/textures/Item_body/HorseAP_Foal.png",
-            invIconBaby = "media/textures/Item_body/HorseAP_Foal.png",
-            invIconMaleDead = "media/textures/Item_body/HorseAP_Dead.png",
-            invIconFemaleDead = "media/textures/Item_body/HorseAP_Dead.png",
-            invIconBabyDead = "media/textures/Item_body/HorseAP_Foal_Dead.png",
-        },
-        ["appaloosa"] = {
-            name = "appaloosa",
-            texture = "HorseMod/HorseGDA",
-            textureMale = "HorseMod/HorseGDA",
-            rottenTexture = "HorseMod/HorseGDA",
-            textureBaby = "HorseMod/HorseGDA",
-            invIconMale = "media/textures/Item_body/HorseGDA_Foal.png",
-            invIconFemale = "media/textures/Item_body/HorseGDA_Foal.png",
-            invIconBaby = "media/textures/Item_body/HorseGDA_Foal.png",
-            invIconMaleDead = "media/textures/Item_body/HorseGDA_Dead.png",
-            invIconFemaleDead = "media/textures/Item_body/HorseGDA_Dead.png",
-            invIconBabyDead = "media/textures/Item_body/HorseGDA_Foal_Dead.png",
-        },
-        ["thoroughbred"] = {
-            name = "thoroughbred",
-            texture = "HorseMod/HorseT",
-            textureMale = "HorseMod/HorseT",
-            rottenTexture = "HorseMod/HorseT",
-            textureBaby = "HorseMod/HorseT",
-            invIconMale = "media/textures/Item_body/HorseT_Foal.png",
-            invIconFemale = "media/textures/Item_body/HorseT_Foal.png",
-            invIconBaby = "media/textures/Item_body/HorseT_Foal.png",
-            invIconMaleDead = "media/textures/Item_body/HorseT_Dead.png",
-            invIconFemaleDead = "media/textures/Item_body/HorseT_Dead.png",
-            invIconBabyDead = "media/textures/Item_body/HorseT_Foal_Dead.png",
-        },
-        ["blue_roan"] = {
-            name = "blue_roan",
-            texture = "HorseMod/HorseAQHBR",
-            textureMale = "HorseMod/HorseAQHBR",
-            rottenTexture = "HorseMod/HorseAQHBR",
-            textureBaby = "HorseMod/HorseAQHBR",
-            invIconMale = "media/textures/Item_body/HorseAQHBR_Foal.png",
-            invIconFemale = "media/textures/Item_body/HorseAQHBR_Foal.png",
-            invIconBaby = "media/textures/Item_body/HorseAQHBR_Foal.png",
-            invIconMaleDead = "media/textures/Item_body/HorseAQHBR_Dead.png",
-            invIconFemaleDead = "media/textures/Item_body/HorseAQHBR_Dead.png",
-            invIconBabyDead = "media/textures/Item_body/HorseAQHBR_Foal_Dead.png",
-        },
-        ["spotted_appaloosa"] = {
-            name = "spotted_appaloosa",
-            texture = "HorseMod/HorseLPA",
-            textureMale = "HorseMod/HorseLPA",
-            rottenTexture = "HorseMod/HorseLPA",
-            textureBaby = "HorseMod/HorseLPA",
-            invIconMale = "media/textures/Item_body/HorseLPA_Foal.png",
-            invIconFemale = "media/textures/Item_body/HorseLPA_Foal.png",
-            invIconBaby = "media/textures/Item_body/HorseLPA_Foal.png",
-            invIconMaleDead = "media/textures/Item_body/HorseLPA_Dead.png",
-            invIconFemaleDead = "media/textures/Item_body/HorseLPA_Dead.png",
-            invIconBabyDead = "media/textures/Item_body/HorseLPA_Foal_Dead.png",
-        },
-        ["american_paint_overo"] = {
-            name = "american_paint_overo",
-            texture = "HorseMod/HorseAPHO",
-            textureMale = "HorseMod/HorseAPHO",
-            rottenTexture = "HorseMod/HorseAPHO",
-            textureBaby = "HorseMod/HorseAPHO",
-            invIconMale = "media/textures/Item_body/HorseAPHO_Foal.png",
-            invIconFemale = "media/textures/Item_body/HorseAPHO_Foal.png",
-            invIconBaby = "media/textures/Item_body/HorseAPHO_Foal.png",
-            invIconMaleDead = "media/textures/Item_body/HorseAPHO_Dead.png",
-            invIconFemaleDead = "media/textures/Item_body/HorseAPHO_Dead.png",
-            invIconBabyDead = "media/textures/Item_body/HorseAPHO_Foal_Dead.png",
-        },
-        ["flea_bitten_grey"] = {
-            name = "flea_bitten_grey",
-            texture = "HorseMod/HorseFBG",
-            textureMale = "HorseMod/HorseFBG",
-            rottenTexture = "HorseMod/HorseFBG",
-            textureBaby = "HorseMod/HorseFBG",
-            invIconMale = "media/textures/Item_body/HorseFBG_Foal.png",
-            invIconFemale = "media/textures/Item_body/HorseFBG_Foal.png",
-            invIconBaby = "media/textures/Item_body/HorseFBG_Foal.png",
-            invIconMaleDead = "media/textures/Item_body/HorseFBG_Dead.png",
-            invIconFemaleDead = "media/textures/Item_body/HorseFBG_Dead.png",
-            invIconBabyDead = "media/textures/Item_body/HorseFBG_Foal_Dead.png",
-        },
+-- define the genome
+AnimalDefinitions.genome["horse"] = {
+    ---@enum Genes
+    genes = {
+        meatRatio = "meatRatio",
+        maxWeight = "maxWeight",
+        lifeExpectancy = "lifeExpectancy",
+        resistance = "resistance",
+        strength = "strength",
+        hungerResistance = "hungerResistance",
+        thirstResistance = "thirstResistance",
+        aggressiveness = "aggressiveness",
+        ageToGrow = "ageToGrow",
+        fertility = "fertility",
+        stress = "stress",
+        speed = "speed",
+        stamina = "stamina",
+        carryWeight = "carryWeight"
     }
 }
 
