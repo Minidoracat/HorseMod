@@ -25,8 +25,33 @@ local HorseDefinitions = {
         invIconMaleDead = "media/textures/Item_body/Horse{shortName}_Dead.png",
         invIconFemaleDead = "media/textures/Item_body/Horse{shortName}_Dead.png",
         invIconBabyDead = "media/textures/Item_body/Horse{shortName}_Foal_Dead.png",
-    }
+    },
+    AVATAR_DEFINITION = {
+        zoom = -20,
+        xoffset = 0,
+        yoffset = -1,
+        avatarWidth = 180,
+        avatarDir = IsoDirections.SE,
+        trailerDir = IsoDirections.SW,
+        trailerZoom = -20,
+        trailerXoffset = 0,
+        trailerYoffset = 0,
+        hook = true,
+        butcherHookZoom = -20,
+        butcherHookXoffset = 0,
+        butcherHookYoffset = 0.5,
+        animalPositionSize = 0.6,
+        animalPositionX = 0,
+        animalPositionY = 0.5,
+        animalPositionZ = 0.7
+    },
 }
+
+
+
+
+
+
 
 -- define the growth stages
 AnimalDefinitions.stages["horse"] = {
@@ -89,268 +114,156 @@ AnimalDefinitions.genome["horse"] = {
 
 -- TODO: a lot of this is just copied from deer
 
-AnimalDefinitions.animals["filly"] = {
-    -- RENDERING
-    bodyModel = "HorseMod.Horse",
-    bodyModelSkel = "HorseMod.HorseSkeleton",
-    textureSkeleton = "HorseMod/HorseSkeletonDry",
-    textureSkeletonBloody = "HorseMod/HorseSkeletonBloody",
-    bodyModelSkelNoHead = "HorseMod.HorseSkeletonHeadless",
-    animset = "buck",
-    modelscript = "HorseMod.Horse",
-    carcassItem = "HorseMod.Horse",
-    bodyModelHeadless = "HorseMod.HorseHeadless",
-    textureSkinned = "HorseMod/HorseSkinned",
-    ropeBone = "DEF_Neck1",
-    shadoww = 1.5,
-    shadowfm = 4.5,
-    shadowbm = 4.5,
-
-    -- CORE
-    breeds = copyTable(AnimalDefinitions.breeds["horse"].breeds),
-    stages = AnimalDefinitions.stages["horse"].stages,
-    genes = AnimalDefinitions.genome["horse"].genes,
-
-    -- MATING
-    minAge = AnimalDefinitions.stages["horse"].stages["filly"].ageToGrow,
-
-    -- BEHAVIOR
-    fleeZombies = true,
-    wanderMul = 500,
-    sitRandomly = true,
-    idleTypeNbr = 3,
-    canBeAttached = true,
-    wild = false,
-    spottingDist = 19,
-    group = "horse",
-    canBeAlerted = false,
-    canBeDomesticated = true,
-    canThump = false,
-    eatGrass = true,
-    canBePet = true,
-    idleEmoteChance = 600,
-    eatFromMother = true,
-    periodicRun = true,
-
-    -- COMBAT
-    dontAttackOtherMale = true,
-    attackDist = 2,
-    knockdownAttack = true,
-    attackIfStressed = true,
-    attackBack = true,
-
-    -- STATS
-    ---- general
-    turnDelta = 0.65,
-    trailerBaseSize = 180,
-    minEnclosureSize = 120,
-    idleSoundVolume = 0.2,
-    ---- size
-    collisionSize = 0.35,
-    minSize = 0.4,
-    maxSize = 0.4,
-    animalSize = 0.3,
-    baseEncumbrance = 180,
-    minWeight = 120,
-    maxWeight = 450,
-    corpseSize = 3,
-    ---- food
-    eatTypeTrough = "AnimalFeed,Grass,Hay,Vegetables,Fruits",
-    hungerMultiplier = 0.0035,
-    thirstMultiplier = 0.006,
-    healthLossMultiplier = 0.01,
-    thirstHungerTrigger = 0.3,
-    distToEat = 1,
-    hungerBoost = 3,
-    ---- death
-    minBlood = 1200,
-    maxBlood = 4000,
+HorseDefinitions.ANIMALS = {
+    ["stallion"] = true,
+    ["mare"] = true,
+    ["filly"] = false,
 }
 
-AnimalDefinitions.animals["stallion"] = {
-    -- RENDERING
-    bodyModel = "HorseMod.Horse",
-    bodyModelSkel = "HorseMod.HorseSkeleton",
-    textureSkeleton = "HorseMod/HorseSkeletonDry",
-    textureSkeletonBloody = "HorseMod/HorseSkeletonBloody",
-    bodyModelSkelNoHead = "HorseMod.HorseSkeletonHeadless",
-    animset = "buck",
-    modelscript = "HorseMod.Horse",
-    carcassItem = "HorseMod.Horse",
-    bodyModelHeadless = "HorseMod.HorseHeadless",
-    textureSkinned = "HorseMod/HorseSkinned",
-    ropeBone = "DEF_Neck1",
-    shadoww = 1.5,
-    shadowfm = 4.5,
-    shadowbm = 4.5,
+HorseDefinitions.ANIMALS_DATA = {
+    --- data applied to every horses
+    _DEFAULT = {
+        bodyModel = "HorseMod.Horse",
+        bodyModelSkel = "HorseMod.HorseSkeleton",
+        textureSkeleton = "HorseMod/HorseSkeletonDry",
+        textureSkeletonBloody = "HorseMod/HorseSkeletonBloody",
+        bodyModelSkelNoHead = "HorseMod.HorseSkeletonHeadless",
+        animset = "buck",
+        modelscript = "HorseMod.Horse",
+        carcassItem = "HorseMod.Horse",
+        bodyModelHeadless = "HorseMod.HorseHeadless",
+        textureSkinned = "HorseMod/HorseSkinned",
+        ropeBone = "DEF_Neck1",
+        shadoww = 1.5,
+        shadowfm = 4.5,
+        shadowbm = 4.5,
 
-    -- CORE
-    breeds = copyTable(AnimalDefinitions.breeds["horse"].breeds),
-    stages = AnimalDefinitions.stages["horse"].stages,
-    genes = AnimalDefinitions.genome["horse"].genes,
+        -- CORE
+        breeds = copyTable(AnimalDefinitions.breeds["horse"].breeds),
+        stages = AnimalDefinitions.stages["horse"].stages,
+        genes = AnimalDefinitions.genome["horse"].genes,
 
-    -- MATING
-    male = true,
-    mate = "mare",
-    babyType = "filly",
-    minAge = AnimalDefinitions.stages["horse"].stages["filly"].ageToGrow,
-    minAgeForBaby = 12 * 30,
-    maxAgeGeriatric = 12 * 20 * 30,
+        -- MATING
+        minAge = AnimalDefinitions.stages["horse"].stages["filly"].ageToGrow,
 
-    -- BEHAVIOR
-    fleeZombies = true,
-    wanderMul = 500,
-    sitRandomly = true,
-    idleTypeNbr = 3,
-    canBeAttached = true,
-    wild = false,
-    spottingDist = 19,
-    group = "horse",
-    canBeAlerted = false,
-    canBeDomesticated = true,
-    canThump = false,
-    eatGrass = true,
-    canBePet = true,
-    idleEmoteChance = 900,
+        -- BEHAVIOR
+        fleeZombies = true,
+        wanderMul = 500,
+        sitRandomly = true,
+        idleTypeNbr = 3,
+        canBeAttached = true,
+        wild = false,
+        spottingDist = 19,
+        group = "horse",
+        canBeAlerted = false,
+        canBeDomesticated = true,
+        canThump = false,
+        eatGrass = true,
+        canBePet = true,
 
-    -- COMBAT
-    dontAttackOtherMale = true,
-    attackDist = 2,
-    knockdownAttack = true,
-    attackIfStressed = true,
-    attackBack = true,
+        -- COMBAT
+        dontAttackOtherMale = true,
+        attackDist = 2,
+        knockdownAttack = true,
+        attackIfStressed = true,
+        attackBack = true,
 
-    -- STATS
-    ---- general
-    turnDelta = 0.65,
-    trailerBaseSize = 300,
-    minEnclosureSize = 120,
-    idleSoundVolume = 0.2,
-    ---- size
-    collisionSize = 0.35,
-    minSize = 0.6,
-    maxSize = 0.6,
-    animalSize = 0.5,
-    baseEncumbrance = 180,
-    minWeight = 380,
-    maxWeight = 1000,
-    corpseSize = 5,
-    ---- food
-    eatTypeTrough = "AnimalFeed,Grass,Hay,Vegetables,Fruits",
-    hungerMultiplier = 0.0035,
-    thirstMultiplier = 0.006,
-    healthLossMultiplier = 0.01,
-    thirstHungerTrigger = 0.3,
-    distToEat = 1,
-    hungerBoost = 3,
-    ---- death
-    minBlood = 1200,
-    maxBlood = 4000,
+        -- STATS
+        --- general
+        turnDelta = 0.65,
+        minEnclosureSize = 120,
+        idleSoundVolume = 0.2,
+        --- size
+        collisionSize = 0.35,
+        baseEncumbrance = 180,
+        ---- food
+        eatTypeTrough = "AnimalFeed,Grass,Hay,Vegetables,Fruits",
+        hungerMultiplier = 0.0035,
+        thirstMultiplier = 0.006,
+        healthLossMultiplier = 0.01,
+        thirstHungerTrigger = 0.3,
+        distToEat = 1,
+        hungerBoost = 3,
+        ---- death
+        minBlood = 1200,
+        maxBlood = 4000,
+    },
+    _DEFAULT_ADULT = {
+        -- MATING
+        babyType = "filly",
+        minAgeForBaby = 12 * 30,
+        maxAgeGeriatric = 12 * 20 * 30,
+
+        -- BEHAVIOR
+        idleEmoteChance = 900,
+
+        -- STATS
+        ---- general
+        trailerBaseSize = 300,
+        --- size
+        minSize = 0.6,
+        maxSize = 0.6,
+        animalSize = 0.5,
+        minWeight = 380,
+        maxWeight = 1000,
+        corpseSize = 5,
+    },
+    ["filly"] = {
+        -- BEHAVIOR
+        idleEmoteChance = 600,
+        eatFromMother = true,
+        periodicRun = true,
+
+        -- STATS
+        ---- general
+        trailerBaseSize = 180,
+        --- size
+        minSize = 0.4,
+        maxSize = 0.4,
+        animalSize = 0.3,
+        minWeight = 120,
+        maxWeight = 450,
+        corpseSize = 3,
+    },
+    ["stallion"] = {
+        -- MATING
+        male = true,
+        mate = "mare",
+    },
+    ["mare"] = {
+        -- MATING
+        female = true,
+        mate = "stallion",
+    },
 }
 
-AnimalDefinitions.animals["mare"] = {
-    -- RENDERING
-    bodyModel = "HorseMod.Horse",
-    bodyModelSkel = "HorseMod.HorseSkeleton",
-    textureSkeleton = "HorseMod/HorseSkeletonDry",
-    textureSkeletonBloody = "HorseMod/HorseSkeletonBloody",
-    bodyModelSkelNoHead = "HorseMod.HorseSkeletonHeadless",
-    animset = "buck",
-    modelscript = "HorseMod.Horse",
-    carcassItem = "HorseMod.Horse",
-    bodyModelHeadless = "HorseMod.HorseHeadless",
-    textureSkinned = "HorseMod/HorseSkinned",
-    ropeBone = "DEF_Neck1",
-    shadoww = 1.5,
-    shadowfm = 4.5,
-    shadowbm = 4.5,
 
-    -- CORE
-    breeds = copyTable(AnimalDefinitions.breeds["horse"].breeds),
-    stages = AnimalDefinitions.stages["horse"].stages,
-    genes = AnimalDefinitions.genome["horse"].genes,
+local function copyOver(data, newData)
+    newData = copyTable(newData)
+    for k,v in pairs(newData) do
+        data[k] = v
+    end
+    return data
+end
 
-    -- MATING
-    female = true,
-    mate = "stallion",
-    babyType = "filly",
-    minAge = AnimalDefinitions.stages["horse"].stages["filly"].ageToGrow,
-    minAgeForBaby = 12 * 30,
-    maxAgeGeriatric = 12 * 20 * 30,
-    pregnantPeriod = 11 * 30,
-    timeBeforeNextPregnancy = 60,
 
-    -- BEHAVIOR
-    fleeZombies = true,
-    wanderMul = 500,
-    sitRandomly = true,
-    idleTypeNbr = 3,
-    canBeAttached = true,
-    wild = false,
-    spottingDist = 19,
-    group = "horse",
-    canBeAlerted = false,
-    canBeDomesticated = true,
-    canThump = false,
-    eatGrass = true,
-    canBePet = true,
-    idleEmoteChance = 900,
+-- apply animal data
+local ANIMALS_DATA = HorseDefinitions.ANIMALS_DATA
+for animalType, isAdult in pairs(HorseDefinitions.ANIMALS) do
+    -- retrieve the default animal data
+    local data = copyTable(ANIMALS_DATA._DEFAULT)
+    
+    -- if adult, apply adult data
+    if isAdult then
+        data = copyOver(data, ANIMALS_DATA._DEFAULT_ADULT)
+    end
 
-    -- COMBAT
-    dontAttackOtherMale = true,
-    attackDist = 2,
-    knockdownAttack = true,
-    attackIfStressed = true,
-    attackBack = true,
+    -- per animal type data
+    data = copyOver(data, ANIMALS_DATA[animalType])
 
-    -- STATS
-    ---- general
-    turnDelta = 0.65,
-    trailerBaseSize = 300,
-    minEnclosureSize = 120,
-    idleSoundVolume = 0.2,
-    ---- size
-    collisionSize = 0.35,
-    minSize = 0.6,
-    maxSize = 0.6,
-    animalSize = 0.5,
-    baseEncumbrance = 180,
-    minWeight = 380,
-    maxWeight = 1000,
-    corpseSize = 5,
-    ---- food
-    eatTypeTrough = "AnimalFeed,Grass,Hay,Vegetables,Fruits",
-    hungerMultiplier = 0.0035,
-    thirstMultiplier = 0.006,
-    healthLossMultiplier = 0.01,
-    thirstHungerTrigger = 0.3,
-    distToEat = 1,
-    hungerBoost = 3,
-    ---- death
-    minBlood = 1200,
-    maxBlood = 4000,
-}
+    -- save data
+    AnimalDefinitions.animals[animalType] = data
 
-local AVATAR_DEFINITION = {
-    zoom = -20,
-    xoffset = 0,
-    yoffset = -1,
-    avatarWidth = 180,
-    avatarDir = IsoDirections.SE,
-    trailerDir = IsoDirections.SW,
-    trailerZoom = -20,
-    trailerXoffset = 0,
-    trailerYoffset = 0,
-    hook = true,
-    butcherHookZoom = -20,
-    butcherHookXoffset = 0,
-    butcherHookYoffset = 0.5,
-    animalPositionSize = 0.6,
-    animalPositionX = 0,
-    animalPositionY = 0.5,
-    animalPositionZ = 0.7
-}
-
-AnimalAvatarDefinition["stallion"] = AVATAR_DEFINITION
-AnimalAvatarDefinition["mare"] = AVATAR_DEFINITION
-AnimalAvatarDefinition["filly"] = AVATAR_DEFINITION
+    -- apply avatar definition
+    AnimalAvatarDefinition[animalType] = HorseDefinitions.AVATAR_DEFINITION
+end
