@@ -1,13 +1,15 @@
 local AnimationVariables = require("HorseMod/AnimationVariables")
+local HorseModData = require("HorseMod/HorseModData")
 
 ---@namespace HorseMod
 
 
-local Stamina = {}
-
--- Tunables (percent points per second)
-Stamina.MAX = 100
-Stamina.MIN_RUN_PERCENT = 0.15
+local Stamina = {
+    -- Tunables (percent points per second)
+    MAX = 100,
+    MIN_RUN_PERCENT = 0.15,
+    
+}
 
 Stamina.StaminaChange = {
     -- while galloping
@@ -21,6 +23,19 @@ Stamina.StaminaChange = {
 }
 
 
+---Persistent stamina data for the horse.
+---@class StaminaModData
+---@field stamina number
+
+local STAMINA_MOD_DATA = HorseModData.register--[[@<StaminaModData>]](
+    "stamina",
+    function(horse, modData)
+        modData.stamina = modData.stamina or Stamina.MAX
+    end
+)
+Stamina.STAMINA_MOD_DATA = STAMINA_MOD_DATA
+
+
 ---@param x number
 ---@param a number
 ---@param b number
@@ -32,28 +47,26 @@ local function clamp(x, a, b)
 end
 
 
+---Retrieves the current stamina of the horse.
 ---@param horse IsoAnimal
----@return number
+---@return number stamina
 function Stamina.get(horse)
-    local modData = horse:getModData()
-    if modData.HorseMod_Stamina == nil then
-        modData.HorseMod_Stamina = Stamina.MAX
-        horse:transmitModData()
-    end
-    return modData.HorseMod_Stamina
+    local modData = HorseModData.get(horse, STAMINA_MOD_DATA)
+    return modData.stamina
 end
 
 
+---Set the stamina of the horse. The value will be clamped between `0` and :lua:obj:`HorseMod.Stamina.MAX`.
 ---@param horse IsoAnimal
 ---@param value number
 ---@param transmit boolean
 ---@return number
 function Stamina.set(horse, value, transmit)
-    local modData = horse:getModData()
+    local modData = HorseModData.get(horse, STAMINA_MOD_DATA)
     local newValue = clamp(value, 0, Stamina.MAX)
 
-    if modData.HorseMod_Stamina ~= newValue then
-        modData.HorseMod_Stamina = newValue
+    if modData.stamina ~= newValue then
+        modData.stamina = newValue
         if transmit then
             horse:transmitModData()
         end
@@ -63,6 +76,7 @@ function Stamina.set(horse, value, transmit)
 end
 
 
+---Modifies the stamina of the horse by the given delta. The resulting value will be clamped between `0` and :lua:obj:`HorseMod.Stamina.MAX`.
 ---@param horse IsoAnimal
 ---@param valueDelta number
 ---@param transmit boolean

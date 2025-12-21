@@ -2,6 +2,7 @@
 
 ---REQUIREMENTS
 local AttachmentData = require("HorseMod/attachments/AttachmentData")
+local HorseModData = require("HorseMod/HorseModData")
 
 local HORSE_TYPES = {
     ["stallion"] = true,
@@ -67,32 +68,7 @@ HorseUtils.isAdult = function(animal)
     return type == "stallion" or type == "mare"
 end
 
----Persistent data structure for horse attachments and related information.
----@class HorseModData
----@field bySlot table<AttachmentSlot, string> Attachments full types associated to their slots of the horse.
----@field maneColors table<AttachmentSlot, ManeColor> Manes of the horse and their associated color.
----@field containers table<AttachmentSlot, ContainerInformation> Container data currently attached to the horse holding XYZ coordinates of the container and identification data.
-
----Used to retrieve or create the mod data of a specific horse.
----@param animal IsoAnimal
----@return HorseModData
-HorseUtils.getModData = function(animal)
-    local md = animal:getModData()
-    local horseModData = md.horseModData
-
-    -- if no mod data, create default one
-    if not horseModData then
-        local maneConfig, maneColors = HorseUtils.generateManeConfig(animal)
-        md.horseModData = {
-            bySlot = maneConfig, -- default mane config
-            maneColors = maneColors,
-            containers = {},
-        } --[[@as HorseModData]]
-        horseModData = md.horseModData
-    end
-
-    return horseModData
-end
+-- TODO: all this stuff should be moved out to the attachments modules
 
 ---@param horse IsoAnimal
 ---@return integer
@@ -152,6 +128,7 @@ end
 ---@type table<IsoAnimal, fun()?>
 local _unlocks = {}
 
+---@TODO this needs to be improved with a proper system because this is quite a heavy approach
 ---@param horse IsoAnimal
 ---@return fun()
 ---@return IsoDirections

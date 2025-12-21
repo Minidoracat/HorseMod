@@ -6,6 +6,8 @@ AttachmentData
 --------------
 :lua:obj:`HorseMod.attachments.AttachmentData` is the main module used to define and store all the attachment slots and definitions. It provides functions to add new slots and attachments, as well as tables to store the defined slots and attachments.
 
+Attachments of a specific horse are stored in a :lua:class:`HorseMod.AttachmentsModData` instance associated to the horse using the :lua:obj:`HorseMod.HorseModData` system. Containers information are stored in :lua:class:`HorseMod.ContainersModData` instances and manes in :lua:class:`HorseMod.ManesModData` instances.
+
 .. _attachmentsload-label:
 
 AttachmentsLoad
@@ -33,7 +35,7 @@ Attachment reapplying
 ---------------------
 Attachments need to be reapplied whenever a horse model becomes visible again, which can be checked with ``IsoAnimal:getModel()`` (nil means not visible). This is handled by the :lua:obj:`HorseMod.attachments.AttachmentUpdater` module, which is called every in-game tick but updates only a handful of horses per tick to spread the load over multiple ticks.
 
-It detects whenever there is a change of visibility for horses and only triggers the reapplying process when a horse becomes visible again by using :lua:obj:`HorseMod.attachments.AttachmentUpdater.reapplyFor`. This will simply iterate every attachments stored in the :lua:class:`HorseMod.HorseModData` of the horse and attach back the InventoryItem if it can be found, or creates a fresh one if its reference can't be found, which is usually the case whenever a horse was reloaded and not when it switches between visible and non visible.
+It detects whenever there is a change of visibility for horses and only triggers the reapplying process when a horse becomes visible again by using :lua:obj:`HorseMod.attachments.AttachmentUpdater.reapplyFor`. This will simply iterate every attachments stored in the :lua:class:`HorseMod.AttachmentsModData` of the horse and attach back the InventoryItem if it can be found, or creates a fresh one if its reference can't be found, which is usually the case whenever a horse was reloaded and not when it switches between visible and non visible.
 
 This reapply then attaches again the attachment to the horse model using :lua:obj:`HorseMod.attachments.Attachments.setAttachedItem`. If it is a mane, if first setup this mane with the use of :lua:obj:`HorseMod.attachments.ManeManager.setupMane`.
 
@@ -41,7 +43,7 @@ Container managing
 ------------------
 Containers attached on horses need to be accessible by the player while attached to the horse, but the attachment system of the base game loses the item references when those get attached on the horse and as such the containers get deleted and lost. To work around that, the attachment system uses invisible containers spawned in the world which follow the horse around and hold the items instead.
 
-Whenever :lua:class:`HorseMod.HorseEquipGear` is used by the player and the attachment has a :lua:class:`HorseMod.ContainerBehavior`, :lua:obj:`HorseMod.attachments.ContainerManager.initContainer` is called to create the invisible world container and transfer all the content to it. This container receives in its mod data, stored under the ``HorseMod.container`` key, a :lua:class:`HorseMod.ContainerInformation` entry to track which horse and slot it is associated with.
+Whenever :lua:class:`HorseMod.HorseEquipGear` is used by the player and the attachment has a :lua:class:`HorseMod.ContainerBehavior`, :lua:obj:`HorseMod.attachments.ContainerManager.initContainer` is called to create the invisible world container and transfer all the content to it. This :lua:class:`HorseMod.ContainerInformation` entry is stored in the horse :lua:class:`HorseMod.ContainersModData` to track which horse and slot it is associated with.
 
 When the player unequips the attachment, :lua:obj:`HorseMod.attachments.ContainerManager.removeContainer` is called to transfer back all the items from the invisible world container to the accessory item and delete the world container.
 

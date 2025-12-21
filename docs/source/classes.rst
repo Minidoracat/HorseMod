@@ -4,8 +4,10 @@ Classes
 .. toctree::
   
   classes/AttachmentComponents
+  classes/AttachmentsModData
   classes/AttachmentDefinition
   classes/ContainerInformation
-  classes/HorseModData
+  classes/ContainersModData
   classes/ManeColor
+  classes/ManesModData
   classes/SlotDefinition

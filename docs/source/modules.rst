@@ -7,4 +7,5 @@ Modules
   modules/Attachments
   modules/AttachmentUpdater
   modules/ContainerManager
+  modules/HorseModData
   modules/ManeManager

@@ -755,63 +755,88 @@ end
 function MountController:update(input)
     assert(self.mount.pair.rider:getVariableString(AnimationVariables.RIDING_HORSE) == "true")
 
-    self.mount.pair.rider:setSneaking(true)
-    self.mount.pair.rider:setIgnoreAutoVault(true)
+    local mountPair = self.mount.pair
+    local rider = mountPair.rider
+    local mount = mountPair.mount
+
+    rider:setSneaking(true)
+    rider:setIgnoreAutoVault(true)
 
     -- TODO i'm doubtful this is needed?
-    self.mount.pair.mount:getPathFindBehavior2():reset()
-    self.mount.pair.mount:getBehavior():setBlockMovement(true)
+    mount:getPathFindBehavior2():reset()
+    mount:getBehavior():setBlockMovement(true)
 
     local deltaTime = GameTime.getInstance():getTimeDelta()
     local moving = (input.movement.x ~= 0 or input.movement.y ~= 0)
 
     -- Prevent running at zero stamina
-    if not Stamina.shouldRun(self.mount.pair.mount, input, moving) then
+    if not Stamina.shouldRun(mount, input, moving) then
         input.run = false
     else
         input.run = true
     end
 
-    self:turn(input, deltaTime)
+    local movementState = self:getMovementState(input)
+
+    -- verify that the horse isn't in a jumping animation before turning
+    local doTurn = true
+    if rider:getIgnoreMovement() or rider:isIgnoreInputsForDirection() then
+        local isJumping = mountPair:getAnimationVariableBoolean(AnimationVariables.JUMP)
+        if not isJumping or movementState ~= "gallop" then
+            -- exit jump state and allow turning again
+            rider:setIgnoreMovement(false)
+            rider:setIgnoreInputsForDirection(false)
+            mountPair:setAnimationVariable(AnimationVariables.JUMP, false)
+        else
+            doTurn = false
+        end
+    end
+
+    -- update current movement
+    if doTurn then
+        self:turn(input, deltaTime)
+    end
     self:updateSpeed(input, deltaTime)
     self:updateReins(input)
 
     if moving and self.currentSpeed > 0 then
-        local currentDirection = self.mount.pair.mount:getDir()
+        local currentDirection = mount:getDir()
         local velocity = currentDirection:ToVector():setLength(self.currentSpeed)
-        moveWithCollision(self.mount.pair.mount, velocity, deltaTime)
+        moveWithCollision(mount, velocity, deltaTime)
 
-        self.mount.pair.mount:setVariable("bPathfind", true)
-        self.mount.pair.mount:setVariable("animalWalking", not input.run)
-        self.mount.pair:setAnimationVariable(AnimationVariables.GALLOP, input.run)
+        mount:setVariable("bPathfind", true)
+        mount:setVariable("animalWalking", not input.run)
+        mountPair:setAnimationVariable(AnimationVariables.GALLOP, input.run)
     else
-        self.mount.pair.mount:setVariable("bPathfind", false)
-        self.mount.pair:setAnimationVariable(AnimationVariables.GALLOP, false)
-        self.mount.pair.mount:setVariable("animalWalking", false)
+        mount:setVariable("bPathfind", false)
+        mountPair:setAnimationVariable(AnimationVariables.GALLOP, false)
+        mount:setVariable("animalWalking", false)
     end
 
-    local mirrorVarsHorse =  { "HorseGalloping","isTurningLeft","isTurningRight" }
-    for i = 1, #mirrorVarsHorse do
-        local k = mirrorVarsHorse[i]
-        local v = self.mount.pair.mount:getVariableBoolean(k)
-        if self.mount.pair.rider:getVariableBoolean(k) ~= v then
-            self.mount.pair.rider:setVariable(k, v)
+    ---@type string[]
+    local mirrorVarsMount =  { "HorseGalloping","isTurningLeft","isTurningRight" }
+    for i = 1, #mirrorVarsMount do
+        local k = mirrorVarsMount[i]
+        local v = mount:getVariableBoolean(k)
+        if rider:getVariableBoolean(k) ~= v then
+            rider:setVariable(k, v)
         end
     end
 
+    ---@type string[]
     local mirrorVarsRider =  { "IdleToRun" }
     for i = 1, #mirrorVarsRider do
         local k = mirrorVarsRider[i]
-        local v = self.mount.pair.rider:getVariableBoolean(k)
-        if self.mount.pair.mount:getVariableBoolean(k) ~= v then
-            self.mount.pair.mount:setVariable(k, v)
+        local v = rider:getVariableBoolean(k)
+        if mount:getVariableBoolean(k) ~= v then
+            mount:setVariable(k, v)
         end
     end
 
-    self.mount.pair.rider:setX(self.mount.pair.mount:getX())
-    self.mount.pair.rider:setY(self.mount.pair.mount:getY())
-    self.mount.pair.rider:setZ(self.mount.pair.mount:getZ())
-    UpdateHorseAudio(self.mount.pair.rider)
+    rider:setX(mount:getX())
+    rider:setY(mount:getY())
+    rider:setZ(mount:getZ())
+    UpdateHorseAudio(rider)
 end
 
 
