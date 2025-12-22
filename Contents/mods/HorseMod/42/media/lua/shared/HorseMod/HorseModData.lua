@@ -1,5 +1,5 @@
 ---REQUIREMENTS
-local HorseManager = require("HorseMod/HorseManager")
+local EventHandler = require("HorseMod/EventHandler")
 
 ---@namespace HorseMod
 
@@ -39,9 +39,7 @@ end
 ---Initialises all mod data kinds for the given horse.
 ---@param horse IsoAnimal
 function HorseModData.initialize(horse)
-    local modData = horse:getModData()
-    modData.horseModData = modData.horseModData or {}
-    local horseModData = modData.horseModData
+    local horseModData = HorseModData.getAll(horse)
     for name, kind in pairs(HorseModData.modDataKinds) do
         horseModData[name] = horseModData[name] or {}
         local kindModData = horseModData[name] --[[@as table goes crazy without it]]
@@ -51,22 +49,46 @@ function HorseModData.initialize(horse)
     end
 end
 
+EventHandler.onHorseAdded:add(HorseModData.initialize)
+
+
 ---Returns mod data of a specific kind.
 ---@generic T
 ---@param horse IsoAnimal
 ---@param kind ModDataKind<T>
 ---@return T modData
 function HorseModData.get(horse, kind)
-    local modData = horse:getModData()
-
     -- get the kind mod data
-    local horseModData = modData.horseModData --[[@as table<string, T>]]
+    local horseModData = HorseModData.getAll(horse)
     local kindModData = horseModData[kind.name]
     
     return kindModData
 end
 
-HorseManager.onHorseAdded:add(HorseModData.initialize)
+---Sets the global horse mod data.
+---@generic T
+---@param horse IsoAnimal
+---@param data table<string, T>
+function HorseModData.setAll(horse, data)
+    local modData = horse:getModData()
+    modData.horseModData = data
+end
+
+---Retrieve all horse mod data.
+---@generic T
+---@param horse IsoAnimal
+---@return table<string, T>
+function HorseModData.getAll(horse)
+    local modData = horse:getModData()
+    modData.horseModData = modData.horseModData or {}
+    return modData.horseModData
+end
+
+function HorseModData.getGlobal()
+    local md = ModData.getOrCreate("HorseMod")
+    md.orphanedHorses = md.orphanedHorses or {}
+    return md
+end
 
 
 return HorseModData

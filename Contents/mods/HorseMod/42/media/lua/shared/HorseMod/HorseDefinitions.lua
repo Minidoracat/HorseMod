@@ -9,9 +9,9 @@ local HorseDefinitions = {
         AP = "american_paint", -- American Paint
         GDA = "appaloosa", -- Appaloosa
         T = "thoroughbred", -- Thoroughbred
-        AQHBR = "american_quarter_blue_roan", -- American Quarter Horse Blue Roan
-        LPA = "leopard_appaloosa", -- Leopard Appaloosa
-        APHO = "american_paint_horse_overo", -- American Paint Horse Overo
+        AQHBR = "blue_roan", -- American Quarter Horse Blue Roan
+        LPA = "spotted_appaloosa", -- Leopard Appaloosa
+        APHO = "american_paint_overo", -- American Paint Horse Overo
         FBG = "flea_bitten_grey", -- Flea Bitten Grey
     },
     PATHS = {

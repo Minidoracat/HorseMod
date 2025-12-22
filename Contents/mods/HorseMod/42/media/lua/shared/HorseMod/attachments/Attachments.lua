@@ -21,7 +21,7 @@ local ATTACHMENTS_MOD_DATA = HorseModData.register--[[@<AttachmentsModData>]](
         if not modData.bySlot then
             local breedName = HorseUtils.getBreedName(horse)
             local maneDef = Attachments.getManeDefinition(breedName)
-            local maneConfig = HorseUtils.tableCopy(maneDef.maneConfig)
+            local maneConfig = copyTable(maneDef.maneConfig)
             modData.bySlot = maneConfig -- default mane config
         end
     end

@@ -7,6 +7,7 @@ local ContainerManager = require("HorseMod/attachments/ContainerManager")
 local AttachmentData = require("HorseMod/attachments/AttachmentData")
 local AttachmentsManager = require("HorseMod/attachments/AttachmentsManager")
 local HorseManager = require("HorseMod/HorseManager")
+local HorseUtils = require("HorseMod/Utils")
 local invTetris = getActivatedMods():contains("\\INVENTORY_TETRIS")
 
 --[[
@@ -22,6 +23,8 @@ When mounted, the player can only transfer items from/to:
 Also patches `ISGrabItemAction` to prevent grabbing horse attachment containers from the ground. Patches `ISInventoryPaneContextMenu.equipWeapon` to unequip horse attachments when trying to equip as primary or secondary from context menu, instead of equiping the item on the ground itself.
 
 Patches context menus to remove horse attachment containers from the "Extended Placement" menu and hijacks the "Grab" option to unequip the attachment instead of grabbing the item.
+
+Patches the horse context menu when clicking on a horse to hijack the animal grab option to unequip all attachments from the horse when picking it up.
 ]]
 local InventoryTransfer = {}
 
@@ -315,5 +318,25 @@ InventoryTransfer.OnFillWorldObjectContextMenu = function(playerNum, context, wo
 end
 
 Events.OnFillWorldObjectContextMenu.Add(InventoryTransfer.OnFillWorldObjectContextMenu)
+
+
+InventoryTransfer._originalOnPickupAnimal = AnimalContextMenu.onPickupAnimal
+AnimalContextMenu.onPickupAnimal = function(animal, chr)
+    if HorseUtils.isHorse(animal) then
+        animal:stopAllMovementNow()
+
+        --- remove attachments first
+        local attachments = Attachments.getAttachedItems(animal)
+        if #attachments > 0 then
+            AttachmentsManager.unequipAllAccessory(nil, chr, animal, attachments)
+        end
+
+        luautils.walkAdj(chr, animal:getSquare(), true)
+        ISTimedActionQueue.add(ISPickupAnimal:new(chr, animal))
+        return
+    end
+    
+    InventoryTransfer._originalOnPickupAnimal(animal, chr)
+end
 
 return InventoryTransfer
