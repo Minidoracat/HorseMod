@@ -119,6 +119,8 @@ function DismountHorseAction:new(mount, side, hasSaddle, landX, landY, landZ)
     local o = ISBaseTimedAction.new(self, mount.pair.rider)
 
     -- HACK: this loses its metatable when transmitted by the server
+    mount = convertToPZNetTable(mount)
+    mount.pair = convertToPZNetTable(mount.pair)
     setmetatable(mount, require("HorseMod/mount/Mount"))
     o.mount = mount
     o.horse = mount.pair.mount

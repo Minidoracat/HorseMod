@@ -130,6 +130,7 @@ function MountHorseAction:new(pair, side, saddle)
     local o = ISBaseTimedAction.new(self, pair.rider)
 
     -- HACK: this loses its metatable when transmitted by the server
+    pair = convertToPZNetTable(pair)
     setmetatable(pair, MountPair)
     o.pair = pair
     o.horse = pair.mount
