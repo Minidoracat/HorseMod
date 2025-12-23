@@ -21,7 +21,7 @@ function StaminaSystem:update(horses, delta)
         local horse = horses[i]
 
         local staminaChange = 0.0
-        if Mounts.mountPlayerMap[horse] then
+        if Mounts.hasRider(horse) then
             if horse:isAnimalMoving() then
                 if horse:getVariableBoolean(AnimationVariables.GALLOP) then
                     staminaChange = StaminaChange.RUN

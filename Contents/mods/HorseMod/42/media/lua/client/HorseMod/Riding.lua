@@ -27,22 +27,22 @@ function HorseRiding.isMountableHorse(animal)
     return HorseUtils.isAdult(animal)
 end
 
----@deprecated Use Mounts.playerMountMap instead.
+---@deprecated Use Mounts.getMount instead.
 ---Retrieve the mount of the player.
 ---@param player IsoPlayer
 ---@return IsoAnimal | nil
 ---@nodiscard
 function HorseRiding.getMountedHorse(player)
-    return Mounts.playerMountMap[player]
+    return Mounts.getMount(player)
 end
 
----@deprecated Use Mounts.playerMountMap instead.
+---@deprecated Use Mounts.hasMount instead.
 ---Check if the player is currently mounting a horse.
 ---@param player IsoPlayer
 ---@return boolean
 ---@nodiscard
 function HorseRiding.isMountingHorse(player)
-    return HorseRiding.getMountedHorse(player) ~= nil
+    return Mounts.hasMount(player)
 end
 
 ---Retrieve the player mount
@@ -93,36 +93,40 @@ function HorseRiding.removeMount(player)
 end
 
 ---@param player IsoPlayer
-local function updateMount(player)
-    local mountedAnimal = Mounts.playerMountMap[player]
-    if mountedAnimal then
-        local mount = HorseRiding.getMount(player)
-        if not mount then
-            -- create mount if they just mounted
-            mount = HorseRiding.createMountFromPair(
-                MountPair.new(player, mountedAnimal)
-            )
-        end
+---@param animal IsoAnimal?
+Mounts.onMountChanged:add(function(player, animal)
+    if not player:isLocalPlayer() then
+        return
+    end
 
-        mount:update()
-    elseif HorseRiding.getMount(player) ~= nil then
-        -- cleanup mount if they just dismounted
+    if HorseRiding.getMount(player) then
         HorseRiding.removeMount(player)
     end
-end
+
+    if animal then
+        HorseRiding.createMountFromPair(
+            MountPair.new(
+                player,
+                animal
+            )
+        )
+    end
+end)
 
 ---Update the horse riding for every mounts.
 local function updateMounts()
     for i = 0, getNumActivePlayers() do
         local player = getSpecificPlayer(i)
         if player then
-            updateMount(player)
+            local mount = HorseRiding.getMount(player)
+            if mount then
+                mount:update()
+            end
         end
     end
 end
 
 Events.OnTick.Add(updateMounts)
-
 
 ---Handle keybind pressing to switch horse riding states.
 ---@param key integer
@@ -175,25 +179,5 @@ end
 
 Events.OnCreatePlayer.Add(initHorseMod)
 
-client.registerCommandHandler(mountcommands.Mount, function(args)
-    local player = commands.getPlayer(args.character)
-    if player and player:isLocalPlayer() then
-        local animal = commands.getAnimal(args.animal)
-        assert(animal ~= nil, "could not find mounted animal sent by server")
-        HorseRiding.createMountFromPair(
-            MountPair.new(player, animal)
-        )
-    end
-end)
-
-client.registerCommandHandler(mountcommands.Dismount, function(args)
-    local player = commands.getPlayer(args.character)
-    if player and player:isLocalPlayer() then
-        HorseRiding.removeMount(player)
-    end
-end)
-
----@FIXME this is because this file should be in shared but in the current state it is it cannot be easily moved there, so we expose the namespace globally for now
-_G["HorseRiding"] = HorseRiding
 
 return HorseRiding

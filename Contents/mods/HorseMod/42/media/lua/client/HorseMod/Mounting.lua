@@ -98,7 +98,7 @@ end
 ---@return string?
 ---@nodiscard
 function Mounting.canMountHorse(player, horse)
-    if Mounts.playerMountMap[player] then
+    if Mounts.hasMount(player) then
         -- already mounted
         return false
     elseif horse:isDead() then

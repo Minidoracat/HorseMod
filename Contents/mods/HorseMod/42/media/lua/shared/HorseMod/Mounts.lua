@@ -1,19 +1,21 @@
 local mountcommands = require("HorseMod/networking/mountcommands")
 local commands = require("HorseMod/networking/commands")
+local Event = require("HorseMod/Event")
 
 local IS_CLIENT = isClient()
 local IS_SERVER = isServer()
 
 
-local Mounts = {}
-
-
 ---@type table<IsoPlayer, IsoAnimal>
-Mounts.playerMountMap = {}
+local playerMountMap = {}
 
 ---@type table<IsoAnimal, IsoPlayer>
-Mounts.mountPlayerMap = {}
+local mountPlayerMap = {}
 
+local Mounts = {}
+
+---Triggered when a player's mount changes.
+Mounts.onMountChanged = Event.new--[[@<IsoPlayer, IsoAnimal?>]]()
 
 ---@param player IsoPlayer
 ---@param animal IsoAnimal
@@ -30,14 +32,16 @@ function Mounts.addMount(player, animal)
             }
         )
     end
-end
 
+    Mounts.onMountChanged:trigger(player, animal)
+end
 
 ---@param player IsoPlayer
 function Mounts.removeMount(player)
-    local mount = Mounts.playerMountMap[player]
-    Mounts.playerMountMap[player] = nil
-    Mounts.mountPlayerMap[mount] = nil
+    assert(Mounts.hasMount(player), "")
+    local mount = playerMountMap[player]
+    playerMountMap[player] = nil
+    mountPlayerMap[mount] = nil
     
     if IS_SERVER then
         mountcommands.Dismount:send(
@@ -47,6 +51,36 @@ function Mounts.removeMount(player)
             }
         )
     end
+
+    Mounts.onMountChanged:trigger(player, nil)
+end
+
+---@param player IsoPlayer
+---@return boolean
+---@nodiscard
+function Mounts.hasMount(player)
+    return playerMountMap[player] ~= nil
+end
+
+---@param player IsoPlayer
+---@return IsoAnimal?
+---@nodiscard
+function Mounts.getMount(player)
+    return playerMountMap[player]
+end
+
+---@param animal IsoAnimal
+---@return boolean
+---@nodiscard
+function Mounts.hasRider(animal)
+    return mountPlayerMap[animal] ~= nil
+end
+
+---@param animal IsoAnimal
+---@return IsoPlayer?
+---@nodiscard
+function Mounts.getRider(animal)
+    return mountPlayerMap[animal]
 end
 
 
