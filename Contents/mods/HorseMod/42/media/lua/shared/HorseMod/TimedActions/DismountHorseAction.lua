@@ -1,6 +1,7 @@
 require("TimedActions/ISBaseTimedAction")
 
 local AnimationVariables = require("HorseMod/AnimationVariables")
+local Mounts = require("HorseMod/Mounts")
 
 
 ---@namespace HorseMod
@@ -80,8 +81,8 @@ end
 
 
 function DismountHorseAction:complete()
-    require("HorseMod/Riding").removeMount(self.character)
-    require("HorseMod/Mounts").removeMount(self.character)
+    -- TODO: this might take a bit to inform the client, so we should consider faking it in perform()
+    Mounts.removeMount(self.character)
     return true
 end
 
@@ -119,6 +120,8 @@ function DismountHorseAction:new(mount, side, hasSaddle, landX, landY, landZ)
     local o = ISBaseTimedAction.new(self, mount.pair.rider)
 
     -- HACK: this loses its metatable when transmitted by the server
+    mount = convertToPZNetTable(mount)
+    mount.pair = convertToPZNetTable(mount.pair)
     setmetatable(mount, require("HorseMod/mount/Mount"))
     o.mount = mount
     o.horse = mount.pair.mount

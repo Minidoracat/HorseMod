@@ -2,6 +2,7 @@ require("TimedActions/ISBaseTimedAction")
 
 local MountPair = require("HorseMod/MountPair")
 local AnimationVariables = require("HorseMod/AnimationVariables")
+local Mounts = require("HorseMod/Mounts")
 
 
 ---@namespace HorseMod
@@ -95,10 +96,8 @@ end
 
 
 function MountHorseAction:complete()
-    -- HACK: we can't require this at file load because it is in the client dir
-    --  this one definitely needs to be fixed but it requires tearing up half the mod
-    require("HorseMod/Riding").createMountFromPair(self.pair)
-    require("HorseMod/Mounts").addMount(self.character, self.horse)
+    -- TODO: this might take a bit to inform the client, so we should consider faking it in perform()
+    Mounts.addMount(self.character, self.horse)
     return true
 end
 
@@ -130,6 +129,7 @@ function MountHorseAction:new(pair, side, saddle)
     local o = ISBaseTimedAction.new(self, pair.rider)
 
     -- HACK: this loses its metatable when transmitted by the server
+    pair = convertToPZNetTable(pair)
     setmetatable(pair, MountPair)
     o.pair = pair
     o.horse = pair.mount

@@ -1,5 +1,4 @@
 local Stamina = require("HorseMod/Stamina")
-local HorseUtils = require("HorseMod/Utils")
 local AttachmentData = require("HorseMod/attachments/AttachmentData")
 local Attachments = require("HorseMod/attachments/Attachments")
 local AnimationVariables = require("HorseMod/AnimationVariables")
@@ -748,6 +747,18 @@ function MountController:updateReins(input)
     else
         mountPair.rider:setVariable(AnimationVariables.HAS_REINS, false)
     end
+end
+
+function MountController:toggleTrot()
+    local current = self.mount.pair:getAnimationVariableBoolean(AnimationVariables.TROT)
+    self.mount.pair:setAnimationVariable(AnimationVariables.TROT, not current)
+end
+
+function MountController:jump()
+    self.mount.pair:setAnimationVariable(AnimationVariables.JUMP, true)
+
+    self.mount.pair.rider:setIgnoreMovement(true)
+    self.mount.pair.rider:setIgnoreInputsForDirection(true)
 end
 
 

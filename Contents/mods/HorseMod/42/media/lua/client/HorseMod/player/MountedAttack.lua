@@ -1,5 +1,5 @@
-local HorseRiding = require("HorseMod/Riding")
 local AnimationVariables = require("HorseMod/AnimationVariables")
+local Mounts = require("HorseMod/Mounts")
 
 ---@class MountedAttack
 ---@field active boolean
@@ -7,7 +7,6 @@ local AnimationVariables = require("HorseMod/AnimationVariables")
 ---@field left boolean
 ---@field right boolean
 ---@type table<number, MountedAttack>
-
 local MountedAttack = {}
 
 MountedAttack.KICK_LOCK_SECONDS = 1.4
@@ -74,7 +73,7 @@ function MountedAttack.horseKick(key)
         return
     end
 
-    local horse = HorseRiding.getMountedHorse and HorseRiding.getMountedHorse(player)
+    local horse = Mounts.getMount(player)
     if not horse then return end
 
     local cell = getCell()

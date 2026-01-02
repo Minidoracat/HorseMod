@@ -2,6 +2,7 @@ local MountController = require("HorseMod/mount/MountController")
 local HorseDamage = require("HorseMod/horse/HorseDamage")
 local HorseUtils = require("HorseMod/Utils")
 local AnimationVariables = require("HorseMod/AnimationVariables")
+local ModOptions = require("HorseMod/ModOptions")
 
 
 local JOY_DEADZONE        = 0.30   -- ignore tiny stick drift
@@ -116,6 +117,18 @@ function Mount:getCurrentInput()
         -- FIXME: Change this when fixing the mod option keybinds
         trot = self.pair.mount:getVariableBoolean(AnimationVariables.TROT),
     }
+end
+
+---@param key integer
+function Mount:keyPressed(key)
+    if key == ModOptions.HorseTrotButton then
+        self.controller:toggleTrot()
+    elseif key == ModOptions.HorseJumpButton then
+        if self.pair.mount:getVariableBoolean(AnimationVariables.GALLOP)
+                and not self.pair:getAnimationVariableBoolean(AnimationVariables.JUMP) then
+            self.controller:jump()
+        end
+    end
 end
 
 

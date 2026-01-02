@@ -1,7 +1,7 @@
-local HorseRiding = require("HorseMod/Riding")
 local HorseUtils = require("HorseMod/Utils")
 local Stamina = require("HorseMod/Stamina")
 local AnimationVariables = require("HorseMod/AnimationVariables")
+local Mounts = require("HorseMod/Mounts")
 
 
 local HorseSounds = {}
@@ -363,7 +363,7 @@ function UpdateNearbyHorsesAudio()
     local pid = player:getPlayerNum()
     local vol = getVolume()
 
-    local myHorse = HorseRiding.getMountedHorse(player)
+    local myHorse = Mounts.getMount(player)
     local myKey = myHorse and horseKey(myHorse)
 
     local px, py, pz = player:getX(), player:getY(), player:getZ()
@@ -487,7 +487,7 @@ end
 ---@param square IsoGridSquare | nil
 ---@return nil
 function UpdateHorseAudio(player, square)
-    local horse = HorseRiding.getMountedHorse and HorseRiding.getMountedHorse(player)
+    local horse = Mounts.getMount(player)
     local emitter
     if horse and horse.isExistInTheWorld and horse:isExistInTheWorld() then
         emitter = (horse.getEmitter and horse:getEmitter()) or player:getEmitter()
