@@ -40,9 +40,6 @@ end
 ---@param oldAccessory InventoryItem
 ---@param slot AttachmentSlot
 AttachmentsManager.unequipAccessory = function(player, horse, oldAccessory, slot)
-    -- if context then
-    --     context:closeAll()
-    -- end
     local unlock, side = HorseUtils.pathfindToHorse(player, horse)
     ISTimedActionQueue.add(HorseUnequipGear:new(player, horse, oldAccessory, slot, side, unlock))
 end
@@ -51,10 +48,7 @@ end
 ---@param player IsoPlayer
 ---@param horse IsoAnimal
 ---@param oldAccessories {item: InventoryItem, slot: AttachmentSlot}[]
-AttachmentsManager.unequipAllAccessory = function(context, player, horse, oldAccessories)
-    if context then
-        context:closeAll()
-    end
+AttachmentsManager.unequipAllAccessory = function(player, horse, oldAccessories)
     local unlock, side = HorseUtils.pathfindToHorse(player, horse)
     
     -- unequip all
@@ -247,9 +241,8 @@ AttachmentsManager.populateHorseContextMenu = function(player, horse, context, a
         if #attachedItems > 1 then
             gearSubMenu:addOptionOnTop(
                 getText("ContextMenu_Horse_Unequip_All"),
-                context,
-                AttachmentsManager.unequipAllAccessory,
                 player,
+                AttachmentsManager.unequipAllAccessory,
                 horse,
                 attachedItems
             )
