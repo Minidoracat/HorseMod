@@ -247,7 +247,7 @@ local function isSquareRough(square)
 
     ---@type IsoObject[]
     local objects = square:getLuaTileObjectList()
-    for i = 0, #objects do
+    for i = 1, #objects do
         local object = objects[i]
         local material = object:getProperty("FootstepMaterial")
         if ROUGH_MATERIALS[material] then
