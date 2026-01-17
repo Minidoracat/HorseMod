@@ -32,7 +32,7 @@ local DismountHorseAction = ISBaseTimedAction:derive("HorseMod_DismountHorseActi
 ---@return boolean
 function DismountHorseAction:isValid()
     return self.horse:isExistInTheWorld()
-           and self.character:getAttachedAnimals():contains(self.horse) or false
+        --    and self.character:getAttachedAnimals():contains(self.horse) or false
 end
 
 
