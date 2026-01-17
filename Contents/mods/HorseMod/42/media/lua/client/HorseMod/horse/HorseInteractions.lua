@@ -1,22 +1,34 @@
 local HorseUtils  = require("HorseMod/Utils")
-local HorseRiding = require("HorseMod/Riding")
+local Mounts = require("HorseMod/Mounts")
 local Mounting = require("HorseMod/Mounting")
-local AnimationVariables = require("HorseMod/AnimationVariables")
+local AnimationVariable = require("HorseMod/AnimationVariable")
 -- local HorseAttachments = require("HorseMod/HorseAttachments")
 
 ---@param context ISContextMenu
 ---@param player IsoPlayer
 ---@param animal IsoAnimal
 local function doHorseInteractionMenu(context, player, animal)
-    local canMount, reason = HorseRiding.canMountHorse(player, animal)
-    local option = context:addOption(
-        getText("IGUI_HorseMod_MountHorse"),
-        player, Mounting.mountHorse, animal
-    )
-    option.iconTexture = animal:getInventoryIconTexture()
-    if not canMount and reason then
-        local tooltip = ISWorldObjectContextMenu.addToolTip()
-        tooltip.description = getText("ContextMenu_Horse_"..reason)
+    local playerMount = Mounts.getMount(player)
+
+    if playerMount ~= animal then
+        local canMount, reason = Mounting.canMountHorse(player, animal)
+        local option = context:addOption(
+            getText("ContextMenu_Horse_Mount", animal:getFullName()),
+            player, Mounting.mountHorse, animal
+        )
+        option.iconTexture = animal:getInventoryIconTexture()
+        if not canMount then
+            option.notAvailable = true
+            if reason then
+                local tooltip = ISWorldObjectContextMenu.addToolTip()
+                tooltip.description = getText("ContextMenu_Horse_" .. reason)
+            end
+        end
+    else
+        context:addOption(
+            getText("ContextMenu_Horse_Dismount", animal:getFullName()),
+            player, Mounting.dismountHorse
+        )
     end
 end
 
@@ -35,7 +47,7 @@ local function onClickedAnimalForContext(playerNum, context, animals, test)
     end
     if not horse then return end
 
-    doHorseInteractionMenu(context, getSpecificPlayer(playerNum), animals[1])
+    doHorseInteractionMenu(context, getSpecificPlayer(playerNum), horse)
 end
 
 Events.OnClickedAnimalForContext.Add(onClickedAnimalForContext)
@@ -82,11 +94,11 @@ local function handleJoypadMountButton(player)
     if joypadHasUIFocus(pid) then return end
     if player:hasTimedActions() then return end
     if player:getVehicle() then return end
-    if player:getVariableBoolean(AnimationVariables.MOUNTING_HORSE) then return end
+    if player:getVariableBoolean(AnimationVariable.MOUNTING_HORSE) then return end
 
-    local mountedHorse = HorseRiding.getMountedHorse(player)
+    local mountedHorse = Mounts.getMount(player)
     if mountedHorse then
-        if player:getVariableBoolean(AnimationVariables.RIDING_HORSE) then
+        if player:getVariableBoolean(AnimationVariable.RIDING_HORSE) then
             Mounting.dismountHorse(player)
         end
         return

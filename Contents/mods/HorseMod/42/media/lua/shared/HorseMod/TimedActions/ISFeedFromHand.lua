@@ -1,5 +1,5 @@
 local HorseUtils = require("HorseMod/Utils")
-local AnimationVariables = require("HorseMod/AnimationVariables")
+local AnimationVariable = require("HorseMod/AnimationVariable")
 
 local _originalFeedFromHandStart = ISFeedAnimalFromHand.start
 
@@ -12,6 +12,8 @@ function ISFeedAnimalFromHand:start()
         end
         self.animal:setVariable(AnimationVariables.EATING_HAND, true)
         self.animal:setVariable("eatingAnim", "eat1")
+        self:setActionAnim("Bob_Horse_EatHand")
+        self.animal:setVariable(AnimationVariable.EATING_HAND, true)
     end
     _originalFeedFromHandStart(self)
 end
@@ -32,6 +34,7 @@ function ISFeedAnimalFromHand:stop()
     if HorseUtils.isHorse(self.animal) then
         self.animal:setVariable(AnimationVariables.EATING_HAND, false)
         self.animal:clearVariable("eatingAnim")
+        self.animal:setVariable(AnimationVariable.EATING_HAND, false)
     end
     _originalFeedFromHandStop(self)
 end
@@ -42,6 +45,7 @@ function ISFeedAnimalFromHand:perform()
     if HorseUtils.isHorse(self.animal) then
         self.animal:setVariable(AnimationVariables.EATING_HAND, false)
         self.animal:clearVariable("eatingAnim")
+        self.animal:setVariable(AnimationVariable.EATING_HAND, false)
     end
     _originalFeedFromHandPerform(self)
 end
@@ -52,6 +56,7 @@ function ISFeedAnimalFromHand:forceStop()
     if HorseUtils.isHorse(self.animal) then
         self.animal:setVariable(AnimationVariables.EATING_HAND, false)
         self.animal:clearVariable("eatingAnim")
+        self.animal:setVariable(AnimationVariable.EATING_HAND, false)
     end
     _originalFeedFromHandForceStop(self)
 end

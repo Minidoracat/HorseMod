@@ -56,7 +56,12 @@ for fullType, itemDef in pairs(AttachmentData.items) do
     local count = 0 -- count number of slots
     for slot, attachmentDef in pairs(itemDef) do repeat
         count = count + 1
+        print(fullType)
         local accessoryScript = scriptManager:getItem(fullType)
+        if not accessoryScript then
+            logError("Horse accessory ("..fullType..") doesn't exist.")
+            break
+        end
 
         -- verify container behavior is compatible with this specific item
         local containerBehavior = attachmentDef.containerBehavior

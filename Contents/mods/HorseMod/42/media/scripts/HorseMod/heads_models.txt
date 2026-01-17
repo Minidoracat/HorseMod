@@ -1,9 +1,9 @@
 module HorseMod
 {
-    model HorseHeadAQHP {
+    model HorseHead_AmericanQuarterPalomino {
         mesh = HorseMod/Horse_Head,
         static = true,
-        texture = Body/HorseMod/HorseAQHP,
+        texture = Body/HorseMod/Horse_AmericanQuarterPalomino,
         scale = 0.3530,
         attachment world {
             offset = -0.0342 0.0122 -0.0071,
@@ -12,10 +12,10 @@ module HorseMod
         }
     }
 
-    model HorseHeadAP {
+    model HorseHead_AmericanPaintTobiano {
         mesh = HorseMod/Horse_Head,
         static = true,
-        texture = Body/HorseMod/HorseAP,
+        texture = Body/HorseMod/Horse_AmericanPaintTobiano,
         scale = 0.3530,
         attachment world {
             offset = -0.0342 0.0122 -0.0071,
@@ -24,10 +24,10 @@ module HorseMod
         }
     }
 
-    model HorseHeadGDA {
+    model HorseHead_AppaloosaGrullaBlanket {
         mesh = HorseMod/Horse_Head,
         static = true,
-        texture = Body/HorseMod/HorseGDA,
+        texture = Body/HorseMod/Horse_AppaloosaGrullaBlanket,
         scale = 0.3530,
         attachment world {
             offset = -0.0342 0.0122 -0.0071,
@@ -36,10 +36,10 @@ module HorseMod
         }
     }
 
-    model HorseHeadT {
+    model HorseHead_ThoroughbredBay {
         mesh = HorseMod/Horse_Head,
         static = true,
-        texture = Body/HorseMod/HorseT,
+        texture = Body/HorseMod/Horse_ThoroughbredBay,
         scale = 0.3530,
         attachment world {
             offset = -0.0342 0.0122 -0.0071,
@@ -48,10 +48,10 @@ module HorseMod
         }
     }
 
-    model HorseHeadAQHBR {
+    model HorseHead_AmericanQuarterBlueRoan {
         mesh = HorseMod/Horse_Head,
         static = true,
-        texture = Body/HorseMod/HorseAQHBR,
+        texture = Body/HorseMod/Horse_AmericanQuarterBlueRoan,
         scale = 0.3530,
         attachment world {
             offset = -0.0342 0.0122 -0.0071,
@@ -60,10 +60,10 @@ module HorseMod
         }
     }
 
-    model HorseHeadLPA {
+    model HorseHead_AppaloosaLeopard {
         mesh = HorseMod/Horse_Head,
         static = true,
-        texture = Body/HorseMod/HorseLPA,
+        texture = Body/HorseMod/Horse_AppaloosaLeopard,
         scale = 0.3530,
         attachment world {
             offset = -0.0342 0.0122 -0.0071,
@@ -72,10 +72,10 @@ module HorseMod
         }
     }
 
-    model HorseHeadAPHO {
+    model HorseHead_AmericanPaintOvero {
         mesh = HorseMod/Horse_Head,
         static = true,
-        texture = Body/HorseMod/HorseAPHO,
+        texture = Body/HorseMod/Horse_AmericanPaintOvero,
         scale = 0.3530,
         attachment world {
             offset = -0.0342 0.0122 -0.0071,
@@ -84,10 +84,10 @@ module HorseMod
         }
     }
 
-    model HorseHeadFBG {
+    model HorseHead_ThoroughbredFleaBittenGrey {
         mesh = HorseMod/Horse_Head,
         static = true,
-        texture = Body/HorseMod/HorseFBG,
+        texture = Body/HorseMod/Horse_ThoroughbredFleaBittenGrey,
         scale = 0.3530,
         attachment world {
             offset = -0.0342 0.0122 -0.0071,

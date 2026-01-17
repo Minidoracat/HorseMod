@@ -4,323 +4,298 @@ module HorseMod {
     }
     /* TODO: decide on a naming scheme: Horse_{part} or Horse{Part}? */
 
-    item Horse_Head_Foal_AQHP {
+    item Foal_Head_AmericanQuarterPalomino {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = American Quarter Foal Head,
-        Icon = head/Head_HorseFoal_AQHP,
+        Icon = head/Head_HorseFoal_AmericanQuarterPalomino,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAQHP,
-        WorldStaticModel = HorseHeadAQHP,
+        StaticModel = HorseHead_AmericanQuarterPalomino,
+        WorldStaticModel = HorseHead_AmericanQuarterPalomino,
     }
 
-    item Horse_Head_Female_AQHP {
+    item Mare_Head_AmericanQuarterPalomino {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = American Quarter Mare Head,
-        Icon = head/Head_HorseFemale_AQHP,
+        Icon = head/Head_HorseFemale_AmericanQuarterPalomino,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAQHP,
-        WorldStaticModel = HorseHeadAQHP,
+        StaticModel = HorseHead_AmericanQuarterPalomino,
+        WorldStaticModel = HorseHead_AmericanQuarterPalomino,
     }
 
-    item Horse_Head_Male_AQHP {
+    item Stallion_Head_AmericanQuarterPalomino {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = American Quarter Stallion Head,
-        Icon = head/Head_HorseMale_AQHP,
+        Icon = head/Head_HorseMale_AmericanQuarterPalomino,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAQHP,
-        WorldStaticModel = HorseHeadAQHP,
+        StaticModel = HorseHead_AmericanQuarterPalomino,
+        WorldStaticModel = HorseHead_AmericanQuarterPalomino,
     }
 
-    item Horse_Head_Foal_AP {
+    item Foal_Head_AmericanPaintTobiano {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = American Paint Foal Head,
-        Icon = head/Head_HorseFoal_AP,
+        Icon = head/Head_HorseFoal_AmericanPaintTobiano,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAP,
-        WorldStaticModel = HorseHeadAP,
+        StaticModel = HorseHead_AmericanPaintTobiano,
+        WorldStaticModel = HorseHead_AmericanPaintTobiano,
     }
 
-    item Horse_Head_Female_AP {
+    item Mare_Head_AmericanPaintTobiano {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = American Paint Mare Head,
-        Icon = head/Head_HorseFemale_AP,
+        Icon = head/Head_HorseFemale_AmericanPaintTobiano,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAP,
-        WorldStaticModel = HorseHeadAP,
+        StaticModel = HorseHead_AmericanPaintTobiano,
+        WorldStaticModel = HorseHead_AmericanPaintTobiano,
     }
 
-    item Horse_Head_Male_AP {
+    item Stallion_Head_AmericanPaintTobiano {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = American Paint Stallion Head,
-        Icon = head/Head_HorseMale_AP,
+        Icon = head/Head_HorseMale_AmericanPaintTobiano,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAP,
-        WorldStaticModel = HorseHeadAP,
+        StaticModel = HorseHead_AmericanPaintTobiano,
+        WorldStaticModel = HorseHead_AmericanPaintTobiano,
     }
 
-    item Horse_Head_Foal_APHO {
+    item Foal_Head_AmericanPaintOvero {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = American Paint (Overo) Foal Head,
-        Icon = head/Head_HorseFoal_APHO,
+        Icon = head/Head_HorseFoal_AmericanPaintOvero,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAPHO,
-        WorldStaticModel = HorseHeadAPHO,
+        StaticModel = HorseHead_AmericanPaintOvero,
+        WorldStaticModel = HorseHead_AmericanPaintOvero,
     }
 
-    item Horse_Head_Female_APHO {
+    item Mare_Head_AmericanPaintOvero {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = American Paint (Overo) Mare Head,
-        Icon = head/Head_HorseFemale_APHO,
+        Icon = head/Head_HorseFemale_AmericanPaintOvero,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAPHO,
-        WorldStaticModel = HorseHeadAPHO,
+        StaticModel = HorseHead_AmericanPaintOvero,
+        WorldStaticModel = HorseHead_AmericanPaintOvero,
     }
 
-    item Horse_Head_Male_APHO {
+    item Stallion_Head_AmericanPaintOvero {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = American Paint (Overo) Stallion Head,
-        Icon = head/Head_HorseMale_APHO,
+        Icon = head/Head_HorseMale_AmericanPaintOvero,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAPHO,
-        WorldStaticModel = HorseHeadAPHO,
+        StaticModel = HorseHead_AmericanPaintOvero,
+        WorldStaticModel = HorseHead_AmericanPaintOvero,
     }
 
-    item Horse_Head_Foal_GDA {
+    item Foal_Head_AppaloosaGrullaBlanket {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Appaloosa Foal Head,
-        Icon = head/Head_HorseFoal_GDA,
+        Icon = head/Head_HorseFoal_AppaloosaGrullaBlanket,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadGDA,
-        WorldStaticModel = HorseHeadGDA,
+        StaticModel = HorseHead_AppaloosaGrullaBlanket,
+        WorldStaticModel = HorseHead_AppaloosaGrullaBlanket,
     }
 
-    item Horse_Head_Female_GDA {
+    item Mare_Head_AppaloosaGrullaBlanket {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Appaloosa Mare Head,
-        Icon = head/Head_HorseFemale_GDA,
+        Icon = head/Head_HorseFemale_AppaloosaGrullaBlanket,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadGDA,
-        WorldStaticModel = HorseHeadGDA,
+        StaticModel = HorseHead_AppaloosaGrullaBlanket,
+        WorldStaticModel = HorseHead_AppaloosaGrullaBlanket,
     }
 
-    item Horse_Head_Male_GDA {
+    item Stallion_Head_AppaloosaGrullaBlanket {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Appaloosa Stallion Head,
-        Icon = head/Head_HorseMale_GDA,
+        Icon = head/Head_HorseMale_AppaloosaGrullaBlanket,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadGDA,
-        WorldStaticModel = HorseHeadGDA,
+        StaticModel = HorseHead_AppaloosaGrullaBlanket,
+        WorldStaticModel = HorseHead_AppaloosaGrullaBlanket,
     }
 
-    item Horse_Head_Foal_T {
+    item Foal_Head_ThoroughbredBay {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Thoroughbred Foal Head,
-        Icon = head/Head_HorseFoal_T,
+        Icon = head/Head_HorseFoal_ThoroughbredBay,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadT,
-        WorldStaticModel = HorseHeadT,
+        StaticModel = HorseHead_ThoroughbredBay,
+        WorldStaticModel = HorseHead_ThoroughbredBay,
     }
 
-    item Horse_Head_Female_T {
+    item Mare_Head_ThoroughbredBay {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Thoroughbred Mare Head,
-        Icon = head/Head_HorseFemale_T,
+        Icon = head/Head_HorseFemale_ThoroughbredBay,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadT,
-        WorldStaticModel = HorseHeadT,
+        StaticModel = HorseHead_ThoroughbredBay,
+        WorldStaticModel = HorseHead_ThoroughbredBay,
     }
 
-    item Horse_Head_Male_T {
+    item Stallion_Head_ThoroughbredBay {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Thoroughbred Stallion Head,
-        Icon = head/Head_HorseMale_T,
+        Icon = head/Head_HorseMale_ThoroughbredBay,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadT,
-        WorldStaticModel = HorseHeadT,
+        StaticModel = HorseHead_ThoroughbredBay,
+        WorldStaticModel = HorseHead_ThoroughbredBay,
     }
 
-    item Horse_Head_Foal_AQHBR {
+    item Foal_Head_AmericanQuarterBlueRoan {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Blue Roan Foal Head,
-        Icon = head/Head_HorseFoal_AQHBR,
+        Icon = head/Head_HorseFoal_AmericanQuarterBlueRoan,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAQHBR,
-        WorldStaticModel = HorseHeadAQHBR,
+        StaticModel = HorseHead_AmericanQuarterBlueRoan,
+        WorldStaticModel = HorseHead_AmericanQuarterBlueRoan,
     }
 
-    item Horse_Head_Female_AQHBR {
+    item Mare_Head_AmericanQuarterBlueRoan {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Blue Roan Mare Head,
-        Icon = head/Head_HorseFemale_AQHBR,
+        Icon = head/Head_HorseFemale_AmericanQuarterBlueRoan,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAQHBR,
-        WorldStaticModel = HorseHeadAQHBR,
+        StaticModel = HorseHead_AmericanQuarterBlueRoan,
+        WorldStaticModel = HorseHead_AmericanQuarterBlueRoan,
     }
 
-    item Horse_Head_Male_AQHBR {
+    item Stallion_Head_AmericanQuarterBlueRoan {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Blue Roan Stallion Head,
-        Icon = head/Head_HorseMale_AQHBR,
+        Icon = head/Head_HorseMale_AmericanQuarterBlueRoan,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadAQHBR,
-        WorldStaticModel = HorseHeadAQHBR,
+        StaticModel = HorseHead_AmericanQuarterBlueRoan,
+        WorldStaticModel = HorseHead_AmericanQuarterBlueRoan,
     }
 
-    item Horse_Head_Foal_LPA {
+    item Foal_Head_AppaloosaLeopard {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Spotted Appaloosa Foal Head,
-        Icon = head/Head_HorseFoal_LPA,
+        Icon = head/Head_HorseFoal_AppaloosaLeopard,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadLPA,
-        WorldStaticModel = HorseHeadLPA,
+        StaticModel = HorseHead_AppaloosaLeopard,
+        WorldStaticModel = HorseHead_AppaloosaLeopard,
     }
 
-    item Horse_Head_Female_LPA {
+    item Mare_Head_AppaloosaLeopard {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Spotted Appaloosa Mare Head,
-        Icon = head/Head_HorseFemale_LPA,
+        Icon = head/Head_HorseFemale_AppaloosaLeopard,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadLPA,
-        WorldStaticModel = HorseHeadLPA,
+        StaticModel = HorseHead_AppaloosaLeopard,
+        WorldStaticModel = HorseHead_AppaloosaLeopard,
     }
 
-    item Horse_Head_Male_LPA {
+    item Stallion_Head_AppaloosaLeopard {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Spotted Appaloosa Stallion Head,
-        Icon = head/Head_HorseMale_LPA,
+        Icon = head/Head_HorseMale_AppaloosaLeopard,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadLPA,
-        WorldStaticModel = HorseHeadLPA,
+        StaticModel = HorseHead_AppaloosaLeopard,
+        WorldStaticModel = HorseHead_AppaloosaLeopard,
     }
 
-    item Horse_Head_Foal_FBG {
+    item Foal_Head_ThoroughbredFleaBittenGrey {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Flea-bitten Grey Foal Head,
-        Icon = head/Head_HorseFoal_FBG,
+        Icon = head/Head_HorseFoal_ThoroughbredFleaBittenGrey,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadFBG,
-        WorldStaticModel = HorseHeadFBG,
+        StaticModel = HorseHead_ThoroughbredFleaBittenGrey,
+        WorldStaticModel = HorseHead_ThoroughbredFleaBittenGrey,
     }
 
-    item Horse_Head_Female_FBG {
+    item Mare_Head_ThoroughbredFleaBittenGrey {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Flea-bitten Grey Mare Head,
-        Icon = head/Head_HorseFemale_FBG,
+        Icon = head/Head_HorseFemale_ThoroughbredFleaBittenGrey,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadFBG,
-        WorldStaticModel = HorseHeadFBG,
+        StaticModel = HorseHead_ThoroughbredFleaBittenGrey,
+        WorldStaticModel = HorseHead_ThoroughbredFleaBittenGrey,
     }
 
-    item Horse_Head_Male_FBG {
+    item Stallion_Head_ThoroughbredFleaBittenGrey {
         DisplayCategory = AnimalPart,
         Weight = 2.5,
         ItemType = base:food,
-        DisplayName = Flea-bitten Grey Stallion Head,
-        Icon = head/Head_HorseMale_FBG,
+        Icon = head/Head_HorseMale_ThoroughbredFleaBittenGrey,
         DaysFresh = 5,
         DaysTotallyRotten = 7,
         Tags = base:animalhead,
-        StaticModel = HorseHeadFBG,
-        WorldStaticModel = HorseHeadFBG,
+        StaticModel = HorseHead_ThoroughbredFleaBittenGrey,
+        WorldStaticModel = HorseHead_ThoroughbredFleaBittenGrey,
     }
 
     item Horse_Skull {
         DisplayCategory = AnimalPart,
         Weight = 1.2,
         ItemType = base:normal,
-        DisplayName = Horse Skull,
         Icon = head/Skull_Horse,
         Tags = base:animalskull,
         StaticModel = HorseSkull,
@@ -329,7 +304,6 @@ module HorseMod {
 
     item Horse_Steak {
         ItemType = base:food,
-        DisplayName = Horse Steak,
         DisplayCategory = Food,
         Weight = 0.5,
         Icon = food/HorseSteak,
@@ -357,7 +331,6 @@ module HorseMod {
 
     item Horse_Loin {
         ItemType = base:food,
-        DisplayName = Horse Loin,
         DisplayCategory = Food,
         Weight = 0.5,
         Icon = food/HorseLoin,
@@ -387,7 +360,6 @@ module HorseMod {
         DisplayCategory = AnimalPart,
         Weight = 0.5,
         ItemType = base:normal,
-        DisplayName = Horse Hoof,
         Icon = parts/HorseHoof,
 		StaticModel = HorseHoof,
 		WorldStaticModel = HorseHoof,
@@ -395,7 +367,6 @@ module HorseMod {
 
     item Dung_Horse {
         DisplayCategory = Junk,
-        DisplayName = Horse Dung,
         Weight = 0.5,
         ItemType = base:food,
         CantEat = true,

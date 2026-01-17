@@ -328,7 +328,7 @@ Events.OnGameBoot.Add(function()
         local data = copyTable(ANIMALS_DATA._DEFAULT)
         data.breeds = copyTable(AnimalDefinitions.breeds["horse"].breeds) -- copy horse breed data
 
-        -- if adult, apply adult data
+    -- if adult, apply adult data
         if isAdult then
             data = copyOver(data, ANIMALS_DATA._DEFAULT_ADULT)
         end

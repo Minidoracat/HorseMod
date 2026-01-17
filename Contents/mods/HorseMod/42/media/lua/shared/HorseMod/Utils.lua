@@ -1,8 +1,6 @@
 ---@namespace HorseMod
 
----REQUIREMENTS
-local AttachmentData = require("HorseMod/attachments/AttachmentData")
-
+---@TODO use the HorseDefinition table to check for horses directly ?
 local HORSE_TYPES = {
     ["stallion"] = true,
     ["mare"] = true,
@@ -67,38 +65,8 @@ HorseUtils.isAdult = function(animal)
     return type == "stallion" or type == "mare"
 end
 
----Persistent data structure for horse attachments and related information.
----@class HorseModData
----@field bySlot table<AttachmentSlot, string> Attachments full types associated to their slots of the horse.
----@field maneColors table<AttachmentSlot, ManeColor> Manes of the horse and their associated color.
----@field containers table<AttachmentSlot, ContainerInformation> Container data currently attached to the horse holding XYZ coordinates of the container and identification data.
+-- TODO: all this stuff should be moved out to the attachments modules
 
----Used to retrieve or create the mod data of a specific horse.
----@param animal IsoAnimal
----@return HorseModData
-HorseUtils.getModData = function(animal)
-    local md = animal:getModData()
-    local horseModData = md.horseModData
-
-    -- if no mod data, create default one
-    if not horseModData then
-        local maneConfig, maneColors = HorseUtils.generateManeConfig(animal)
-        md.horseModData = {
-            bySlot = maneConfig, -- default mane config
-            maneColors = maneColors,
-            containers = {},
-        } --[[@as HorseModData]]
-        horseModData = md.horseModData
-    end
-
-    return horseModData
-end
-
----@param horse IsoAnimal
----@return integer
-HorseUtils.getHorseID = function(horse)
-    return horse:getAnimalID()
-end
 
 ---@param horse IsoAnimal
 ---@return string
@@ -152,6 +120,7 @@ end
 ---@type table<IsoAnimal, fun()?>
 local _unlocks = {}
 
+---@TODO this needs to be improved with a proper system because this is quite a heavy approach
 ---@param horse IsoAnimal
 ---@return fun()
 ---@return IsoDirections
@@ -232,47 +201,6 @@ HorseUtils.pathfindToHorse = function(player, horse)
 end
 
 
----@deprecated use Attachments.getAttachedItem instead
----@param animal IsoAnimal
----@param slot string
----@return InventoryItem | nil
----@nodiscard
-HorseUtils.getAttachedItem = function(animal, slot)
-    -- TODO: check if this will actually be nil in real circumstances, doesn't seem like it!
-    local attachedItems = animal:getAttachedItems()
-    if attachedItems then
-        return attachedItems:getItem(slot)
-    end
-
-    return nil
-end
-
----@deprecated use Attachments.getSaddle instead
----@param animal IsoAnimal
----@return InventoryItem | nil
----@nodiscard
-HorseUtils.getSaddle = function(animal)
-    local saddle = HorseUtils.getAttachedItem(animal, "Saddle")
-    if not saddle then
-        return nil
-    else
-        return saddle
-    end
-end
-
----@deprecated use Attachments.getReins instead
----@param animal IsoAnimal
----@return InventoryItem | nil
----@nodiscard
-HorseUtils.getReins = function(animal)
-    local reins = HorseUtils.getAttachedItem(animal, "Reins")
-    if not reins then
-        return nil
-    else
-        return reins
-    end
-end
-
 ---Formats translation entries that use such a format:
 ---```lua
 ---local params = {param1 = "Str1", paramNamed = "Str2", helloWorld="Str3",}
@@ -285,16 +213,6 @@ HorseUtils.formatTemplate = function(template, params)
     return template:gsub("{(%w+)}", params)
 end
 
----Make a copy of a table
----@param tbl table
----@return table
-HorseUtils.tableCopy = function(tbl)
-    local copy = {}
-    for k,v in pairs(tbl) do
-        copy[k] = v
-    end
-    return copy
-end
 
 ---@param hex string|nil
 ---@return number, number, number

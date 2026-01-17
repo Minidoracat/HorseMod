@@ -1,6 +1,6 @@
 local HorseUtils = require("HorseMod/Utils")
 local Event = require("HorseMod/Event")
-local AnimationVariables = require("HorseMod/AnimationVariables")
+local AnimationVariable = require("HorseMod/AnimationVariable")
 
 ---@namespace HorseMod
 
@@ -27,22 +27,31 @@ local HorseManager = {
 }
 
 ---Triggers when a horse gets loaded in.
-HorseManager.onHorseAdded = Event.new() ---@as Event<IsoAnimal>
+HorseManager.onHorseAdded = Event.new--[[@<IsoAnimal>]]()
 
 ---Triggers when a horse gets unloaded.
-HorseManager.onHorseRemoved = Event.new() ---@as Event<IsoAnimal>
+HorseManager.onHorseRemoved = Event.new--[[@<IsoAnimal>]]()
 
-
-
-
+function HorseManager.removeHorse(horse, i)
+    if i then
+        table.remove(HorseManager.horses, i)
+    else
+        for i = #HorseManager.horses, 1, -1 do
+            if HorseManager.horses[i] == horse then
+                table.remove(HorseManager.horses, i)
+                break
+            end
+        end
+    end
+    HorseManager.onHorseRemoved:trigger(horse)
+    HorseManager._detected_horses[horse] = nil
+end
 
 function HorseManager.releaseRemovedHorses()
     for i = #HorseManager.horses, 1, -1 do
         local horse = HorseManager.horses[i]
         if not horse:isExistInTheWorld() or horse:isDead() then
-            table.remove(HorseManager.horses, i)
-            HorseManager.onHorseRemoved:trigger(horse)
-            HorseManager._detected_horses[horse] = nil
+            HorseManager.removeHorse(horse, i)
         end
     end
 end
@@ -50,16 +59,16 @@ end
 
 ---@param horse IsoAnimal
 local function initialiseHorse(horse)
-    horse:setVariable(AnimationVariables.IS_HORSE, true)
+    horse:setVariable(AnimationVariable.IS_HORSE, true)
 
     local speed = horse:getUsedGene("speed"):getCurrentValue()
-    horse:setVariable(AnimationVariables.GENE_SPEED, speed)
+    horse:setVariable(AnimationVariable.GENE_SPEED, speed)
     local strength = horse:getUsedGene("strength"):getCurrentValue()
-    horse:setVariable(AnimationVariables.GENE_STRENGTH, strength)
+    horse:setVariable(AnimationVariable.GENE_STRENGTH, strength)
     local stamina = horse:getUsedGene("stamina"):getCurrentValue()
-    horse:setVariable(AnimationVariables.GENE_STAMINA, stamina)
+    horse:setVariable(AnimationVariable.GENE_STAMINA, stamina)
     local carry = horse:getUsedGene("carryWeight"):getCurrentValue()
-    horse:setVariable(AnimationVariables.GENE_CARRYWEIGHT, carry)
+    horse:setVariable(AnimationVariable.GENE_CARRYWEIGHT, carry)
 end
 
 ---Utility function to find a horse by its animal ID.
@@ -77,7 +86,7 @@ HorseManager.findHorseByID = function(animalID)
 end
 
 
----Detect newly created horses par parsing the moving objects array list of the player cell 
+---Detect newly created horses by parsing the moving objects array list of the player cell 
 
 local UPDATE_RATE = 8
 local TICK_AMOUNT = 0
@@ -97,22 +106,29 @@ HorseManager.retrieveNewHorses = function()
     TICK_AMOUNT = TICK_AMOUNT < update_rate - 1 and TICK_AMOUNT + 1 or 0
 
     -- iterate every update_rate-th entries
-    for i = TICK_AMOUNT, size - 1, update_rate do
+    for i = TICK_AMOUNT, size - 1, update_rate do repeat
         local isoMovingObject = isoMovingObjects:get(i)
 
-        -- verify is an animal and horse and not already checked and not dead
-        if instanceof(isoMovingObject, "IsoAnimal") 
-            and HorseUtils.isHorse(isoMovingObject) 
+        -- verify is an animal 
+        if not instanceof(isoMovingObject, "IsoAnimal") then break end
+        ---@cast isoMovingObject IsoAnimal 
+
+        -- verify is a horse and not already checked and not dead
+        if HorseUtils.isHorse(isoMovingObject) 
             and not HorseManager._detected_horses[isoMovingObject]
             and not isoMovingObject:isDead() then
             
+            -- initialise horse
             initialiseHorse(isoMovingObject)
-            HorseManager.horses[#HorseManager.horses + 1] = isoMovingObject
+            
+            -- trigger horse init event
             HorseManager.onHorseAdded:trigger(isoMovingObject)
 
+            -- add to detected horses
+            HorseManager.horses[#HorseManager.horses + 1] = isoMovingObject
             HorseManager._detected_horses[isoMovingObject] = true
         end
-    end
+    until true end
 end
 
 Events.OnTick.Add(HorseManager.retrieveNewHorses)

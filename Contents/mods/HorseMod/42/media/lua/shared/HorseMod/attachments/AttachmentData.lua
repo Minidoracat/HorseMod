@@ -1,7 +1,6 @@
 ---@namespace HorseMod
 
----Available attachment slots.
----"Saddle"|"Saddlebags"|"Reins"|"ManeStart"|"ManeMid1"|"ManeMid2"|"ManeMid3"|"ManeMid4"|"ManeMid5"|"ManeEnd"|"Head"|"MountLeft"|"MountRight"
+---Defines an attachment slot ID, see :ref:`availableslots-label` for the full list of attachment slots.
 ---@alias AttachmentSlot string
 
 
@@ -40,7 +39,7 @@
 ---Time to equip, if `-1` the animation defines the end time.
 ---@field time number
 ---
----Animation to play during equip, it must be an AnimNode variable condition.
+---Animations to play during equip, based on the mounting position, it must be an AnimNode variable condition.
 ---@field anim {["Left"]: string?, ["Right"]: string?}?
 ---
 ---Whenever the item should be held in hand when equipping it. Defaults to `false`.
@@ -121,6 +120,7 @@ local AttachmentData = {
     },
 
     ---Sets attachment model points and mane properties for attachment slots.
+    ---!doctype table
     ---@type table<AttachmentSlot, SlotDefinition>
     slotsDefinitions = {
         ---ACCESSORIES
@@ -177,14 +177,17 @@ local AttachmentData = {
     ---Breeds associated to their mane colors.
     ---@type table<string, HexColor[]>
     MANE_HEX_BY_BREED = {
-        ["american_quarter"] = {"#EADAB6", "#FF0000"},
-        ["american_paint"] = {"#FBDEA7"},
-        ["appaloosa"] = {"#24201D"},
-        ["thoroughbred"] = {"#140C08"},
-        ["blue_roan"] = {"#19191C"},
-        ["spotted_appaloosa"] = {"#FFF7E4"},
-        ["american_paint_overo"] = {"#292524"},
-        ["flea_bitten_grey"] = {"#FCECC5"},
+        ["AmericanQuarterPalomino"] = {"#EADAB6"},
+        ["AmericanQuarterBlueRoan"] = {"#19191C"},
+        
+        ["AmericanPaintTobiano"] = {"#FBDEA7"},
+        ["AmericanPaintOvero"] = {"#292524"},
+        
+        ["AppaloosaGrullaBlanket"] = {"#24201D"},
+        ["AppaloosaLeopard"] = {"#FFF7E4"},
+        
+        ["ThoroughbredBay"] = {"#140C08"},
+        ["ThoroughbredFleaBittenGrey"] = {"#FCECC5"},
     },
 
     ---Default mane items configuration.
@@ -233,14 +236,14 @@ AttachmentData.items = {
     ["HorseMod.HorseSaddle_White"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
     ["HorseMod.HorseSaddle_Landrace"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
         -- horses
-    ["HorseMod.HorseSaddle_AP"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
-    ["HorseMod.HorseSaddle_APHO"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
-    ["HorseMod.HorseSaddle_AQHBR"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
-    ["HorseMod.HorseSaddle_AQHP"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
-    ["HorseMod.HorseSaddle_FBG"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
-    ["HorseMod.HorseSaddle_GDA"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
-    ["HorseMod.HorseSaddle_LPA"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
-    ["HorseMod.HorseSaddle_T"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
+    ["HorseMod.HorseSaddle_AmericanPaintTobiano"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
+    ["HorseMod.HorseSaddle_AmericanPaintOvero"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
+    ["HorseMod.HorseSaddle_AmericanQuarterBlueRoan"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
+    ["HorseMod.HorseSaddle_AmericanQuarterPalomino"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
+    ["HorseMod.HorseSaddle_AppaloosaGrullaBlanket"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
+    ["HorseMod.HorseSaddle_AppaloosaLeopard"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
+    ["HorseMod.HorseSaddle_ThoroughbredBay"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
+    ["HorseMod.HorseSaddle_ThoroughbredFleaBittenGrey"] = DEFAULT_ATTACHMENT_DEFS.SADDLE,
 
     -- saddlebags
         -- vanilla animals
@@ -251,14 +254,14 @@ AttachmentData.items = {
     ["HorseMod.HorseSaddlebags_White"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
     ["HorseMod.HorseSaddlebags_Landrace"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
         -- horses
-    ["HorseMod.HorseSaddlebags_AP"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
-    ["HorseMod.HorseSaddlebags_APHO"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
-    ["HorseMod.HorseSaddlebags_AQHBR"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
-    ["HorseMod.HorseSaddlebags_AQHP"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
-    ["HorseMod.HorseSaddlebags_FBG"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
-    ["HorseMod.HorseSaddlebags_GDA"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
-    ["HorseMod.HorseSaddlebags_LPA"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
-    ["HorseMod.HorseSaddlebags_T"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
+    ["HorseMod.HorseSaddlebags_AmericanPaintTobiano"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
+    ["HorseMod.HorseSaddlebags_AmericanPaintOvero"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
+    ["HorseMod.HorseSaddlebags_AmericanQuarterBlueRoan"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
+    ["HorseMod.HorseSaddlebags_AmericanQuarterPalomino"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
+    ["HorseMod.HorseSaddlebags_AppaloosaGrullaBlanket"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
+    ["HorseMod.HorseSaddlebags_AppaloosaLeopard"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
+    ["HorseMod.HorseSaddlebags_ThoroughbredBay"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
+    ["HorseMod.HorseSaddlebags_ThoroughbredFleaBittenGrey"] = DEFAULT_ATTACHMENT_DEFS.SADDLEBAGS,
 
     -- reins
     ["HorseMod.HorseReins_Crude"] = { ["Reins"] = {model = "HorseMod.HorseReins_Crude"} },
@@ -277,77 +280,5 @@ AttachmentData.items = {
     },
     ["HorseMod.HorseManeEnd"]   = { ["ManeEnd"] = {hidden = true} },
 }
-
----Used to define new attachments.
----@param itemDefinitions table<string,ItemDefinition>
-AttachmentData.addNewAttachments = function(itemDefinitions)
-    for fullType, itemDef in pairs(itemDefinitions) do
-        for slot, attachmentDef in pairs(itemDef) do
-            AttachmentData.addNewAttachment(fullType, slot, attachmentDef)
-        end
-    end
-end
-
----@param fullType string
----@param slot AttachmentSlot
----@param attachmentDef AttachmentDefinition
-AttachmentData.addNewAttachment = function(fullType, slot, attachmentDef)
-    -- retrieve item definition
-    local items = AttachmentData.items
-    local itemDefEntry = items[fullType] or {}
-
-    -- set or overwrite
-    local attachmentDefEntry = itemDefEntry[slot]
-    assert(not attachmentDefEntry, "AttachmentData.addNewAttachment: Attachment for item '" .. fullType .. "' on slot '" .. slot .. "' already exists!")
-
-    itemDefEntry[slot] = attachmentDef
-    items[fullType] = itemDefEntry
-end
-
----Used to define a new attachment slot.
----@param slot AttachmentSlot
----@param slotDefinition SlotDefinition
-AttachmentData.addNewSlot = function(slot, slotDefinition)
-    local slotsDef = AttachmentData.slotsDefinitions
-    assert(not slotsDef[slot], "AttachmentData.addNewSlot: Slot '" .. slot .. "' already exists!")
-
-    slotsDef[slot] = slotDefinition
-end
-
----XYZ coordinate table.
----@alias XYZ {x: number, y: number, z: number}
-
-
----Used to add a new model `attachment point <https://pzwiki.net/wiki/Attachment_(scripts)>`_ to the horse model script via Lua. This attachment point can then be used in :lua:obj:`HorseMod.attachments.AttachmentData.slotsDefinitions` to define new attachment slots on a custom position on the horse.
----@param modelAttachment string Attachment point name.
----@param attachmentData {bone: string, offset: XYZ, rotate: XYZ}
-AttachmentData.addNewModelAttachment = function(modelAttachment, attachmentData)
-    local horseModelScript = getScriptManager():getModelScript("HorseMod.Horse")
-
-    -- verify this attachment point does not already exist
-    local attachmentPoint = horseModelScript:getAttachmentById(modelAttachment)
-    assert(attachmentPoint == nil, "AttachmentData.addNewModelAttachment: Attachment point '" .. modelAttachment .. "' already exists!")
-
-    -- create a new attachment point
-    local attachmentPoint = ModelAttachment.new(modelAttachment)
-    attachmentPoint:setBone(attachmentData.bone)
-    
-    -- set offset
-    local offset = attachmentData.offset
-    if offset then
-        local v3 = attachmentPoint:getOffset()
-        v3:set(offset.x, offset.y, offset.z)
-    end
-
-    -- set rotation
-    local rotate = attachmentData.rotate
-    if rotate then
-        local v3 = attachmentPoint:getRotate()
-        v3:set(rotate.x, rotate.y, rotate.z)
-    end
-
-    -- save attachment point
-    horseModelScript:addAttachment(attachmentPoint)
-end
 
 return AttachmentData

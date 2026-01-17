@@ -216,7 +216,7 @@ module HorseMod
 	model HorseHead {
         mesh = HorseMod/Horse_Head,
         static = true,
-        texture = Body/HorseMod/HorseAQHP,
+        texture = Body/HorseMod/Horse_AmericanQuarterPalomino,
         scale = 0.3530,
         attachment world {
             offset = -0.0342 0.0122 -0.0071,
@@ -252,6 +252,6 @@ module HorseMod
 	model HorseHoof {
         mesh = HorseMod/HorseHoof,
         static = true,
-        texture = Body/HorseMod/HorseAQHP,
+        texture = Body/HorseMod/Horse_AmericanQuarterPalomino,
     }
 }

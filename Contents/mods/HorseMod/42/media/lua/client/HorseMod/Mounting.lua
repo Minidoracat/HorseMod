@@ -1,11 +1,13 @@
 require("TimedActions/ISPathFindAction")
 
 local HorseRiding = require("HorseMod/Riding")
-local HorseUtils = require("HorseMod/Utils")
 local HorseManager = require("HorseMod/HorseManager")
 local MountHorseAction = require("HorseMod/TimedActions/MountHorseAction")
 local DismountHorseAction = require("HorseMod/TimedActions/DismountHorseAction")
 local MountPair = require("HorseMod/MountPair")
+local Attachments = require("HorseMod/attachments/Attachments")
+local Mounts = require("HorseMod/Mounts")
+local HorseUtils = require("HorseMod/Utils")
 
 
 local Mounting = {}
@@ -89,6 +91,31 @@ function Mounting.getBestMountableHorse(player, radius)
     return bestHorse
 end
 
+---Verify that the player can mount a horse.
+---@param player IsoPlayer
+---@param horse IsoAnimal
+---@return boolean
+---@return string?
+---@nodiscard
+function Mounting.canMountHorse(player, horse)
+    if Mounts.hasMount(player) then
+        -- already mounted
+        return false
+    elseif Mounts.hasRider(horse) then
+        return false, "AlreadyMounted"
+    elseif horse:isDead() then
+        return false, "IsDead"
+    elseif horse:isOnHook() then
+        return false
+    -- elseif horse:getVariableBoolean("animalRunning") then
+    --     -- running
+    --     return false, "IsRunning"
+    elseif not HorseUtils.isAdult(horse) then
+        return false, "NotAdult"
+    end
+
+    return true
+end
 
 -- TODO: mountHorse and dismountHorse are too long and have a lot of redundant code
 
@@ -96,7 +123,7 @@ end
 ---@param player IsoPlayer
 ---@param horse IsoAnimal
 function Mounting.mountHorse(player, horse)
-    if not HorseRiding.canMountHorse(player, horse) then
+    if not Mounting.canMountHorse(player, horse) then
         return
     end
 
@@ -108,14 +135,15 @@ function Mounting.mountHorse(player, horse)
         -- Detach from tree
         local tree = data:getAttachedTree()
         if tree then
-            sendAttachAnimalToTree(horse, player, tree, true)
             data:setAttachedTree(nil)
+            sendAttachAnimalToTree(horse, player, tree, true)
         end
         -- Detach from any leading player
         local leader = data:getAttachedPlayer()
         if leader then
             leader:getAttachedAnimals():remove(horse)
             data:setAttachedPlayer(nil)
+            sendAttachAnimalToPlayer(horse, player, nil, true)
         end
     end
 
@@ -168,7 +196,7 @@ function Mounting.mountHorse(player, horse)
 
     ISTimedActionQueue.add(path)
 
-    local saddle = HorseUtils.getSaddle(horse)
+    local saddle = Attachments.getSaddle(horse)
     local pairing = MountPair.new(player, horse)
 
     ISTimedActionQueue.add(
@@ -229,7 +257,7 @@ function Mounting.dismountHorse(player)
         end
     end
 
-    local saddleItem = HorseUtils.getSaddle(horse)
+    local saddleItem = Attachments.getSaddle(horse)
 
     player:setDir(lockDir)
 
