@@ -277,7 +277,6 @@ HorseUtils.getAnimationFromDebugString = function(debugString, matchString)
                 local rawWeight = string.sub(debugString, weightColon + 1, weightEnd)
                 weightValue = tonumber(trim(rawWeight))
             end
-            print("Weight value of anim: ", weightValue)
             animationData.name = name
             animationData.weight = weightValue
             return animationData
