@@ -7,7 +7,7 @@ HealthPanelAction,false
 HorseMod_DismountAction,true
 HorseMod_HorseEquipGear,false
 HorseMod_HorseUnequipGear,false
-HorseMod_MountHorseAction,false
+HorseMod_MountAction,false
 ISActivateCarBatteryChargerAction,false
 ISActivateGenerator,false
 ISAddAnimalInTrailer,false
