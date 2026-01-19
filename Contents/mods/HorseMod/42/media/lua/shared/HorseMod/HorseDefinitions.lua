@@ -112,14 +112,11 @@ HorseDefinitions.IS_ADULT = {
 HorseDefinitions.ANIMALS_DATA = {
     --- data applied to every horses, adult or not
     _DEFAULT = {
-        bodyModel = "HorseMod.Horse",
         bodyModelSkel = "HorseMod.HorseSkeleton",
         textureSkeleton = "HorseMod/HorseSkeletonDry",
         textureSkeletonBloody = "HorseMod/HorseSkeletonBloody",
         bodyModelSkelNoHead = "HorseMod.HorseSkeletonHeadless",
         animset = "buck",
-        modelscript = "HorseMod.Horse",
-        carcassItem = "HorseMod.Horse",
         bodyModelHeadless = "HorseMod.HorseHeadless",
         textureSkinned = "HorseMod/HorseSkinned",
         ropeBone = "DEF_Neck1",
@@ -179,6 +176,9 @@ HorseDefinitions.ANIMALS_DATA = {
 
     -- adult horse specific data
     _DEFAULT_ADULT = {
+        bodyModel = "HorseMod.Horse",
+        modelscript = "HorseMod.Horse",
+        carcassItem = "HorseMod.Horse",
         -- MATING
         babyType = "filly",
         minAgeForBaby = 12 * 30,
@@ -201,6 +201,9 @@ HorseDefinitions.ANIMALS_DATA = {
 
     -- adult, male, female data
     ["filly"] = {
+        bodyModel = "HorseMod.Foal",
+        modelscript = "HorseMod.Foal",
+        carcassItem = "HorseMod.Foal",
         -- BEHAVIOR
         idleEmoteChance = 600,
         eatFromMother = true,
@@ -324,8 +327,8 @@ Events.OnGameBoot.Add(function()
         -- retrieve the default animal data
         local data = copyTable(ANIMALS_DATA._DEFAULT)
         data.breeds = copyTable(AnimalDefinitions.breeds["horse"].breeds) -- copy horse breed data
-        
-        -- if adult, apply adult data
+
+    -- if adult, apply adult data
         if isAdult then
             data = copyOver(data, ANIMALS_DATA._DEFAULT_ADULT)
         end
