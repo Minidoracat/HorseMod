@@ -105,7 +105,8 @@ local function squareCenterSolid(sq)
     for i = 1, #objects do
         local object = objects[i]
         local properties = object:getProperties()
-        if properties:get("Solid") or properties:get("SolidTrans") then
+        if properties and 
+            (properties:get("Solid") or properties:get("SolidTrans")) then
             return true
         end
     end

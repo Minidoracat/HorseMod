@@ -1,3 +1,10 @@
+--[[
+This file hooks to the vanilla action to patch for the horse
+]]
+
+
+
+---REQUIREMENTS
 local HorseUtils = require("HorseMod/Utils")
 local AnimationVariable = require("HorseMod/AnimationVariable")
 

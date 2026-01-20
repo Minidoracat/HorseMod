@@ -11,37 +11,29 @@ local Mounts = require("HorseMod/Mounts")
 ---
 ---@field character IsoPlayer
 ---
----@field horse IsoAnimal
+---@field animal IsoAnimal
 ---
 ---@field mount Mount
 ---
----@field _lockDir IsoDirections | nil
----
----@field side "left" | "right"
+---@field mountPosition MountPosition
 ---
 ---@field hasSaddle boolean
----
----@field landX number
----
----@field landY number
----
----@field landZ number
 local DismountHorseAction = ISBaseTimedAction:derive("HorseMod_DismountHorseAction")
 
 
 ---@return boolean
 function DismountHorseAction:isValid()
-    return self.horse:isExistInTheWorld()
-        --    and self.character:getAttachedAnimals():contains(self.horse) or false
+    return self.animal:isExistInTheWorld()
 end
 
 
 function DismountHorseAction:update()
-    assert(self._lockDir ~= nil)
-
     -- keep the horse locked facing the stored direction
-    self.horse:setDir(self._lockDir)
+    local animal = self.animal
+    animal:setDirectionAngle(self.lockDir)
+    animal:getPathFindBehavior2():reset()
 
+    -- complete when dismount is finished
     if self.character:getVariableBoolean(AnimationVariable.DISMOUNT_FINISHED) == true then
         self.character:setVariable(AnimationVariable.DISMOUNT_FINISHED, false)
         self:forceComplete()
@@ -50,31 +42,23 @@ end
 
 
 function DismountHorseAction:start()
-    self.horse:getPathFindBehavior2():reset()
-    self.horse:getBehavior():setBlockMovement(true)
-    self.horse:stopAllMovementNow()
-
-    self._lockDir  = self.horse:getDir()
+    self.lockDir = self.animal:getDirectionAngle()
     self.character:setVariable(AnimationVariable.DISMOUNT_STARTED, true)
 
-    if self.side == "right" then
-        if self.hasSaddle then
-            self:setActionAnim("Bob_Dismount_Saddle_Right")
-        else
-            self:setActionAnim("Bob_Dismount_Bareback_Right")
-        end
+    -- start animation
+    local actionAnim = ""
+    if self.hasSaddle then
+        actionAnim = "Bob_Dismount_Saddle_"
     else
-        if self.hasSaddle then
-            self:setActionAnim("Bob_Dismount_Saddle_Left")
-        else
-            self:setActionAnim("Bob_Dismount_Bareback_Left")
-        end
+        actionAnim = "Bob_Dismount_Bareback_"
     end
+
+    actionAnim = actionAnim .. self.mountPosition.name
+    self:setActionAnim(actionAnim)
 end
 
 
 function DismountHorseAction:stop()
-    self.horse:getBehavior():setBlockMovement(false)
     self.character:setVariable(AnimationVariable.DISMOUNT_STARTED, false)
     ISBaseTimedAction.stop(self)
 end
@@ -88,11 +72,9 @@ end
 
 
 function DismountHorseAction:perform()
-    assert(self._lockDir ~= nil)
-
-    self.character:setX(self.landX)
-    self.character:setY(self.landY)
-    self.character:setZ(self.landZ)
+    local mountPosition = self.mountPosition
+    self.character:setX(mountPosition.x)
+    self.character:setY(mountPosition.y)
 
     ISBaseTimedAction.perform(self)
 end
@@ -107,29 +89,20 @@ function DismountHorseAction:getDuration()
 end
 
 
----@param mount Mount
----@param side "left" | "right"
+---@param character IsoPlayer
+---@param animal IsoAnimal
+---@param mountPosition MountPosition
 ---@param hasSaddle boolean
----@param landX number
----@param landY number
----@param landZ number
 ---@return self
 ---@nodiscard
-function DismountHorseAction:new(mount, side, hasSaddle, landX, landY, landZ)
+function DismountHorseAction:new(character, animal, mountPosition, hasSaddle)
     ---@type DismountHorseAction
-    local o = ISBaseTimedAction.new(self, mount.pair.rider)
+    local o = ISBaseTimedAction.new(self, character)
 
-    -- HACK: this loses its metatable when transmitted by the server
-    mount = convertToPZNetTable(mount)
-    mount.pair = convertToPZNetTable(mount.pair)
-    setmetatable(mount, require("HorseMod/mount/Mount"))
-    o.mount = mount
-    o.horse = mount.pair.mount
-    o.side = side
+    o.character = character
+    o.animal = animal
+    o.mountPosition = mountPosition
     o.hasSaddle = hasSaddle
-    o.landX = landX
-    o.landY = landY
-    o.landZ = landZ
     o.stopOnWalk = true
     o.stopOnRun = true
 
