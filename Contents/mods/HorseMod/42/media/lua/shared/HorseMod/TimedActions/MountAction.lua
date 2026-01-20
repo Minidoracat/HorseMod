@@ -50,8 +50,6 @@ end
 
 
 function MountAction:update()
-    self.character:addLineChatElement("Mounting horse")
-
     -- fix the mount and rider to look in the same direction for animation alignment
     local character = self.character
     local animal = self.animal
