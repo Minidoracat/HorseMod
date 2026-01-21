@@ -117,7 +117,7 @@ function InputManager:getKeyboardInput()
         x = x + 1
     end
 
-    run = isKeyDown(CORE:getKey("Run")) or isKeyDown(CORE:getKey("Sprint"))
+    run = isKeyDown(ModOptions.HorseGallopButton)
 
     return {
         movement = {

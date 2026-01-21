@@ -85,6 +85,13 @@ end
 
 
 function Mounting.dismountDeath(player, horse, dismountVariable)
+    -- prevent multiple urgent dismount actions
+    local queue = ISTimedActionQueue.getTimedActionQueue(player)
+    local actionIndex = queue:indexOfType(UrgentDismountAction.Type)
+    if actionIndex >= 0 then
+        return
+    end
+
     ISTimedActionQueue.add(UrgentDismountAction:new(
         player,
         horse,
