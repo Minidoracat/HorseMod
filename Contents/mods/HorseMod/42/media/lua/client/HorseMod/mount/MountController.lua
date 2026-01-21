@@ -1,8 +1,10 @@
 ---REQUIREMENTS
 local Stamina = require("HorseMod/Stamina")
 local AnimationVariable = require("HorseMod/AnimationVariable")
-local Mounts = require("HorseMod/Mounts")
 local DismountAction = require("HorseMod/TimedActions/DismountAction")
+local UrgentDismountAction = require("HorseMod/TimedActions/UrgentDismountAction")
+local rdm = newrandom()
+
 
 
 ---@param state "walk"|"gallop"
@@ -542,8 +544,59 @@ local PLAYER_SYNC_TUNER = 0.8
 ---
 ---Current movement speed in squares/s.
 ---@field currentSpeed number
+---
+---Used to calculate if the player should fall while in trees. Chance increases the longer they stay in trees.
+---@field timeInTrees number
+---
+---Last time a tree fall check was made.
+---@field lastCheck number
 local MountController = {}
 MountController.__index = MountController
+
+
+local BASE_CHANCE = 0.05
+local NIMBLE_LOW = 1
+local NIMBLE_HIGH = 0
+local TRAITS = {
+    [CharacterTrait.EAGLE_EYED] = 0.5,
+    [CharacterTrait.GYMNAST] = 0.5,
+    [CharacterTrait.MOTION_SENSITIVE] = 2,
+    [CharacterTrait.CLUMSY] = 2,
+}
+
+---@return number
+function MountController:calculateTreeFallChance()
+    local rider = self.mount.pair.rider
+
+    local timeInTrees = self.timeInTrees
+    local skill = rider:getPerkLevel(Perks.Agility)
+
+    local chance = BASE_CHANCE * timeInTrees * ((NIMBLE_HIGH - NIMBLE_LOW) / 10 * skill + NIMBLE_LOW)
+
+    for trait, mult in pairs(TRAITS) do
+        if rider:hasTrait(trait) then
+            chance = chance * mult
+        end
+    end
+
+    return chance
+end
+
+---@return boolean
+function MountController:rollForTreeFall()
+    local chance = self:calculateTreeFallChance()
+    local pass = rdm:random() < chance
+    if pass then
+        local pair = self.mount.pair
+        ISTimedActionQueue.add(UrgentDismountAction:new(
+            pair.rider,
+            pair.mount,
+            AnimationVariable.FALL_BACK
+        ))
+        return true
+    end
+    return false
+end
 
 
 ---@param input InputManager.Input
@@ -753,6 +806,7 @@ function MountController:update(input)
 
     local deltaTime = GameTime.getInstance():getTimeDelta()
     local moving = (input.movement.x ~= 0 or input.movement.y ~= 0)
+    local isGalloping = self:getMovementState() == "gallop"
 
     -- Prevent running at zero stamina
     if not Stamina.shouldRun(mount, input, moving) then
@@ -765,7 +819,7 @@ function MountController:update(input)
     local doTurn = true
     if rider:getIgnoreMovement() or rider:isIgnoreInputsForDirection() then
         local isJumping = mountPair:getAnimationVariableBoolean(AnimationVariable.JUMP)
-        if not isJumping or self:getMovementState() ~= "gallop" then
+        if not isJumping or not isGalloping then
             -- exit jump state and allow turning again
             rider:setIgnoreMovement(false)
             rider:setIgnoreInputsForDirection(false)
@@ -820,13 +874,41 @@ function MountController:update(input)
     rider:setY(mount:getY())
     rider:setZ(mount:getZ())
 
+    -- make the player fall if they are in trees based on some skills and traits
+    local timeInTrees = self.timeInTrees
+    if isGalloping then
+        if rider:isInTreesNoBush() then
+            self.timeInTrees = timeInTrees + deltaTime
+
+            -- roll for tree fall every 0.5s
+            if self.lastCheck > 0.5 then
+                self:rollForTreeFall()
+                self.lastCheck = 0.0
+            else
+                self.lastCheck = self.lastCheck + deltaTime
+            end
+        end
+    elseif self.timeInTrees > 0 then
+        timeInTrees = math.max(0, timeInTrees - deltaTime*4)
+        timeInTrees = math.min(timeInTrees, 10)
+        self.timeInTrees = timeInTrees
+    end
+
+
+    -- local num1 = self.timeInTrees
+    -- num1 = (num1 * 100 - num1 * 100%1) / 100
+    -- local num2 = self:calculateTreeFallChance()
+    -- num2 = (num2 * 100 - num2 * 100%1) / 100
+    -- rider:addLineChatElement(tostring(num1) .. " / " .. tostring(num2))
+
+    ---@TODO improve by having a custom falling animation for the player
     -- verify the rider/mount are not falling
     if rider:isbFalling() or mount:isbFalling() then
-        mount:getPathFindBehavior2():reset()
-        mount:stopAllMovementNow()
-        mount:getBehavior():setBlockMovement(false)
-        
-        Mounts.removeMount(rider)
+        ISTimedActionQueue.add(UrgentDismountAction:new(
+            rider,
+            mount,
+            nil
+        ))
     end
 end
 
@@ -843,6 +925,8 @@ function MountController.new(mount)
             currentSpeed = 0.0,
             vegetationLingerTime = 0.0,
             vegetationLingerStartMult = 1.0,
+            timeInTrees = 0.0,
+            lastCheck = 0.0,
         },
         MountController
     )

@@ -3,6 +3,7 @@
 ---REQUIREMENTS
 local MountAction = require("HorseMod/TimedActions/MountAction")
 local DismountAction = require("HorseMod/TimedActions/DismountAction")
+local UrgentDismountAction = require("HorseMod/TimedActions/UrgentDismountAction")
 local Attachments = require("HorseMod/attachments/Attachments")
 local MountingUtility = require("HorseMod/mounting/MountingUtility")
 
@@ -68,7 +69,7 @@ end
 ---@param mountPosition MountPosition
 function Mounting.dismountHorse(player, horse, mountPosition)
     --- pathfind to the mount position
-    local pathfindAction = MountingUtility.pathfindToHorse(player, horse, mountPosition)
+    MountingUtility.pathfindToHorse(player, horse, mountPosition)
 
     -- dismount
     local hasSaddle = Attachments.getSaddle(horse) ~= nil
@@ -80,6 +81,15 @@ function Mounting.dismountHorse(player, horse, mountPosition)
     )
 
     ISTimedActionQueue.add(action)
+end
+
+
+function Mounting.dismountDeath(player, horse, dismountVariable)
+    ISTimedActionQueue.add(UrgentDismountAction:new(
+        player,
+        horse,
+        dismountVariable
+    ))
 end
 
 

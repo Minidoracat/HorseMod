@@ -28,7 +28,8 @@ function UrgentDismountAction:update()
     character:setDirectionAngle(self.lockDir)
 
     -- complete when mounting dying animation is finished
-    if character:getVariableBoolean(self.dismountVariable) == false then
+    local dismountVariable = self.dismountVariable
+    if dismountVariable and character:getVariableBoolean(dismountVariable) == false then
         self:forceComplete()
     end
 end
@@ -38,7 +39,10 @@ function UrgentDismountAction:start()
     local character = self.character
 
     -- start animation
-    character:setVariable(self.dismountVariable, true)
+    local dismountVariable = self.dismountVariable
+    if dismountVariable then
+        character:setVariable(dismountVariable, true)
+    end
 
     -- lock player movement
     self.lockDir = self.animal:getDirectionAngle()
@@ -74,7 +78,10 @@ function UrgentDismountAction:resetCharacterState()
 end
 
 function UrgentDismountAction:getDuration()
-    return -1
+    if self.dismountVariable then
+        return -1
+    end
+    return 100
 end
 
 ---@param character IsoPlayer
@@ -88,7 +95,7 @@ function UrgentDismountAction:new(character, animal, dismountVariable)
 
     o.character = character
     o.animal = animal
-    o.dismountVariable = dismountVariable or AnimationVariable.DYING
+    o.dismountVariable = dismountVariable
 
     -- we manually lock the player in place
     o.stopOnWalk = false

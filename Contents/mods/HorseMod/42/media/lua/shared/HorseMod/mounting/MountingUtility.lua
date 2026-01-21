@@ -47,10 +47,12 @@ function MountingUtility.getNearestMountPosition(player, horse, maxDistance)
     ---@type MountPosition | nil
     local nearest = nil
 
-    for i = 1, #MOUNT_POINTS do
+    for i = 1, #MOUNT_POINTS do repeat
         local mountPoint = MOUNT_POINTS[i]
         local attachment = mountPoint.attachment
         local attachmentPosition = horse:getAttachmentWorldPos(attachment)
+        if not attachmentPosition then break end
+        
         local x = attachmentPosition:x()
         local y = attachmentPosition:y()
         local distanceSquared = player:DistToSquared(x, y)
@@ -68,7 +70,7 @@ function MountingUtility.getNearestMountPosition(player, horse, maxDistance)
                 nearestDistanceSquared = distanceSquared
             end
         end
-    end
+    until true end
 
     return nearest
 end

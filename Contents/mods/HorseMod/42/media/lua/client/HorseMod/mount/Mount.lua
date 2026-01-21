@@ -1,10 +1,8 @@
 local MountController = require("HorseMod/mount/MountController")
-local HorseDamage = require("HorseMod/horse/HorseDamage")
-local HorseUtils = require("HorseMod/Utils")
 local AnimationVariable = require("HorseMod/AnimationVariable")
 local InputManager = require("HorseMod/mount/InputManager")
 local ReinsManager = require("HorseMod/mount/ReinsManager")
-local UrgentDismountAction = require("HorseMod/TimedActions/UrgentDismountAction")
+local Mounting = require("HorseMod/Mounting")
 
 
 ---@namespace HorseMod
@@ -39,17 +37,13 @@ function Mount:isDying()
     return false
 end
 
-function Mount:deathUnmount()
-    ISTimedActionQueue.add(UrgentDismountAction:new(
-        self.pair.rider,
-        self.pair.mount,
-        AnimationVariable.DYING
-    ))
-end
-
 function Mount:update()
     if self:isDying() then
-        self:deathUnmount()
+        Mounting.dismountDeath(
+            self.pair.rider,
+            self.pair.mount,
+            AnimationVariable.DYING
+        )
         return
     end
     self.controller:update(
@@ -65,7 +59,7 @@ function Mount:cleanup()
 
     local attached = self.pair.rider:getAttachedAnimals()
     attached:remove(self.pair.mount)
-    self.pair.mount:getData():setAttachedPlayer(nil)
+    self.pair.mount:getData():setAttachedPlayer(nil) ---@diagnostic disable-line technically can still pass nil
 
     self.pair.mount:getBehavior():setBlockMovement(false)
     self.pair.mount:getPathFindBehavior2():reset()
