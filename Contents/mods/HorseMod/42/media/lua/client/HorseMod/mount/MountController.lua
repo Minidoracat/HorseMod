@@ -410,10 +410,12 @@ local function collideStepAt(horse, z, x0, y0, dx, dy)
 end
 
 --- Do all substeps in locals; write back ONCE.
+---@param rider IsoPlayer
 ---@param horse IsoAnimal
 ---@param velocity Vector2
 ---@param delta number
-local function moveWithCollision(horse, velocity, delta)
+---@param isGalloping boolean
+local function moveWithCollision(rider, horse, velocity, delta, isGalloping)
     local z = horse:getZ()
     local x = horse:getX()
     local y = horse:getY()
@@ -438,8 +440,16 @@ local function moveWithCollision(horse, velocity, delta)
         local dx = velocityX * s
         local dy = velocityY * s
 
+        -- check if hitting a wall
         local rx, ry = collideStepAt(horse, z, x, y, dx, dy)
         if rx == 0 and ry == 0 then
+            if isGalloping then
+                ISTimedActionQueue.add(UrgentDismountAction:new(
+                    rider,
+                    horse,
+                    AnimationVariable.FALL_BACK
+                ))
+            end
             break
         end
 
@@ -839,7 +849,7 @@ function MountController:update(input)
         and not rider:getVariableBoolean(AnimationVariable.DISMOUNT_STARTED) then
         local currentDirection = mount:getDir()
         local velocity = currentDirection:ToVector():setLength(self.currentSpeed)
-        moveWithCollision(mount, velocity, deltaTime)
+        moveWithCollision(rider, mount, velocity, deltaTime, isGalloping)
 
         mount:setVariable("bPathfind", true)
         mount:setVariable("animalWalking", not input.run)
