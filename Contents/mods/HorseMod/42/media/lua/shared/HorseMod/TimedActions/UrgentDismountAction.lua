@@ -1,7 +1,7 @@
 ---@namespace HorseMod
 
 ---REQUIREMENTS
-local AnimationVariable = require("HorseMod/AnimationVariable")
+local AnimationVariable = require('HorseMod/definitions/AnimationVariable')
 local Mounts = require("HorseMod/Mounts")
 
 ---@class UrgentDismountAction : ISBaseTimedAction
@@ -15,6 +15,12 @@ local Mounts = require("HorseMod/Mounts")
 ---@field dismountVariable AnimationVariable
 ---
 ---@field hasSaddle boolean
+---
+---@field horseSound Sound
+---
+---@field playerVoice string
+---
+---@field shouldWander boolean
 local UrgentDismountAction = ISBaseTimedAction:derive("HorseMod_UrgentDismountAction")
 
 function UrgentDismountAction:isValid()
@@ -28,7 +34,8 @@ function UrgentDismountAction:update()
     character:setDirectionAngle(self.lockDir)
 
     -- complete when mounting dying animation is finished
-    if character:getVariableBoolean(self.dismountVariable) == false then
+    local dismountVariable = self.dismountVariable
+    if dismountVariable and character:getVariableBoolean(dismountVariable) == false then
         self:forceComplete()
     end
 end
@@ -36,17 +43,34 @@ end
 
 function UrgentDismountAction:start()
     local character = self.character
+    local animal = self.animal
 
     -- start animation
-    character:setVariable(self.dismountVariable, true)
+    local dismountVariable = self.dismountVariable
+    if dismountVariable then
+        character:setVariable(dismountVariable, true)
+    end
 
     -- lock player movement
-    self.lockDir = self.animal:getDirectionAngle()
+    self.lockDir = animal:getDirectionAngle()
     character:setBlockMovement(true)
     character:setIgnoreInputsForDirection(true)
 
     -- drop heavy items
     character:dropHeavyItems()
+
+    -- play hurting sound based on dismount type
+    local playerVoice = self.playerVoice
+    if playerVoice then
+        character:playerVoiceSound(playerVoice)
+    end
+
+    -- play horse hurting sound
+    local HorseSounds = require("HorseMod/HorseSounds")
+    local horseSound = self.horseSound
+    if horseSound then
+        HorseSounds.playSound(animal, horseSound)
+    end
 
     -- unmount
     Mounts.removeMount(character)
@@ -59,6 +83,15 @@ end
 
 function UrgentDismountAction:complete()
     self:resetCharacterState()
+
+    ---@TODO need to make the horse move before the end since the complete triggers only when the player falling animation ends
+    ---possibly do that with a variable being set in the anim node
+    ---or make the falling animations make the player fall fast enough so it looks natural
+    if self.shouldWander then
+        local animal = self.animal
+        animal:setVariable("animalRunning", true)
+        animal:forceWanderNow()
+    end
     return true
 end
 
@@ -74,22 +107,36 @@ function UrgentDismountAction:resetCharacterState()
 end
 
 function UrgentDismountAction:getDuration()
-    return -1
+    if self.dismountVariable then
+        return -1
+    end
+    return 100
 end
 
 ---@param character IsoPlayer
 ---@param animal IsoAnimal
 ---@param dismountVariable AnimationVariable?
+---@param horseSound Sound? The sound to play from the horse when dismounting
+---@param playerVoice string? The voice ID to play when dismounting
+---@param shouldWander boolean Whenever the horse should wander after dismounting
 ---@return self
 ---@nodiscard
-function UrgentDismountAction:new(character, animal, dismountVariable)
+function UrgentDismountAction:new(
+    character, 
+    animal, 
+    dismountVariable, 
+    horseSound, 
+    playerVoice, 
+    shouldWander)
     ---@type UrgentDismountAction
     local o = ISBaseTimedAction.new(self, character)
 
     o.character = character
     o.animal = animal
-    o.dismountVariable = dismountVariable or AnimationVariable.DYING
-
+    o.dismountVariable = dismountVariable
+    o.horseSound = horseSound
+    o.playerVoice = playerVoice
+    o.shouldWander = shouldWander
     -- we manually lock the player in place
     o.stopOnWalk = false
     o.stopOnRun = false

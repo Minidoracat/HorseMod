@@ -42,28 +42,35 @@ function MountingUtility.getNearestMountPosition(player, horse, maxDistance)
         nearestDistanceSquared = maxDistance^2
     end
 
+    local horse_square = horse:getSquare()
+
     ---@type MountPosition | nil
     local nearest = nil
 
-    for i = 1, #MOUNT_POINTS do
+    for i = 1, #MOUNT_POINTS do repeat
         local mountPoint = MOUNT_POINTS[i]
         local attachment = mountPoint.attachment
         local attachmentPosition = horse:getAttachmentWorldPos(attachment)
+        if not attachmentPosition then break end
+        
         local x = attachmentPosition:x()
         local y = attachmentPosition:y()
         local distanceSquared = player:DistToSquared(x, y)
         if distanceSquared <= nearestDistanceSquared then
-            ---@type MountPosition
-            nearest = {
-                x = x,
-                y = y,
-                name = mountPoint.name,
-                pos3D = attachmentPosition,
-                attachment = attachment,
-            }
-            nearestDistanceSquared = distanceSquared
+            local square = getSquare(x, y, horse_square:getZ())
+            if square and not horse_square:isBlockedTo(square) then
+                ---@type MountPosition
+                nearest = {
+                    x = x,
+                    y = y,
+                    name = mountPoint.name,
+                    pos3D = attachmentPosition,
+                    attachment = attachment,
+                }
+                nearestDistanceSquared = distanceSquared
+            end
         end
-    end
+    until true end
 
     return nearest
 end
@@ -106,21 +113,22 @@ function MountingUtility.canMountHorse(player, horse)
         -- already mounted
         return false
     elseif Mounts.hasRider(horse) then
-        return false, "AlreadyMounted"
+        return false, "ContextMenu_Horse_IsAlreadyRiding"
     elseif horse:isDead() then
-        return false, "IsDead"
-    elseif horse:isOnHook() then
-        return false, "IsAttached"
-    -- elseif horse:getVariableBoolean("animalRunning") then
-    --     -- running
-    --     return false, "IsRunning"
+        return false, "ContextMenu_Horse_IsDead"
+    elseif horse:isOnHook() then -- butcher hook
+        return false, "ContextMenu_Horse_IsAttached"
+    elseif horse:getVariableBoolean("animalRunning") and horse:getMovementSpeed() ~= 0 then
+        return false, "ContextMenu_Horse_IsRunning"
     elseif not HorseUtils.isAdult(horse) then
-        return false, "NotAdult"
+        return false, "ContextMenu_Horse_NotAdult"
     end
 
+    ---@TODO is this needed anymore ? I wasn't able to properly test it because
+    ---even if I comment this I can't mount the horse, and I didn't find the exact reason why
     local state = horse:getCurrentStateName()
     if state == "AnimalFollowWallState" then
-        return false, ""
+        return false
     end
 
     return true
@@ -131,13 +139,10 @@ end
 ---Make the player pathfind to the nearest mount point on the horse. First stops the horse from moving and then move to the horse nearest mounting position.
 ---@param player IsoPlayer
 ---@param horse IsoAnimal
----@return MountPosition
+---@param mountPosition MountPosition
 ---@return PathfindToMountPoint
-function MountingUtility.pathfindToHorse(player, horse)
+function MountingUtility.pathfindToHorse(player, horse, mountPosition)
     --- pathfind to the mount position
-    local mountPosition = MountingUtility.getNearestMountPosition(player, horse)
-    assert(mountPosition ~= nil, "No mount position found when should be found. Report this to the mod authors.")
-
     local PathfindToMountPoint = require("HorseMod/TimedAction/PathfindToMountPoint")
     local pathfindAction = PathfindToMountPoint:new(
         player,
@@ -150,7 +155,7 @@ function MountingUtility.pathfindToHorse(player, horse)
 
     ISTimedActionQueue.add(pathfindAction)
 
-    return mountPosition, pathfindAction
+    return pathfindAction
 end
 
 

@@ -20,10 +20,13 @@ function PathfindToMountPoint:waitToStart()
     -- update mount position or cancel pathfind if not reachable
     local mountPosition = MountingUtility.getNearestMountPosition(self.character, animal)
     self.mountPosition = mountPosition
+
+    -- we need to stop the action if we can't reach a mount position
     if not mountPosition then
         self:forceStop()
         return true
     end
+
     self.location = mountPosition.pos3D ---@diagnostic disable-line
     return ISWalkToTimedActionF.waitToStart(self)
 end

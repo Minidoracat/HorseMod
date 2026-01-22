@@ -1,8 +1,10 @@
 ---REQUIREMENTS
 local Stamina = require("HorseMod/Stamina")
-local AnimationVariable = require("HorseMod/AnimationVariable")
-local Mounts = require("HorseMod/Mounts")
+local AnimationVariable = require('HorseMod/definitions/AnimationVariable')
 local DismountAction = require("HorseMod/TimedActions/DismountAction")
+local Mounting = require("HorseMod/Mounting")
+local rdm = newrandom()
+
 
 
 ---@param state "walk"|"gallop"
@@ -10,9 +12,9 @@ local DismountAction = require("HorseMod/TimedActions/DismountAction")
 ---@nodiscard
 local function getSpeed(state)
     if state == "walk" then
-        return SandboxVars.HorseMod.WalkSpeed
+        return SandboxVars.HorseMod.WalkSpeed ---@diagnostic disable-line
     else
-        return SandboxVars.HorseMod.GallopSpeed
+        return SandboxVars.HorseMod.GallopSpeed ---@diagnostic disable-line
     end
 end
 
@@ -318,8 +320,8 @@ local function collideStepAt(horse, z, x0, y0, dx, dy)
 
     -- mid-square checks
     local tx, ty = math.floor(x1), math.floor(y1)
-    local midSqX = (tx ~= fx) and getSq(tx, fy, z) or nil
-    local midSqY = (ty ~= fy) and getSq(fx, ty, z) or nil
+    local midSqX = (tx ~= fx) and getSquare(tx, fy, z) or nil
+    local midSqY = (ty ~= fy) and getSquare(fx, ty, z) or nil
     local killedX, killedY = false, false
     if midSqX and squareCenterSolid(midSqX) then rx = 0; killedX = true end
     if midSqY and squareCenterSolid(midSqY) then ry = 0; killedY = true end
@@ -379,7 +381,7 @@ local function collideStepAt(horse, z, x0, y0, dx, dy)
                     if x0 + rx1 < b then rx1 = math.min(0, b - x0) end
                 end
             end
-            local okX = (rx1 ~= 0) and not squareCenterSolid(getSq(x0 + rx1, y0, z))
+            local okX = (rx1 ~= 0) and not squareCenterSolid(getSquare(x0 + rx1, y0, z))
 
             local rx2, ry2 = 0, py
             if ry2 > 0 then
@@ -393,7 +395,7 @@ local function collideStepAt(horse, z, x0, y0, dx, dy)
                     if y0 + ry2 < b then ry2 = math.min(0, b - y0) end
                 end
             end
-            local okY = (ry2 ~= 0) and not squareCenterSolid(getSq(x0, y0 + ry2, z))
+            local okY = (ry2 ~= 0) and not squareCenterSolid(getSquare(x0, y0 + ry2, z))
 
             if okX and not okY then return rx1, 0 end
             if okY and not okX then return 0, ry2 end
@@ -408,10 +410,12 @@ local function collideStepAt(horse, z, x0, y0, dx, dy)
 end
 
 --- Do all substeps in locals; write back ONCE.
+---@param rider IsoPlayer
 ---@param horse IsoAnimal
 ---@param velocity Vector2
 ---@param delta number
-local function moveWithCollision(horse, velocity, delta)
+---@param isGalloping boolean
+local function moveWithCollision(rider, horse, velocity, delta, isGalloping)
     local z = horse:getZ()
     local x = horse:getX()
     local y = horse:getY()
@@ -436,8 +440,12 @@ local function moveWithCollision(horse, velocity, delta)
         local dx = velocityX * s
         local dy = velocityY * s
 
+        -- check if hitting a wall
         local rx, ry = collideStepAt(horse, z, x, y, dx, dy)
         if rx == 0 and ry == 0 then
+            if isGalloping then
+                Mounting.dismountFallBack(rider, horse)
+            end
             break
         end
 
@@ -542,8 +550,55 @@ local PLAYER_SYNC_TUNER = 0.8
 ---
 ---Current movement speed in squares/s.
 ---@field currentSpeed number
+---
+---Used to calculate if the player should fall while in trees. Chance increases the longer they stay in trees.
+---@field timeInTrees number
+---
+---Last time a tree fall check was made.
+---@field lastCheck number
 local MountController = {}
 MountController.__index = MountController
+
+
+local BASE_CHANCE = 0.1
+local NIMBLE_LOW = 1
+local NIMBLE_HIGH = 0
+local TRAITS = {
+    [CharacterTrait.EAGLE_EYED] = 0.5,
+    [CharacterTrait.GYMNAST] = 0.5,
+    [CharacterTrait.MOTION_SENSITIVE] = 2,
+    [CharacterTrait.CLUMSY] = 2,
+}
+
+---@return number
+function MountController:calculateTreeFallChance()
+    local rider = self.mount.pair.rider
+
+    local timeInTrees = self.timeInTrees
+    local skill = rider:getPerkLevel(Perks.Nimble)
+
+    local chance = BASE_CHANCE * timeInTrees * ((NIMBLE_HIGH - NIMBLE_LOW) / 10 * skill + NIMBLE_LOW)
+
+    for trait, mult in pairs(TRAITS) do
+        if rider:hasTrait(trait) then
+            chance = chance * mult
+        end
+    end
+
+    return chance
+end
+
+---@return boolean
+function MountController:rollForTreeFall()
+    local chance = self:calculateTreeFallChance()
+    local pass = rdm:random() < chance
+    if pass then
+        local pair = self.mount.pair
+        Mounting.dismountFallBack(pair.rider, pair.mount)
+        return true
+    end
+    return false
+end
 
 
 ---@param input InputManager.Input
@@ -706,6 +761,30 @@ function MountController:updateSpeed(input, deltaTime)
     end
 end
 
+function MountController:updateTreeFall(isGalloping, deltaTime)
+    local rider = self.mount.pair.rider
+
+    -- make the player fall if they are in trees based on some skills and traits
+    local timeInTrees = self.timeInTrees
+    if isGalloping then
+        if rider:isInTreesNoBush() then
+            self.timeInTrees = timeInTrees + deltaTime
+
+            -- roll for tree fall every 0.5s
+            if self.lastCheck > 0.5 then
+                self:rollForTreeFall()
+                self.lastCheck = 0.0
+            else
+                self.lastCheck = self.lastCheck + deltaTime
+            end
+        end
+    elseif self.timeInTrees > 0 then
+        timeInTrees = math.max(0, timeInTrees - deltaTime*4)
+        timeInTrees = math.min(timeInTrees, 10)
+        self.timeInTrees = timeInTrees
+    end
+end
+
 ---@alias MovementState "idle"|"walking"|"trot"|"gallop"
 
 ---@return MovementState
@@ -753,6 +832,7 @@ function MountController:update(input)
 
     local deltaTime = GameTime.getInstance():getTimeDelta()
     local moving = (input.movement.x ~= 0 or input.movement.y ~= 0)
+    local isGalloping = self:getMovementState() == "gallop"
 
     -- Prevent running at zero stamina
     if not Stamina.shouldRun(mount, input, moving) then
@@ -765,7 +845,7 @@ function MountController:update(input)
     local doTurn = true
     if rider:getIgnoreMovement() or rider:isIgnoreInputsForDirection() then
         local isJumping = mountPair:getAnimationVariableBoolean(AnimationVariable.JUMP)
-        if not isJumping or self:getMovementState() ~= "gallop" then
+        if not isJumping or not isGalloping then
             -- exit jump state and allow turning again
             rider:setIgnoreMovement(false)
             rider:setIgnoreInputsForDirection(false)
@@ -785,7 +865,7 @@ function MountController:update(input)
         and not rider:getVariableBoolean(AnimationVariable.DISMOUNT_STARTED) then
         local currentDirection = mount:getDir()
         local velocity = currentDirection:ToVector():setLength(self.currentSpeed)
-        moveWithCollision(mount, velocity, deltaTime)
+        moveWithCollision(rider, mount, velocity, deltaTime, isGalloping)
 
         mount:setVariable("bPathfind", true)
         mount:setVariable("animalWalking", not input.run)
@@ -820,13 +900,12 @@ function MountController:update(input)
     rider:setY(mount:getY())
     rider:setZ(mount:getZ())
 
+    self:updateTreeFall(isGalloping, deltaTime)
+
     -- verify the rider/mount are not falling
+    ---@TODO improve by having a custom falling animation for the player
     if rider:isbFalling() or mount:isbFalling() then
-        mount:getPathFindBehavior2():reset()
-        mount:stopAllMovementNow()
-        mount:getBehavior():setBlockMovement(false)
-        
-        Mounts.removeMount(rider)
+        Mounting.dismountFall(rider, mount)
     end
 end
 
@@ -843,6 +922,8 @@ function MountController.new(mount)
             currentSpeed = 0.0,
             vegetationLingerTime = 0.0,
             vegetationLingerStartMult = 1.0,
+            timeInTrees = 0.0,
+            lastCheck = 0.0,
         },
         MountController
     )

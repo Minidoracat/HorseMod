@@ -1,7 +1,7 @@
 local HorseUtils  = require("HorseMod/Utils")
 local Mounts = require("HorseMod/Mounts")
 local Mounting = require("HorseMod/Mounting")
-local AnimationVariable = require("HorseMod/AnimationVariable")
+local AnimationVariable = require('HorseMod/definitions/AnimationVariable')
 local MountingUtility = require("HorseMod/mounting/MountingUtility")
 
 
@@ -13,17 +13,26 @@ local function doHorseInteractionMenu(context, player, animal)
 
     if playerMount ~= animal then
         local canMount, reason = MountingUtility.canMountHorse(player, animal)
+        local mountPosition = MountingUtility.getNearestMountPosition(player, animal)
         local option = context:addOption(
             getText("ContextMenu_Horse_Mount", animal:getFullName()),
-            player, Mounting.mountHorse, animal
+            player, Mounting.mountHorse, animal, mountPosition
         )
         option.iconTexture = animal:getInventoryIconTexture()
-        if not canMount then
+        local tooltip
+        if not mountPosition then
+            option.notAvailable = true
+            tooltip = ISWorldObjectContextMenu.addToolTip()
+            tooltip.description = getText("ContextMenu_Horse_NoMountPoint")
+        elseif not canMount then
             option.notAvailable = true
             if reason then
-                local tooltip = ISWorldObjectContextMenu.addToolTip()
-                tooltip.description = getText("ContextMenu_Horse_" .. reason)
+                tooltip = ISWorldObjectContextMenu.addToolTip()
+                tooltip.description = getText(reason)
             end
+        end
+        if tooltip then
+            option.toolTip = tooltip
         end
     else
         context:addOption(
@@ -98,17 +107,24 @@ local function handleJoypadMountButton(player)
     if player:getVariableBoolean(AnimationVariable.MOUNTING_HORSE) then return end
 
     local mountedHorse = Mounts.getMount(player)
+
+    -- dismount current horse if riding one
     if mountedHorse then
         if player:getVariableBoolean(AnimationVariable.RIDING_HORSE) then
-            Mounting.dismountHorse(player, mountedHorse)
+            local mountPosition = MountingUtility.getNearestMountPosition(player, mountedHorse)
+            if not mountPosition then return end
+            Mounting.dismountHorse(player, mountedHorse, mountPosition)
         end
         return
     end
 
+    -- mount nearest horse
     local horse = MountingUtility.getBestMountableHorse(player, 1.25)
     if horse and horse:isExistInTheWorld() then
+        local mountPosition = MountingUtility.getNearestMountPosition(player, horse)
+        if not mountPosition then return end
         player:setIsAiming(false)
-        Mounting.mountHorse(player, horse)
+        Mounting.mountHorse(player, horse, mountPosition)
     end
 end
 
