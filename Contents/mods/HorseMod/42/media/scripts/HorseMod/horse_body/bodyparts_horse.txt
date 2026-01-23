@@ -2,7 +2,6 @@ module HorseMod {
     imports {
         Base
     }
-    /* TODO: decide on a naming scheme: Horse_{part} or Horse{Part}? */
 
     item Foal_Head_AmericanQuarterPalomino {
         DisplayCategory = AnimalPart,
