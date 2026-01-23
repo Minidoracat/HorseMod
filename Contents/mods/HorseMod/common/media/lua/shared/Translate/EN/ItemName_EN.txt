@@ -14,7 +14,7 @@ ItemName_EN = {
     ItemName_HorseMod.HorseSaddle_AmericanQuarterPalomino = "Horse Saddle (Palomino)"
     ItemName_HorseMod.HorseSaddle_AppaloosaGrullaBlanket = "Horse Saddle (Grulla Blanket)"
     ItemName_HorseMod.HorseSaddle_AppaloosaLeopard = "Horse Saddle (Leopard)"
-    ItemName_HorseMod.HorseSaddle_ThoroughbredBay = "Horse Saddle (Thoroughbred)"
+    ItemName_HorseMod.HorseSaddle_ThoroughbredBay = "Horse Saddle (Bay)"
     ItemName_HorseMod.HorseSaddle_ThoroughbredFleaBittenGrey = "Horse Saddle (Flea-Bitten Grey)"
 
         /* Saddlebags */
@@ -32,7 +32,7 @@ ItemName_EN = {
     ItemName_HorseMod.HorseSaddlebags_AmericanQuarterPalomino = "Horse Saddle Bags (Palomino)"
     ItemName_HorseMod.HorseSaddlebags_AppaloosaGrullaBlanket = "Horse Saddle Bags (Grulla Blanket)"
     ItemName_HorseMod.HorseSaddlebags_AppaloosaLeopard = "Horse Saddle Bags (Leopard)"
-    ItemName_HorseMod.HorseSaddlebags_ThoroughbredBay = "Horse Saddle Bags (Thoroughbred)"
+    ItemName_HorseMod.HorseSaddlebags_ThoroughbredBay = "Horse Saddle Bags (Bay)"
     ItemName_HorseMod.HorseSaddlebags_ThoroughbredFleaBittenGrey = "Horse Saddle Bags (Flea-Bitten Grey)"
 
         /* Reins */
