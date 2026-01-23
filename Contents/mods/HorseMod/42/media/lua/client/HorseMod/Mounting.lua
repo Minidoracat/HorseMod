@@ -38,7 +38,8 @@ function Mounting.mountHorse(player, horse, mountPosition)
         if leader then
             leader:getAttachedAnimals():remove(horse)
             data:setAttachedPlayer(nil) ---@diagnostic disable-line
-            sendAttachAnimalToPlayer(horse, player, nil, true)  ---@diagnostic disable-line
+            ---@FIXME that function got removed in B42.13.2
+            -- sendAttachAnimalToPlayer(horse, player, nil, true)  ---@diagnostic disable-line
         end
     end
 
