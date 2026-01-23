@@ -2,84 +2,6 @@ module HorseMod {
     imports {
         Base
     }
-    /* American Paint */
-    item HorseLeather_AmericanPaintTobiano_Full
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 5.0,
-        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
-        WorldStaticModel = Leather_Horse_AmericanPaintTobiano,
-        Tags = base:leatherfulllarge,
-        Tooltip = Tooltip_Leather_SofteningBeam,
-    }
-    item HorseLeather_AmericanPaintTobiano_Fur
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 5.0,
-        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
-        WorldStaticModel = Leather_Horse_AmericanPaintTobiano,
-        Tags = base:leatherfurlarge,
-        Tooltip = Tooltip_Leather_TanninBarrel,
-    }
-    item HorseLeather_AmericanPaintTobiano_Fur_Tan_Wet
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 5.0,
-        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
-        WorldStaticModel = Leather_Horse_AmericanPaintTobiano,
-        Tags = base:leatherfurwetlarge,
-        Tooltip = Tooltip_Leather_DryingRack,
-    }
-    item HorseLeather_AmericanPaintTobiano_Fur_Tan
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 5.0,
-        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
-        WorldStaticModel = Leather_Horse_AmericanPaintTobiano,
-        Tags = base:leatherfurtannedlarge,
-    }
-    item HorseLeather_AmericanPaintTobiano_Fur_Tan_Medium
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 3.0,
-        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
-        WorldStaticModel = Leather_Horse_AmericanPaintTobiano_Medium,
-        Tags = base:leatherfurtannedmedium,
-    }
-    item HorseLeather_AmericanPaintTobiano_Fur_Tan_Small
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 1.0,
-        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
-        WorldStaticModel = Leather_Horse_AmericanPaintTobiano_Small,
-        Tags = base:leatherfurtannedsmall,
-    }
-    model Leather_Horse_AmericanPaintTobiano
-    {
-        mesh = WorldItems/Leather_Rolled,
-        texture = WorldItems/Leathers/LeatherRolled_Horse_AmericanPaintTobiano,
-        scale = 0.1,
-    }
-    model Leather_Horse_AmericanPaintTobiano_Medium
-    {
-        mesh = WorldItems/Leather_Rolled,
-        texture = WorldItems/Leathers/LeatherRolled_Horse_AmericanPaintTobiano,
-        scale = 0.08,
-    }
-    model Leather_Horse_AmericanPaintTobiano_Small
-    {
-        mesh = WorldItems/Leather_Rolled,
-        texture = WorldItems/Leathers/LeatherRolled_Horse_AmericanPaintTobiano,
-        scale = 0.055,
-    }
-
-
     /* American Paint Overo */
     item HorseLeather_AmericanPaintOvero_Full
     {
@@ -114,9 +36,10 @@ module HorseMod {
     item HorseLeather_AmericanPaintOvero_Fur_Tan
     {
         DisplayCategory = Material,
-        ItemType = base:normal,
+        ItemType = base:moveable,
         Weight = 5.0,
         Icon = leather/LeatherHide_Horse_AmericanPaintOvero,
+        WorldObjectSprite = rugs_animals_horse_16,
         WorldStaticModel = Leather_Horse_AmericanPaintOvero,
         Tags = base:leatherfurtannedlarge,
     }
@@ -158,6 +81,85 @@ module HorseMod {
     }
 
 
+    /* American Paint */
+    item HorseLeather_AmericanPaintTobiano_Full
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 5.0,
+        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
+        WorldStaticModel = Leather_Horse_AmericanPaintTobiano,
+        Tags = base:leatherfulllarge,
+        Tooltip = Tooltip_Leather_SofteningBeam,
+    }
+    item HorseLeather_AmericanPaintTobiano_Fur
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 5.0,
+        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
+        WorldStaticModel = Leather_Horse_AmericanPaintTobiano,
+        Tags = base:leatherfurlarge,
+        Tooltip = Tooltip_Leather_TanninBarrel,
+    }
+    item HorseLeather_AmericanPaintTobiano_Fur_Tan_Wet
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 5.0,
+        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
+        WorldStaticModel = Leather_Horse_AmericanPaintTobiano,
+        Tags = base:leatherfurwetlarge,
+        Tooltip = Tooltip_Leather_DryingRack,
+    }
+    item HorseLeather_AmericanPaintTobiano_Fur_Tan
+    {
+        DisplayCategory = Material,
+        ItemType = base:moveable,
+        Weight = 5.0,
+        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
+        WorldObjectSprite = rugs_animals_horse_56,
+        WorldStaticModel = Leather_Horse_AmericanPaintTobiano,
+        Tags = base:leatherfurtannedlarge,
+    }
+    item HorseLeather_AmericanPaintTobiano_Fur_Tan_Medium
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 3.0,
+        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
+        WorldStaticModel = Leather_Horse_AmericanPaintTobiano_Medium,
+        Tags = base:leatherfurtannedmedium,
+    }
+    item HorseLeather_AmericanPaintTobiano_Fur_Tan_Small
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = leather/LeatherHide_Horse_AmericanPaintTobiano,
+        WorldStaticModel = Leather_Horse_AmericanPaintTobiano_Small,
+        Tags = base:leatherfurtannedsmall,
+    }
+    model Leather_Horse_AmericanPaintTobiano
+    {
+        mesh = WorldItems/Leather_Rolled,
+        texture = WorldItems/Leathers/LeatherRolled_Horse_AmericanPaintTobiano,
+        scale = 0.1,
+    }
+    model Leather_Horse_AmericanPaintTobiano_Medium
+    {
+        mesh = WorldItems/Leather_Rolled,
+        texture = WorldItems/Leathers/LeatherRolled_Horse_AmericanPaintTobiano,
+        scale = 0.08,
+    }
+    model Leather_Horse_AmericanPaintTobiano_Small
+    {
+        mesh = WorldItems/Leather_Rolled,
+        texture = WorldItems/Leathers/LeatherRolled_Horse_AmericanPaintTobiano,
+        scale = 0.055,
+    }
+
+
     /* Blue Roan */
     item HorseLeather_AmericanQuarterBlueRoan_Full
     {
@@ -192,9 +194,10 @@ module HorseMod {
     item HorseLeather_AmericanQuarterBlueRoan_Fur_Tan
     {
         DisplayCategory = Material,
-        ItemType = base:normal,
+        ItemType = base:moveable,
         Weight = 5.0,
         Icon = leather/LeatherHide_Horse_AmericanQuarterBlueRoan,
+        WorldObjectSprite = rugs_animals_horse_96,
         WorldStaticModel = Leather_Horse_AmericanQuarterBlueRoan,
         Tags = base:leatherfurtannedlarge,
     }
@@ -270,9 +273,10 @@ module HorseMod {
     item HorseLeather_AmericanQuarterPalomino_Fur_Tan
     {
         DisplayCategory = Material,
-        ItemType = base:normal,
+        ItemType = base:moveable,
         Weight = 5.0,
         Icon = leather/LeatherHide_Horse_AmericanQuarterPalomino,
+        WorldObjectSprite = rugs_animals_horse_136,
         WorldStaticModel = Leather_Horse_AmericanQuarterPalomino,
         Tags = base:leatherfurtannedlarge,
     }
@@ -314,84 +318,6 @@ module HorseMod {
     }
 
 
-    /* Flea-Bitten Grey */
-    item HorseLeather_ThoroughbredFleaBittenGrey_Full
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 5.0,
-        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
-        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey,
-        Tags = base:leatherfulllarge,
-        Tooltip = Tooltip_Leather_SofteningBeam,
-    }
-    item HorseLeather_ThoroughbredFleaBittenGrey_Fur
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 5.0,
-        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
-        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey,
-        Tags = base:leatherfurlarge,
-        Tooltip = Tooltip_Leather_TanninBarrel,
-    }
-    item HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan_Wet
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 5.0,
-        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
-        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey,
-        Tags = base:leatherfurwetlarge,
-        Tooltip = Tooltip_Leather_DryingRack,
-    }
-    item HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 5.0,
-        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
-        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey,
-        Tags = base:leatherfurtannedlarge,
-    }
-    item HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan_Medium
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 3.0,
-        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
-        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey_Medium,
-        Tags = base:leatherfurtannedmedium,
-    }
-    item HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan_Small
-    {
-        DisplayCategory = Material,
-        ItemType = base:normal,
-        Weight = 1.0,
-        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
-        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey_Small,
-        Tags = base:leatherfurtannedsmall,
-    }
-    model Leather_Horse_ThoroughbredFleaBittenGrey
-    {
-        mesh = WorldItems/Leather_Rolled,
-        texture = WorldItems/Leathers/LeatherRolled_Horse_ThoroughbredFleaBittenGrey,
-        scale = 0.1,
-    }
-    model Leather_Horse_ThoroughbredFleaBittenGrey_Medium
-    {
-        mesh = WorldItems/Leather_Rolled,
-        texture = WorldItems/Leathers/LeatherRolled_Horse_ThoroughbredFleaBittenGrey,
-        scale = 0.08,
-    }
-    model Leather_Horse_ThoroughbredFleaBittenGrey_Small
-    {
-        mesh = WorldItems/Leather_Rolled,
-        texture = WorldItems/Leathers/LeatherRolled_Horse_ThoroughbredFleaBittenGrey,
-        scale = 0.055,
-    }
-
-
     /* Appaloosa */
     item HorseLeather_AppaloosaGrullaBlanket_Full
     {
@@ -426,9 +352,10 @@ module HorseMod {
     item HorseLeather_AppaloosaGrullaBlanket_Fur_Tan
     {
         DisplayCategory = Material,
-        ItemType = base:normal,
+        ItemType = base:moveable,
         Weight = 5.0,
         Icon = leather/LeatherHide_Horse_AppaloosaGrullaBlanket,
+        WorldObjectSprite = rugs_animals_horse_176,
         WorldStaticModel = Leather_Horse_AppaloosaGrullaBlanket,
         Tags = base:leatherfurtannedlarge,
     }
@@ -504,9 +431,10 @@ module HorseMod {
     item HorseLeather_AppaloosaLeopard_Fur_Tan
     {
         DisplayCategory = Material,
-        ItemType = base:normal,
+        ItemType = base:moveable,
         Weight = 5.0,
         Icon = leather/LeatherHide_Horse_AppaloosaLeopard,
+        WorldObjectSprite = rugs_animals_horse_216,
         WorldStaticModel = Leather_Horse_AppaloosaLeopard,
         Tags = base:leatherfurtannedlarge,
     }
@@ -555,7 +483,7 @@ module HorseMod {
         ItemType = base:normal,
         Weight = 5.0,
         Icon = leather/LeatherHide_Horse_ThoroughbredBay,
-        WorldStaticModel = BLeather_Horse_ThoroughbredBay,
+        WorldStaticModel = Leather_Horse_ThoroughbredBay,
         Tags = base:leatherfulllarge,
         Tooltip = Tooltip_Leather_SofteningBeam,
     }
@@ -565,7 +493,7 @@ module HorseMod {
         ItemType = base:normal,
         Weight = 5.0,
         Icon = leather/LeatherHide_Horse_ThoroughbredBay,
-        WorldStaticModel = BLeather_Horse_ThoroughbredBay,
+        WorldStaticModel = Leather_Horse_ThoroughbredBay,
         Tags = base:leatherfurlarge,
         Tooltip = Tooltip_Leather_TanninBarrel,
     }
@@ -575,17 +503,18 @@ module HorseMod {
         ItemType = base:normal,
         Weight = 5.0,
         Icon = leather/LeatherHide_Horse_ThoroughbredBay,
-        WorldStaticModel = BLeather_Horse_ThoroughbredBay,
+        WorldStaticModel = Leather_Horse_ThoroughbredBay,
         Tags = base:leatherfurwetlarge,
         Tooltip = Tooltip_Leather_DryingRack,
     }
     item HorseLeather_ThoroughbredBay_Fur_Tan
     {
         DisplayCategory = Material,
-        ItemType = base:normal,
+        ItemType = base:moveable,
         Weight = 5.0,
         Icon = leather/LeatherHide_Horse_ThoroughbredBay,
-        WorldStaticModel = BLeather_Horse_ThoroughbredBay,
+        WorldObjectSprite = rugs_animals_horse_256,
+        WorldStaticModel = Leather_Horse_ThoroughbredBay,
         Tags = base:leatherfurtannedlarge,
     }
     item HorseLeather_ThoroughbredBay_Fur_Tan_Medium
@@ -594,7 +523,7 @@ module HorseMod {
         ItemType = base:normal,
         Weight = 3.0,
         Icon = leather/LeatherHide_Horse_ThoroughbredBay,
-        WorldStaticModel = BLeather_Horse_ThoroughbredBay_Medium,
+        WorldStaticModel = Leather_Horse_ThoroughbredBay_Medium,
         Tags = base:leatherfurtannedmedium,
     }
     item HorseLeather_ThoroughbredBay_Fur_Tan_Small
@@ -603,26 +532,104 @@ module HorseMod {
         ItemType = base:normal,
         Weight = 1.0,
         Icon = leather/LeatherHide_Horse_ThoroughbredBay,
-        WorldStaticModel = BLeather_Horse_ThoroughbredBay_Small,
+        WorldStaticModel = Leather_Horse_ThoroughbredBay_Small,
         Tags = base:leatherfurtannedsmall,
     }
-    model BLeather_Horse_ThoroughbredBay
+    model Leather_Horse_ThoroughbredBay
     {
         mesh = WorldItems/Leather_Rolled,
         texture = WorldItems/Leathers/LeatherRolled_Horse_ThoroughbredBay,
         scale = 0.1,
     }
-    model BLeather_Horse_ThoroughbredBay_Medium
+    model Leather_Horse_ThoroughbredBay_Medium
     {
         mesh = WorldItems/Leather_Rolled,
         texture = WorldItems/Leathers/LeatherRolled_Horse_ThoroughbredBay,
         scale = 0.08,
     }
-    model BLeather_Horse_ThoroughbredBay_Small
+    model Leather_Horse_ThoroughbredBay_Small
     {
         mesh = WorldItems/Leather_Rolled,
         texture = WorldItems/Leathers/LeatherRolled_Horse_ThoroughbredBay,
         scale = 0.055,
     }
 
+
+    /* Flea-Bitten Grey */
+    item HorseLeather_ThoroughbredFleaBittenGrey_Full
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 5.0,
+        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
+        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey,
+        Tags = base:leatherfulllarge,
+        Tooltip = Tooltip_Leather_SofteningBeam,
+    }
+    item HorseLeather_ThoroughbredFleaBittenGrey_Fur
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 5.0,
+        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
+        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey,
+        Tags = base:leatherfurlarge,
+        Tooltip = Tooltip_Leather_TanninBarrel,
+    }
+    item HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan_Wet
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 5.0,
+        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
+        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey,
+        Tags = base:leatherfurwetlarge,
+        Tooltip = Tooltip_Leather_DryingRack,
+    }
+    item HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan
+    {
+        DisplayCategory = Material,
+        ItemType = base:moveable,
+        Weight = 5.0,
+        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
+        WorldObjectSprite = rugs_animals_horse_296,
+        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey,
+        Tags = base:leatherfurtannedlarge,
+    }
+    item HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan_Medium
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 3.0,
+        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
+        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey_Medium,
+        Tags = base:leatherfurtannedmedium,
+    }
+    item HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan_Small
+    {
+        DisplayCategory = Material,
+        ItemType = base:normal,
+        Weight = 1.0,
+        Icon = leather/LeatherHide_Horse_ThoroughbredFleaBittenGrey,
+        WorldStaticModel = Leather_Horse_ThoroughbredFleaBittenGrey_Small,
+        Tags = base:leatherfurtannedsmall,
+    }
+    model Leather_Horse_ThoroughbredFleaBittenGrey
+    {
+        mesh = WorldItems/Leather_Rolled,
+        texture = WorldItems/Leathers/LeatherRolled_Horse_ThoroughbredFleaBittenGrey,
+        scale = 0.1,
+    }
+    model Leather_Horse_ThoroughbredFleaBittenGrey_Medium
+    {
+        mesh = WorldItems/Leather_Rolled,
+        texture = WorldItems/Leathers/LeatherRolled_Horse_ThoroughbredFleaBittenGrey,
+        scale = 0.08,
+    }
+    model Leather_Horse_ThoroughbredFleaBittenGrey_Small
+    {
+        mesh = WorldItems/Leather_Rolled,
+        texture = WorldItems/Leathers/LeatherRolled_Horse_ThoroughbredFleaBittenGrey,
+        scale = 0.055,
+    }
 }

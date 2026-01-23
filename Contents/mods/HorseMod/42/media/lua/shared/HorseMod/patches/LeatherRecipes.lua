@@ -7,18 +7,19 @@ The item mappers of this recipe are handled in the `scripts/HorseMod/patches/lea
 ]]
 local LeatherRecipes = {
     LEATHERS = {
+        -- Horse leathers
         -- American Paint
-        "HorseMod.HorseLeather_AmericanPaintTobiano_Fur_Tan",
-        "HorseMod.HorseLeather_AmericanPaintTobiano_Fur_Tan_Medium",
         "HorseMod.HorseLeather_AmericanPaintOvero_Fur_Tan",
         "HorseMod.HorseLeather_AmericanPaintOvero_Fur_Tan_Medium",
-        
+        "HorseMod.HorseLeather_AmericanPaintTobiano_Fur_Tan",
+        "HorseMod.HorseLeather_AmericanPaintTobiano_Fur_Tan_Medium",
+
         -- American Quarter
         "HorseMod.HorseLeather_AmericanQuarterBlueRoan_Fur_Tan",
         "HorseMod.HorseLeather_AmericanQuarterBlueRoan_Fur_Tan_Medium",
         "HorseMod.HorseLeather_AmericanQuarterPalomino_Fur_Tan",
         "HorseMod.HorseLeather_AmericanQuarterPalomino_Fur_Tan_Medium",
-        
+
         -- Appaloosa
         "HorseMod.HorseLeather_AppaloosaGrullaBlanket_Fur_Tan",
         "HorseMod.HorseLeather_AppaloosaGrullaBlanket_Fur_Tan_Medium",
@@ -30,6 +31,32 @@ local LeatherRecipes = {
         "HorseMod.HorseLeather_ThoroughbredBay_Fur_Tan_Medium",
         "HorseMod.HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan",
         "HorseMod.HorseLeather_ThoroughbredFleaBittenGrey_Fur_Tan_Medium",
+
+
+        -- Foal leathers
+        -- American Paint
+        "HorseMod.FoalLeather_AmericanPaintOvero_Fur_Tan",
+        "HorseMod.FoalLeather_AmericanPaintOvero_Fur_Tan_Small",
+        "HorseMod.FoalLeather_AmericanPaintTobiano_Fur_Tan",
+        "HorseMod.FoalLeather_AmericanPaintTobiano_Fur_Tan_Small",
+
+        -- American Quarter
+        "HorseMod.FoalLeather_AmericanQuarterBlueRoan_Fur_Tan",
+        "HorseMod.FoalLeather_AmericanQuarterBlueRoan_Fur_Tan_Small",
+        "HorseMod.FoalLeather_AmericanQuarterPalomino_Fur_Tan",
+        "HorseMod.FoalLeather_AmericanQuarterPalomino_Fur_Tan_Small",
+
+        -- Appaloosa
+        "HorseMod.FoalLeather_AppaloosaGrullaBlanket_Fur_Tan",
+        "HorseMod.FoalLeather_AppaloosaGrullaBlanket_Fur_Tan_Small",
+        "HorseMod.FoalLeather_AppaloosaLeopard_Fur_Tan",
+        "HorseMod.FoalLeather_AppaloosaLeopard_Fur_Tan_Small",
+
+        -- Thoroughbred
+        "HorseMod.FoalLeather_ThoroughbredBay_Fur_Tan",
+        "HorseMod.FoalLeather_ThoroughbredBay_Fur_Tan_Small",
+        "HorseMod.FoalLeather_ThoroughbredFleaBittenGrey_Fur_Tan",
+        "HorseMod.FoalLeather_ThoroughbredFleaBittenGrey_Fur_Tan_Small",
     },
     IDENTIFIER_ITEM = "Base.Leather_Crude_Large",
 }
