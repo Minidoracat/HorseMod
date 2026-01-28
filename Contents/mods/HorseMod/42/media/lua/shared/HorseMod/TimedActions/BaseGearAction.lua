@@ -17,8 +17,11 @@ function BaseGearAction:isValid()
 end
 
 function BaseGearAction:serverStart()
-    ---@diagnostic disable-next-line: param-type-mismatch
-    emulateAnimEventOnce(self.netAction, 1000, AnimationEvent.EQUIP_FINISHED, nil)
+    if self.maxTime == -1 then
+        ---@diagnostic disable-next-line: param-type-mismatch
+        emulateAnimEventOnce(self.netAction, 1000, AnimationEvent.EQUIP_FINISHED, nil)
+    end
+
     return true
 end
 
