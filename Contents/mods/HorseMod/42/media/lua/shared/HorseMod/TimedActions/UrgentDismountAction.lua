@@ -20,7 +20,7 @@ local Mounts = require("HorseMod/Mounts")
 ---
 ---@field playerVoice string
 ---
----@field shouldWander boolean
+---@field shouldFlee boolean
 local UrgentDismountAction = ISBaseTimedAction:derive("HorseMod_UrgentDismountAction")
 
 function UrgentDismountAction:isValid()
@@ -38,6 +38,12 @@ function UrgentDismountAction:update()
     if dismountVariable and character:getVariableBoolean(dismountVariable) == false then
         self:forceComplete()
     end
+
+    if self.shouldFlee and character:getVariableBoolean("HorseFlee") then
+        local animal = self.animal
+        animal:setVariable("animalRunning", true)
+        animal:forceWanderNow()
+    end
 end
 
 
@@ -53,7 +59,7 @@ function UrgentDismountAction:start()
 
     -- lock player movement
     self.lockDir = animal:getDirectionAngle()
-    character:setBlockMovement(true)
+    -- character:setBlockMovement(true)
     character:setIgnoreInputsForDirection(true)
 
     -- drop heavy items
@@ -83,15 +89,6 @@ end
 
 function UrgentDismountAction:complete()
     self:resetCharacterState()
-
-    ---@TODO need to make the horse move before the end since the complete triggers only when the player falling animation ends
-    ---possibly do that with a variable being set in the anim node
-    ---or make the falling animations make the player fall fast enough so it looks natural
-    if self.shouldWander then
-        local animal = self.animal
-        animal:setVariable("animalRunning", true)
-        animal:forceWanderNow()
-    end
     return true
 end
 
@@ -118,7 +115,7 @@ end
 ---@param dismountVariable AnimationVariable?
 ---@param horseSound Sound? The sound to play from the horse when dismounting
 ---@param playerVoice string? The voice ID to play when dismounting
----@param shouldWander boolean Whenever the horse should wander after dismounting
+---@param shouldFlee boolean Whenever the horse should flee after dismounting
 ---@return self
 ---@nodiscard
 function UrgentDismountAction:new(
@@ -127,7 +124,7 @@ function UrgentDismountAction:new(
     dismountVariable, 
     horseSound, 
     playerVoice, 
-    shouldWander)
+    shouldFlee)
     ---@type UrgentDismountAction
     local o = ISBaseTimedAction.new(self, character)
 
@@ -136,7 +133,7 @@ function UrgentDismountAction:new(
     o.dismountVariable = dismountVariable
     o.horseSound = horseSound
     o.playerVoice = playerVoice
-    o.shouldWander = shouldWander
+    o.shouldFlee = shouldFlee
     -- we manually lock the player in place
     o.stopOnWalk = false
     o.stopOnRun = false

@@ -32,6 +32,11 @@
     </m_Transitions>
     <m_Events>
         <m_EventName>SetVariable</m_EventName>
+        <m_Time>0.5</m_Time>
+        <m_ParameterValue>HorseFlee=true</m_ParameterValue>
+    </m_Events>
+    <m_Events>
+        <m_EventName>SetVariable</m_EventName>
         <m_Time>End</m_Time>
         <m_ParameterValue>HorseFallBackGetUp=true</m_ParameterValue>
     </m_Events>
