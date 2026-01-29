@@ -807,6 +807,13 @@ function MountController:toggleTrot()
 end
 
 
+function MountController:canJump()
+    local mount = self.mount.pair.mount
+    return mount:getVariableBoolean(AnimationVariable.GALLOP)
+        and mount:getMovementSpeed() > 0.07
+        and not self.mount.pair:getAnimationVariableBoolean(AnimationVariable.JUMP)
+end
+
 function MountController:jump()
     self.mount.pair:setAnimationVariable(AnimationVariable.JUMP, true)
 
