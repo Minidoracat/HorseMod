@@ -39,7 +39,7 @@ function UrgentDismountAction:update()
         self:forceComplete()
     end
 
-    if self.shouldFlee and character:getVariableBoolean("HorseFlee") then
+    if self.shouldFlee and character:getVariableBoolean(AnimationVariable.FLEE) then
         local animal = self.animal
         animal:setVariable("animalRunning", true)
         animal:forceWanderNow()
