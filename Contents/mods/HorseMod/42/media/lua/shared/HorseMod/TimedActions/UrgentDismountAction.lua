@@ -1,8 +1,10 @@
 ---@namespace HorseMod
 
 ---REQUIREMENTS
-local AnimationVariable = require('HorseMod/definitions/AnimationVariable')
 local Mounts = require("HorseMod/Mounts")
+local AnimationEvent = require("HorseMod/definitions/AnimationEvent")
+
+local IS_SERVER = isServer()
 
 ---@class UrgentDismountAction : ISBaseTimedAction
 ---
@@ -38,11 +40,16 @@ function UrgentDismountAction:update()
     if dismountVariable and character:getVariableBoolean(dismountVariable) == false then
         self:forceComplete()
     end
+end
 
-    if self.shouldFlee and character:getVariableBoolean(AnimationVariable.FLEE) then
-        local animal = self.animal
-        animal:setVariable("animalRunning", true)
-        animal:forceWanderNow()
+function UrgentDismountAction:animEvent(event, parameter)
+    if self.shouldFlee and event == AnimationEvent.HORSE_FLEE then
+        if IS_SERVER then
+            ---@TODO to implement
+        else
+            local animal = self.animal
+            animal:getBehavior():forceFleeFromChr(self.character)
+        end
     end
 end
 

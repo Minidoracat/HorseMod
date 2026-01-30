@@ -31,9 +31,9 @@
         </m_Conditions>
     </m_Transitions>
     <m_Events>
-        <m_EventName>SetVariable</m_EventName>
-        <m_Time>0.5</m_Time>
-        <m_ParameterValue>HorseFlee=true</m_ParameterValue>
+        <m_EventName>HorseFlee</m_EventName>
+        <m_TimePc>0.15</m_TimePc>
+        <m_ParameterValue></m_ParameterValue>
     </m_Events>
     <m_Events>
         <m_EventName>SetVariable</m_EventName>
