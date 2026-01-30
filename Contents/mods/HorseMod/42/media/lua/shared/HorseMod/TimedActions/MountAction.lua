@@ -118,6 +118,10 @@ function MountAction:perform()
     local HorseSounds = require("HorseMod/HorseSounds")
     HorseSounds.playSound(self.animal, HorseSounds.Sound.MOUNT)
 
+    if isClient() then
+        Mounts.addMount(self.character, self.animal)
+    end
+
     ISBaseTimedAction.perform(self)
 end
 

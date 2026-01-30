@@ -103,6 +103,10 @@ function DismountAction:perform()
     self.character:setX(attachmentPosition:x())
     self.character:setY(attachmentPosition:y())
 
+    if isClient() then
+        Mounts.removeMount(self.character)
+    end
+
     ISBaseTimedAction.perform(self)
 end
 

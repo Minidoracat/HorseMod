@@ -72,7 +72,11 @@ Mounts.onMountChanged:add(function(player, animal)
         return
     end
 
-    if HorseRiding.getMount(player) then
+    local mount = HorseRiding.getMount(player)
+    if mount then
+        if mount.pair.mount == animal then
+            return
+        end
         HorseRiding.removeMount(player)
     end
 
