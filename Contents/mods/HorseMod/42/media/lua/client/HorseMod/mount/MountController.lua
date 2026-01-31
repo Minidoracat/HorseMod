@@ -820,6 +820,7 @@ end
 
 function MountController:jump()
     self.mount.pair:setAnimationVariable(AnimationVariable.JUMP, true)
+    self.mount.pair.rider:setIgnoreMovement(true)
     self.mount.pair.rider:setIgnoreInputsForDirection(true)
 end
 
