@@ -23,7 +23,7 @@ IGUI_PTBR = {
     IGUI_Breed_ThoroughbredFleaBittenGrey = "Puro-Sangue Inglês (Tordilho Mosqueado)"
 
     /* Opções do Mod */
-    IGUI_ModOptions_HorseModName = "Cavalo"
+    IGUI_ModOptions_HorseModName = "Horse Mod"
     IGUI_ModOptions_HorseSoundVolume_Desc = "Altera o volume dos sons do cavalo"
     IGUI_ModOptions_HorseSoundVolume_Name = "Volume do som do cavalo (Padrão 0.40)"
     IGUI_ModOptions_HorseSoundVolume_Tooltip = "Define o volume de todos os sons do cavalo."
