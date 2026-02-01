@@ -48,11 +48,13 @@ function Mounting.mountHorse(player, horse, mountPosition)
     local pathfindAction = MountingUtility.pathfindToHorse(player, horse, mountPosition)
 
     -- unequip items from hands
-    if player:getPrimaryHandItem() then
-        ISTimedActionQueue.add(ISUnequipAction:new(player, player:getPrimaryHandItem(), 50));
+    local primaryItem = player:getPrimaryHandItem()
+    local secondaryItem = player:getSecondaryHandItem()
+    if primaryItem and primaryItem:getFullType() ~= "Base.Rope" then
+        ISTimedActionQueue.add(ISUnequipAction:new(player, primaryItem, 50));
     end
-    if player:getSecondaryHandItem() and player:getSecondaryHandItem() ~= player:getPrimaryHandItem() then
-        ISTimedActionQueue.add(ISUnequipAction:new(player, player:getSecondaryHandItem(), 50));
+    if secondaryItem and secondaryItem ~= primaryItem and secondaryItem:getFullType() ~= "Base.Rope" then
+        ISTimedActionQueue.add(ISUnequipAction:new(player, secondaryItem, 50));
     end
 
     -- create mount action
