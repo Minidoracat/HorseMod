@@ -114,7 +114,6 @@ local function handleJoypadMountButton(player)
     if not pressed or prev then return end
     if joypadHasUIFocus(pid) then return end
     if player:getVehicle() then return end
-    if player:getVariableBoolean(AnimationVariable.MOUNTING_HORSE) then return end
 
     local mountedHorse = Mounts.getMount(player)
     if player:hasTimedActions() and not mountedHorse then return end
