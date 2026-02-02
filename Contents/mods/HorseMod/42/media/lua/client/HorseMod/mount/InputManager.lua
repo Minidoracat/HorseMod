@@ -26,6 +26,19 @@ local function processJoypadAxisInput(v)
     return 0
 end
 
+---@param playerIndex integer
+---@return boolean
+---@nodiscard
+local function joypadHasUIFocus(playerIndex)
+    local data = JoypadState.players[playerIndex + 1]
+
+    if not data then
+        return false
+    end
+
+    return data.focus and data.focus:isVisible() or false
+end
+
 
 ---@class InputManager
 ---
@@ -79,6 +92,22 @@ function InputManager:getJoypadInput(pad)
 
     if isJoypadRTPressed(pad) then
         run = true
+    end
+
+    local lb = getJoypadLBumper(pad)
+    if lb ~= -1 then
+        local pressed = isJoypadPressed(pad, lb)
+        local prev = self.lastJoypadLB or false
+        self.lastJoypadLB = pressed
+
+        if pressed and not prev then
+            local rider = self.mount.pair.rider
+            if not joypadHasUIFocus(rider:getPlayerNum()) then
+                self.mount.controller:toggleTrot()
+            end
+        end
+    else
+        self.lastJoypadLB = false
     end
 
     return {
@@ -160,7 +189,8 @@ end
 function InputManager.new(mount)
     return setmetatable(
         {
-            mount = mount
+            mount = mount,
+            lastJoypadLB = false
         },
         InputManager
     )
