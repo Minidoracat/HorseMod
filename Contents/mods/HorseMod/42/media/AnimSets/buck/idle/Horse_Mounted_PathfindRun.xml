@@ -96,6 +96,15 @@
             <m_BoolValue>false</m_BoolValue>
         </m_Conditions>
     </m_Transitions>
+    <m_Transitions>
+        <m_Target>Horse_RunMounted</m_Target>
+        <m_BlendTime>1.80</m_BlendTime>
+        <m_Conditions>
+            <m_Name>walkstateRun</m_Name>
+            <m_Type>BOOL</m_Type>
+            <m_BoolValue>true</m_BoolValue>
+        </m_Conditions>
+    </m_Transitions>
     <!-- <m_Events>
         <m_EventName>SetVariable</m_EventName>
         <m_TimePc>0.3</m_TimePc>
@@ -136,7 +145,11 @@
         <m_Time>Start</m_Time>
         <m_ParameterValue>isTurningRightSharp=false</m_ParameterValue>
     </m_Events>
-
+    <m_Events>
+        <m_EventName>SetVariable</m_EventName>
+        <m_Time>Start</m_Time>
+        <m_ParameterValue>walkstateRun=false</m_ParameterValue>
+    </m_Events>
     <m_Conditions>
         <m_Name>HorseRiding</m_Name>
         <m_Type>BOOL</m_Type>

@@ -6,6 +6,7 @@ local AnimationEvent = {
     DISMOUNTING_COMPLETE = "HorseDismountingComplete",
     HORSE_FLEE = "HorseFlee",
     EQUIP_FINISHED = "HorseEquipFinished",
+    JUMP_END = "HorseJumpEnd",
 }
 
 return AnimationEvent

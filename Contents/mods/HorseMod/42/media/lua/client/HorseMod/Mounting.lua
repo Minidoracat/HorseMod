@@ -110,6 +110,7 @@ end
 function Mounting.dismountDeath(player, horse)
     if not Mounting.canDismountUrgent(player) then return end
 
+    ISTimedActionQueue.clear(player)
     ISTimedActionQueue.add(UrgentDismountAction:new(
         player,
         horse,
@@ -125,6 +126,7 @@ end
 function Mounting.dismountFall(player, horse)
     if not Mounting.canDismountUrgent(player) then return end
 
+    ISTimedActionQueue.clear(player)
     ISTimedActionQueue.add(UrgentDismountAction:new(
         player,
         horse,
@@ -140,6 +142,7 @@ end
 function Mounting.dismountFallBack(player, horse)
     if not Mounting.canDismountUrgent(player) then return end
 
+    ISTimedActionQueue.clear(player)
     ISTimedActionQueue.add(UrgentDismountAction:new(
         player,
         horse,

@@ -2,6 +2,7 @@
 local Stamina = require("HorseMod/Stamina")
 local AnimationVariable = require('HorseMod/definitions/AnimationVariable')
 local Mounting = require("HorseMod/Mounting")
+local HorseJump = require("HorseMod/TimedActions/HorseJump")
 local rdm = newrandom()
 
 
@@ -563,6 +564,9 @@ local PLAYER_SYNC_TUNER = 0.8
 ---
 ---Amount of slowdown applied by hitting zombies.
 ---@field slowdownCounter number
+---
+---Indicates whether the pair can turn this update.
+---@field doTurn boolean
 local MountController = {}
 MountController.__index = MountController
 
@@ -869,7 +873,8 @@ function MountController:updateTreeFall(isGalloping, deltaTime)
     -- make the player fall if they are in trees based on some skills and traits
     local timeInTrees = self.timeInTrees
     if isGalloping then
-        if rider:isInTreesNoBush() then
+        if rider:isInTreesNoBush() 
+            or self.mount.pair.mount:isInTreesNoBush() then
             self.timeInTrees = timeInTrees + deltaTime
 
             -- roll for tree fall every 0.5s
@@ -880,6 +885,9 @@ function MountController:updateTreeFall(isGalloping, deltaTime)
                 self.lastCheck = self.lastCheck + deltaTime
             end
         end
+
+    -- we consider the player to be unbalanced when exiting trees for a short time
+    -- so the counter isn't reset immediately
     elseif self.timeInTrees > 0 then
         timeInTrees = math.max(0, timeInTrees - deltaTime*4)
         timeInTrees = math.min(timeInTrees, 10)
@@ -915,6 +923,9 @@ function MountController:getCurrentSpeed()
     return self.speed
 end
 
+
+---Checks whenever the mount can jump.
+---@return boolean
 function MountController:canJump()
     local mount = self.mount.pair.mount
     return mount:getVariableBoolean(AnimationVariable.GALLOP)
@@ -922,24 +933,23 @@ function MountController:canJump()
         and not self.mount.pair:getAnimationVariableBoolean(AnimationVariable.JUMP)
 end
 
+---Checks if the current action is jumping.
+---@return boolean
 function MountController:isJumping()
-    return self.mount.pair:getAnimationVariableBoolean(AnimationVariable.JUMP)
+    local pair = self.mount.pair
+    local queue = ISTimedActionQueue.getTimedActionQueue(pair.rider)
+    local current = queue.current
+    if not current then return false end
+    return current.Type == HorseJump.Type
 end
 
+---Initiates a jump action.
 function MountController:jump()
-    self.mount.pair:setAnimationVariable(AnimationVariable.JUMP, true)
-    self.mount.pair.rider:setIgnoreMovement(true)
-    self.mount.pair.rider:setIgnoreInputsForDirection(true)
-end
-
-function MountController:stopJump()
-    local mountPair = self.mount.pair
-    local rider = mountPair.rider
+    local rider = self.mount.pair.rider
     
-    -- exit jump state and allow turning again
-    rider:setIgnoreMovement(false)
-    rider:setIgnoreInputsForDirection(false)
-    mountPair:setAnimationVariable(AnimationVariable.JUMP, false)
+    -- reset the queue of actions, since jump takes priority
+    ISTimedActionQueue.clear(rider)    
+    ISTimedActionQueue.add(HorseJump:new(rider, self.mount.pair.mount, self))
 end
 
 
@@ -969,14 +979,12 @@ function MountController:update(input)
     end
 
     -- verify that the horse isn't in a jumping animation before turning
-    local doTurn = true
+    local doTurn = self.doTurn
     local isJumping = self:isJumping()
-    if rider:getIgnoreMovement() or rider:isIgnoreInputsForDirection() then
-        if not isJumping or not isGalloping then
-            self:stopJump()
-        else
-            doTurn = false
-        end
+
+    -- safeguard in case the jump action errored out, not resetting the doTurn flag
+    if not isJumping then
+        self.doTurn = true
     end
 
     -- update current movement
@@ -1000,7 +1008,7 @@ function MountController:update(input)
     end
 
     ---@type string[]
-    local mirrorVarsMount =  { "HorseGalloping","isTurningLeft","isTurningRight" }
+    local mirrorVarsMount =  { "HorseGalloping","isTurningLeft","isTurningRight","walkstateRun" }
     for i = 1, #mirrorVarsMount do
         local k = mirrorVarsMount[i]
         local v = mount:getVariableBoolean(k)
@@ -1048,7 +1056,8 @@ function MountController.new(mount)
             timeInTrees = 0.0,
             lastCheck = 0.0,
             slowdownCounter = 0.0,
-            speed = 0.0
+            speed = 0.0,
+            doTurn = true
         },
         MountController
     )
