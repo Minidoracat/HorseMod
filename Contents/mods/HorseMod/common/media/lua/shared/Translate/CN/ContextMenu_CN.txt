@@ -1,0 +1,31 @@
+ContextMenu_CN = {
+    /* Riding */
+    ContextMenu_Horse_Mount = "上马 %1"
+    ContextMenu_Horse_Dismount = "下马 %1"
+
+    /* Attachments */
+    ContextMenu_Horse_Gear = "装备"
+    ContextMenu_Horse_Equip = "装备{新}为{槽位}"
+    ContextMenu_Horse_Replace = "用{新}替换{旧}"
+    ContextMenu_Horse_No_Compatible_Gear = "无兼容装备可为马匹装备。"
+    ContextMenu_Horse_Unequip = "卸下装备"
+    ContextMenu_Horse_Unequip_All = "全部卸下"
+    ContextMenu_Horse_NoMountPosition = "无法触及马匹。"
+
+    /* Attachment Slots */
+    ContextMenu_Horse_Slot_Saddle = "马鞍"
+    ContextMenu_Horse_Slot_Saddlebags = "鞍袋"
+    ContextMenu_Horse_Slot_Reins = "缰绳"
+
+    /* Unavailability reasons for options */
+    ContextMenu_Horse_NotAdult = "非成年马匹。"
+    ContextMenu_Horse_IsRunning = "马匹正在奔跑。"
+    ContextMenu_Horse_IsDead = "马匹已死亡。"
+    ContextMenu_Horse_IsAlreadyRiding = "马匹已被骑乘。"
+    ContextMenu_Horse_CantChangeAttachmentsWhilePlayerMounted = "上马时无法更换装备。"
+    ContextMenu_Horse_CantChangeAttachmentsWhileAnimalMounted = "无法更换骑乘马匹的装备。"
+    ContextMenu_Horse_HasRider = "马匹已被其他角色骑乘。"
+
+    /* Food */
+    ContextMenu_FoodType_Horse = "马"
+}
