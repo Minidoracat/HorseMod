@@ -46,19 +46,9 @@ Horse textures
 You need to create the following textures for your new breed:
     `media/textures/Body/HorseMod/Horse_YourVeryUniqueBreedID.png`
 
-    `media/textures/Body/HorseMod/Horse_YourVeryUniqueBreedID.png`
-
     `media/textures/Body/HorseMod/Horse_YourVeryUniqueBreedID_Rotting.png`
 
-    `media/textures/Body/HorseMod/Horse_YourVeryUniqueBreedID.png`
-
     `media/textures/Item_body/Horse_YourVeryUniqueBreedID_Foal.png`
-
-    `media/textures/Item_body/Horse_YourVeryUniqueBreedID_Foal.png`
-
-    `media/textures/Item_body/Horse_YourVeryUniqueBreedID_Foal.png`
-
-    `media/textures/Item_body/Horse_YourVeryUniqueBreedID_Dead.png`
 
     `media/textures/Item_body/Horse_YourVeryUniqueBreedID_Dead.png`
 
