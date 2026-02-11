@@ -40,12 +40,7 @@ local function check_meatball()
     local size = clips:size()
     animViewer:fromLua0('exit')
 
-    if size > 0 then 
-        print("No meatball issue detected, horse animation clips loaded successfully.")
-        return 
-    end
-
-    print("WARNING, MEATBALL ISSUE DETECTED")
+    if size > 0 then return end
 
     local text = getText("IGUI_HorseMod_MeatballWarning")
     make_popup(text)
@@ -55,14 +50,11 @@ Events.OnGameStart.Add(check_meatball)
 
 
 local function check_new_game(newGame)
-    print("Checking for new game. newGame =", newGame)
     local modData = ModData.getOrCreate("horsemod")
-    print(newGame, modData.newGame)
     if newGame then
         modData.newGame = true
     elseif not modData.newGame then
         -- this means that the save was created, then the mod was added later
-        print("WARNING, OLD SAVE DETECTED")
         MAKE_NEW_SAVE_WARNING = true
     end
 end
