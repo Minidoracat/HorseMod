@@ -7,12 +7,12 @@ link2 = Github = https://github.com/PZ-HorseTeam/HorseMod,
 v1.0.1
 
 Added:
-- Pop-up warning when loading the Horse mod wrongly. See #215 for details.
+- Pop-up warning when loading the Horse mod incorrectly. See #215 for details.
 - Pop-up when activating the mod in an old save, making horses not spawn on the map. See #382 for details.
 
 Fixed:
-- Ability to swap clothings while riding.
-- Ability to drink water while riding.
+- Now able to swap clothing while riding.
+- Now able to drink water while riding.
 - Adjusted horse deceleration so the horse doesn't slide for this long when stopping.
 
 New translations:
@@ -20,5 +20,5 @@ New translations:
 - Russian by Sangria
 - Chinese by Cetty McTrailwinder
 - German by Jackson Frost
-- Updated french by Xianah
+- Updated French by Xianah
 [ ------ ]
